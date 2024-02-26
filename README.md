@@ -6,32 +6,34 @@
 
 ### Landing Page
 - Route: /
-- Links to Peer Tutoring, Tech/Lab Support Pages (Student)
-- Link to LabSquad Login Page
-
-### Peer Tutoring Page
-- Route: /peer-tutoring (form?)
+- Link to Service Request Page (Student)
+- Link to Login Page (LabSquad)
 
 
-### Tech/Lab Support Page
-- Route: /tech-lab-support
+### Service Request Page
+- Route: /service-request
+- Include form to submit ticket
 
 
-### LabSquad Login Page
+### Confirmation Page
+- Route: /confirmation
+- Include confirmation info of the submitted ticket
+
+### Login Page
 - Route: /login
 
 
-### LabSquad Ticket Queue Page (Homepage)
+### Ticket Queue Page (Homepage)
 - Route: /ticket-queue
 
 
-### LabSquad Ticket Detail Page
+### Ticket Detail Page
 - Route: /ticket-detail
 
 
-### LabSquad Data Dashboard Page
+### Data Dashboard Page
 - Route: /data-dashboard
 
 
-### LabSquad User Management Page 
+### User Management Page 
 - Route: /user-management
