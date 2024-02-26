@@ -3,5 +3,5 @@
 </script>
 
 <template>
-<h1>This is tickets page</h1>
+<h1>This is Ticket Queue page</h1>
 </template>

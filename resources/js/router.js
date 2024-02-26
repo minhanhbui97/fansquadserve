@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Landing from '@/Pages/Landing.vue';
-import Tickets from '@/Pages/Tickets.vue';
+import TicketQueue from '@/Pages/TicketQueue.vue';
 import Login from '@/Pages/Login.vue';
-import StudentHome from '@/Pages/StudentHome.vue';
+import ServiceRequest from '@/Pages/ServiceRequest.vue';
 
 const routes = [
   {
@@ -10,16 +10,16 @@ const routes = [
     component: Landing
   },
   {
-    path: '/tickets',
-    component: Tickets
+    path: '/ticket-queue',
+    component: TicketQueue
   },
   {
     path: '/login',
     component: Login
   },
   {
-    path: '/student',
-    component: StudentHome
+    path: '/service-request',
+    component: ServiceRequest
   }
 ];
 
