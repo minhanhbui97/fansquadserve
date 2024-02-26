@@ -1,6 +1,23 @@
 # FanSquadServe
+## Installation
+- clone repo
+- checkout branch dev
+- clone ".env.example" file content to a new file, name it ".env" (same directory)
+- install Laravel: https://laravel.com/docs/7.x/installation (php, mysql, composer)
+- cmd to run BE server:
+    - php artisan migrate
+    - php artisan serve
+    - php artisan seed (not needed at this point)
+- cmd to run FE server:
+    - npm install {package_name} (when first installing new dependencies)
+    - npm run dev
+- ready to use components
+    - PrimeVue: https://primevue.org/vite
+- Vue documentation: https://vuejs.org/guide/introduction.html
 
 # Frontend
+
+
 
 ## Pages
 
