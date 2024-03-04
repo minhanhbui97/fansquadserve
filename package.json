@@ -19,6 +19,10 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
+        "@vueuse/core": "^10.9.0",
+        "lodash": "^4.17.21",
+        "pinia": "^2.1.7",
+        "vue": "^3.4.21",
         "vue-router": "^4.3.0"
     }
 }
