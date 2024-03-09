@@ -12,6 +12,7 @@ module.exports = {
     extend: {
       colors: {
         'blue-gray': '#F2F5F8',
+        'theme-purple': '#2B2A4C'
       },
     },
   },

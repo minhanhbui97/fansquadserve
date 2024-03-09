@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Landing from '@/Pages/Landing.vue';
 import TicketQueue from '@/Pages/TicketQueue.vue';
 import Login from '@/Pages/Login.vue';
+import DataDashboard from '@/Pages/DataDashboard.vue';
+import UserManagement from '@/Pages/UserManagement.vue';
 import ServiceRequest from '@/Pages/ServiceRequest.vue';
 import { useAuthStore } from './Stores/AuthStore';
 import { storeToRefs } from 'pinia';
@@ -19,6 +21,22 @@ const routes = [
     path: '/ticket-queue',
     name: 'ticket-queue',
     component: TicketQueue,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/data-dashboard',
+    name: 'data-dashboard',
+    component: DataDashboard,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/user-management',
+    name: 'user-management',
+    component: UserManagement,
     meta: {
       requiresAuth: true,
     },

@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useAuthStore } from './Stores/AuthStore';
 import { storeToRefs } from 'pinia';
+import Sidenav from '@/Components/Sidenav.vue'
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -9,7 +10,7 @@ const { user } = storeToRefs(authStore);
 
 <template>
   <main class="h-screen w-full flex flex-row">
-    <div v-if="user">User here</div>
+    <Sidenav v-if="user" />
     <div class="w-full">
       <router-view></router-view>
     </div>
