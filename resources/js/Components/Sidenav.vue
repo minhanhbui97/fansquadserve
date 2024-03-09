@@ -2,6 +2,17 @@
 import PeopleIcon from '@/Components/SVGIcons/PeopleIcon.vue';
 import GraphIcon from '@/Components/SVGIcons/GraphIcon.vue';
 import DocIcon from '@/Components/SVGIcons/DocIcon.vue';
+import { useAuthStore } from '@/Stores/AuthStore';
+import { storeToRefs } from 'pinia';
+
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+const { logout } = authStore;
+
+async function handleLogout() {
+  await logout();
+  router.push('login');
+}
 </script>
 
 <template>
@@ -9,10 +20,8 @@ import DocIcon from '@/Components/SVGIcons/DocIcon.vue';
     <header class="p-8">
       <img src="../../images/logo.png" alt="" />
     </header>
-    <div class="flex flex-col justify-between">
-      <section
-        class="flex flex-col flex-grow w-full justify-center items-center"
-      >
+    <div class="flex flex-col justify-between flex-grow">
+      <section class="flex flex-col w-full justify-center items-center">
         <router-link
           :to="{ name: 'ticket-queue' }"
           class="flex gap-4 items-center py-4 px-8 font-semibold w-full"
@@ -40,6 +49,10 @@ import DocIcon from '@/Components/SVGIcons/DocIcon.vue';
           </div>
           <div>User Management</div>
         </router-link>
+      </section>
+      <section class="flex flex-col gap-4 justify-center items-center p-8 font-bold">
+        <h1 class="font-bold">{{ user.first_name }} {{ user.last_name }}</h1>
+        <button @click="handleLogout" class="py-2 px-4 bg-red-500 rounded text-white hover:bg-red-500/90">Log Out</button>
       </section>
     </div>
   </div>
