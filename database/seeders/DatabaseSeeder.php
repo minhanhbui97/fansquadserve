@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,13 +19,14 @@ class DatabaseSeeder extends Seeder
         $this->call([
             
             RoleSeeder::class,
+            TicketSeeder::class
             
         ]);
 
         $roles = Role::all();
 
         
-        $users = \App\Models\User::factory()->count(10)->create();
+        $users = User::all();
         
         foreach ($users as $user) {
             $role = $roles->random();
