@@ -20,7 +20,7 @@ async function submit(values) {
 </script>
 
 <template>
-  <div class="h-screen flex flex-col gap-8 justify-center max-w-xl mx-auto">
+  <div class="h-screen flex flex-col gap-8 justify-center items-center max-w-xl mx-auto">
     <div class="w-64 self-center">
       <img src="../../images/logo.png" alt="" />
     </div>
