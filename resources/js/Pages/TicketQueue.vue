@@ -36,7 +36,7 @@ onMounted(() => {
           sortable
           style="width: 100px"
         ></Column>
-        <Column field="tutor.full_name" header="Assignee" sortable style="width: 150px;"></Column>
+        <Column field="tutor.full_name" header="Assignee" sortable style="width: 130px;"></Column>
         <Column field="description" header="Description" style="width: 200px">
           <template #body="slotProps">
             <div class="singleLine">

@@ -12,6 +12,10 @@ class TicketStatusSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $statuses = ['New', 'Confirmed', 'In-progress', 'Resolved', 'On-hold', 'Escalated', 'Closed'];
+
+        foreach ($statuses as $status) {
+            \App\Models\TicketStatus::firstOrCreate(['name' => $status]);
+        }
     }
 }
