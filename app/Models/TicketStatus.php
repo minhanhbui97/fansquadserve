@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class TicketStatus extends Model
 {
     use HasFactory;
+
+    public function tickets() {
+        return $this->belongsToMany(Ticket::class);
+    }
+
 }

@@ -16,4 +16,9 @@ class Ticket extends Model
     public function student() {
         return $this->belongsTo(Student::class);
     }
+
+    public function ticket_statuses() {
+        return $this->belongsToMany(TicketStatus::class);
+    }
+
 }
