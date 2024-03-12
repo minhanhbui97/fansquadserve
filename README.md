@@ -7,7 +7,8 @@
 - cmd to run BE server:
     - php artisan migrate
     - php artisan serve
-    - php artisan seed (not needed at this point)
+    - php artisan migrate:fresh
+    - php artisan db:seed (not needed at this point)
 - cmd to run FE server:
     - npm install {package_name} (when first installing new dependencies)
     - npm run dev
