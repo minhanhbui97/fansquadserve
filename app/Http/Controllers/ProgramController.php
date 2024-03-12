@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreStudentRequest;
-use App\Http\Requests\UpdateStudentRequest;
-use App\Models\Student;
+use App\Http\Requests\StoreProgramRequest;
+use App\Http\Requests\UpdateProgramRequest;
+use App\Models\Program;
 
-class StudentController extends Controller
+class ProgramController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $students = Student::all();
-        return $students;
+        $programs = Program::all();
+        return $programs;
     }
 
     /**
@@ -22,31 +22,29 @@ class StudentController extends Controller
      */
     public function create()
     {
-        
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreStudentRequest $request)
+    public function store(StoreProgramRequest $request)
     {
-        $student = Student::create($request->all());
-
-        return response($student, 201);
+        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Student $student)
+    public function show(Program $program)
     {
-        return $student;
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Student $student)
+    public function edit(Program $program)
     {
         //
     }
@@ -54,7 +52,7 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStudentRequest $request, Student $student)
+    public function update(UpdateProgramRequest $request, Program $program)
     {
         //
     }
@@ -62,7 +60,7 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Student $student)
+    public function destroy(Program $program)
     {
         //
     }

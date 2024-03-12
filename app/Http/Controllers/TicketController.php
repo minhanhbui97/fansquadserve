@@ -8,12 +8,12 @@ use App\Models\Ticket;
 
 class TicketController extends Controller
 {
-    /**
+    /*
      * Display a listing of the resource.
      */
     public function index()
     {
-        $tickets = Ticket::with([ 'student', 'tutor' ])->get();
+        $tickets = Ticket::with(['student', 'tutor'])->get();
         return $tickets;
     }
 
@@ -30,7 +30,14 @@ class TicketController extends Controller
      */
     public function store(StoreTicketRequest $request)
     {
-        //
+        $body = $request->except('scheduled_start_time', 'scheduled_end_time');
+        $body['scheduled_start_time'] = date($request->get('scheduled_start_time')); // Convert datetime to timestamp
+        $body['scheduled_end_time'] = date($request->get('scheduled_end_time')); // Convert datetime to timestamp
+
+        $ticket = Ticket::create($body);
+        $ticket->ticketStatuses()->attach(1); // Newly created ticket has status "New" (id 1)
+        $ticket->refresh();
+        return $ticket;
     }
 
     /**
