@@ -1,0 +1,81 @@
+<script setup>
+import { ref } from 'vue';
+
+const counter = ref(0);
+const name = ref('Huy');
+
+function increment() {
+    counter.value += 1;
+}
+
+function changeName() {
+    name.value = 'ellie';
+}
+
+const text = ref('');
+const errors = ref(null);
+const courses = ref([]);
+
+async function fetchCourses() {
+    const response = await getCourseService();
+    courses.value = response.data;
+}
+
+function submit(e) {
+    // Check form valid -> if not -> error
+    if (!text) {
+        errors.value = 'name is required'
+        return;
+    }
+
+    // submit 
+    // axios.post('api/submit-form', { name: dsad, age: dsadsa })
+    // redirect to confirm
+}
+
+fetchCourses();
+
+onMounted(() => {
+    
+})
+
+</script>
+
+<template>
+<h1 :id="name">This is Login page {{ counter }} {{ name }}</h1>
+<button @click="increment">Increment</button>
+<button @click="changeName">ChangeName</button>
+<form @submit.prevent="submit">
+    <input v-model="text" name="name">
+    <div v-if="errors" class="text-sm text-red-500">{{ errors }}</div>
+    <button type="submit">Submit</button>
+</form>
+<div>{{ text }}</div>
+
+
+<ul>
+    <li v-for="course in courses">{{
+        course.name
+    }}</li>
+</ul>
+
+<Student name="Max" age="28" />
+<Student name="Ellie" age="27" />
+
+</template>
+
+// create state -> gan state vao dom text content hoac la attribute
+// cung co the gan event handler 
+// function
+- perform side effect: 
+- update state
+
+<template>
+    <div>{{ name }} {{ age }}</div>
+</template>
+
+<script setup>
+defineProps(['name', 'age'])
+
+const internalState = ref(0);
+</script>

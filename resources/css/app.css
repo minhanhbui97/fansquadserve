@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root, :before, :after, * {
+    --vf-border-color-input: #F1f1f1;
+  }
+
 .btn {
     @apply px-4 py-2 rounded border text-center hover:bg-gray-200;
 }
