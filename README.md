@@ -5,10 +5,13 @@
 - clone ".env.example" file content to a new file, name it ".env" (same directory)
 - install Laravel: https://laravel.com/docs/7.x/installation (php, mysql, composer)
 - cmd to run BE server:
-    - php artisan migrate
+    - php artisan migrate:fresh --seeder DatabaseSeeder
     - php artisan serve
+
+=======
     - php artisan migrate:fresh
     - php artisan db:seed (not needed at this point)
+
 - cmd to run FE server:
     - npm install {package_name} (when first installing new dependencies)
     - npm run dev
