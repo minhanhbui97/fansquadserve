@@ -13,7 +13,7 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::with(['student', 'tutor'])->get();
+        $tickets = Ticket::with(['student', 'tutor', 'priority', 'course', 'ticketStatuses'])->get();
         return $tickets;
     }
 
@@ -45,8 +45,9 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        //
+        return $ticket;
     }
+
 
     /**
      * Show the form for editing the specified resource.

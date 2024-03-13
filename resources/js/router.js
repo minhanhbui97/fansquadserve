@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Landing from '@/Pages/Landing.vue';
 import TicketQueue from '@/Pages/TicketQueue.vue';
+import TicketDetails from '@/Pages/TicketDetails.vue';
 import Login from '@/Pages/Login.vue';
 import DataDashboard from '@/Pages/DataDashboard.vue';
 import UserManagement from '@/Pages/UserManagement.vue';
@@ -21,6 +22,14 @@ const routes = [
     path: '/ticket-queue',
     name: 'ticket-queue',
     component: TicketQueue,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/tickets/:id',
+    name: 'ticket-details',
+    component: TicketDetails,
     meta: {
       requiresAuth: true,
     },

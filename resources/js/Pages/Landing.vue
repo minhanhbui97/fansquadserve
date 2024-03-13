@@ -2,7 +2,7 @@
 
 <template>
   <div
-    class="flex-grow bg-blue-gray items-center justify-center flex flex-col shadow"
+    class="flex-grow bg-blue-gray items-center justify-center flex flex-col shadow h-full"
   >
     <div
       class="bg-white border rounded-lg flex flex-col justify-center items-center gap-32 p-8"

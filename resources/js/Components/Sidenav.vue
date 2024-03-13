@@ -4,7 +4,9 @@ import GraphIcon from '@/Components/SVGIcons/GraphIcon.vue';
 import DocIcon from '@/Components/SVGIcons/DocIcon.vue';
 import { useAuthStore } from '@/Stores/AuthStore';
 import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const { logout } = authStore;
@@ -16,7 +18,7 @@ async function handleLogout() {
 </script>
 
 <template>
-  <div class="w-[500px] flex flex-col bg-gray-200">
+  <div class="w-[380px] flex flex-col flex-shrink-0 bg-gray-200">
     <header class="p-8">
       <img src="../../images/logo.png" alt="" />
     </header>

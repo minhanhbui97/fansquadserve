@@ -9,6 +9,9 @@ class Ticket extends Model
 {
     use HasFactory;
 
+    // protected $appends = ['latest_status'];
+    protected $appends = ['latest_status', 'details_url'];
+
     protected $guarded = [];
 
     public function tutor() {
@@ -21,6 +24,10 @@ class Ticket extends Model
 
     public function ticketStatuses() {
         return $this->belongsToMany(TicketStatus::class);
+    }
+
+    public function getLatestStatusAttribute() {
+        return $this->ticketStatuses->reverse()->first();
     }
 
     public function course() {
@@ -41,5 +48,9 @@ class Ticket extends Model
 
     public function program() {
         return $this->belongsTo(Program::class);
+    }
+
+    public function getDetailsUrlAttribute() {
+        return '/api/tickets/' . $this->id;
     }
 }
