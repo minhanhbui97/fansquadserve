@@ -1,4 +1,4 @@
-import { getAllTickets } from '@/Services/TicketService';
+import { getAllTickets, getAllPriorities } from '@/Services/TicketService';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -7,11 +7,21 @@ export const useTicketStore = defineStore('ticket', () => {
   const isLoading = ref(false);
   const error = ref(null);
 
+  const priorities = ref([]);
+
+
   async function getTickets() {
     isLoading.value = true;
     const data = await getAllTickets();
     tickets.value = data;
   }
 
-  return { tickets, isLoading, error, getTickets };
+
+  async function getPriorities() {
+    isLoading.value = true;
+    const data = await getAllPriorities();
+    priorities.value = data;
+  }
+
+  return { tickets, priorities, isLoading, error, getTickets, getPriorities };
 });
