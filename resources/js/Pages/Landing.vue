@@ -2,7 +2,7 @@
 
 <style>
 
-     @import '../../css/landingstyle.css';
+    /* @import '../../css/landingstyle.css';*/
 
 
 </style>
@@ -42,12 +42,12 @@
 <!-- Your content here -->
 
 <div class="img">
-<img src="../../css/logo.png" alt="fansquadservelogo"/>
+<!--<img src="../../css/logo.png" alt="fansquadservelogo"/>-->
 </div>
 <div style="padding:20px">
   <h1>Your go-to booking solution for </h1><br>
   <h1>all your LabSquad needs.</h1>
 </div>
-<img src="../../css/contact.svg"/>-->
+<!--<img src="../../css/contact.svg"/>-->
 </template>
 

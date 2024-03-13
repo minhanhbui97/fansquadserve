@@ -9,7 +9,7 @@ import { useRouter } from 'vue-router';
 
 
 <style>
-  @import '../../css/style.css';
+ /* @import '../../css/style.css';*/
 </style>
 
 <<template>
