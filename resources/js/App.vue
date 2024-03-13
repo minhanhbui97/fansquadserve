@@ -1,10 +1,18 @@
 <script setup>
 import { ref } from 'vue';
-const count = ref(1);
+import { useAuthStore } from './Stores/AuthStore';
+import { storeToRefs } from 'pinia';
+import Sidenav from '@/Components/Sidenav.vue'
+
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 </script>
 
 <template>
-  <main class="h-screen flex flex-col">
-    <router-view></router-view>
+  <main class="h-screen w-full flex flex-row">
+    <Sidenav v-if="user" />
+    <div class="w-full">
+      <router-view></router-view>
+    </div>
   </main>
 </template>
