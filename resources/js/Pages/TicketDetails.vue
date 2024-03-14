@@ -10,7 +10,8 @@ const ticketStore = useTicketStore();
 const { getPriorities } = ticketStore;
 const { priorities } = storeToRefs(ticketStore);
 
-const selectOptions = computed(() => {
+
+const selectPriorityOptions = computed(() => {
   return priorities.value.map((priority) => {
     return {
       value: priority.id,
@@ -19,9 +20,14 @@ const selectOptions = computed(() => {
   });
 });
 
+
+
 onMounted(() => {
   getPriorities();
+  
 });
+
+
 </script>
 
 <template>
@@ -36,9 +42,12 @@ onMounted(() => {
     <!-- value = id, label = name -->
     <SelectElement
       :native="false"
-      name="“courseId”"
-      :items="selectOptions"
+      name="priority"
+      :items="selectPriorityOptions"
     />
+
+    
+
 
     <!-- // https://vueform.com/reference/date-element#option-time
     <DateElement :date="true" :time="true" ... name />

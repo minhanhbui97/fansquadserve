@@ -9,4 +9,24 @@ export async function getAllPriorities() {
     return response.data;
 }
 
+export async function getAllOperatingSystem() {
+    const response = await axios.get('/api/operating_systems')
+    return response.data;
+}
+
+export async function getAllProgram() {
+    const response = await axios.get('/api/programs')
+    return response.data;
+}
+
+export async function getAllTypeofMachines() {
+    const response = await axios.get('/api/type_of_machines')
+    return response.data;
+}
+
+export async function getAllCourses() {
+    const response = await axios.get('/api/courses')
+    return response.data;
+}
+
 
