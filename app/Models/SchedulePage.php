@@ -9,6 +9,8 @@ class SchedulePage extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['schedule_url'];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'tutor_id');

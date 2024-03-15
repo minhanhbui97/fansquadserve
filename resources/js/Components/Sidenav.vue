@@ -18,14 +18,14 @@ async function handleLogout() {
 </script>
 
 <template>
-  <div class="w-[380px] flex flex-col flex-shrink-0 bg-gray-200">
+<div class="w-[280px] flex flex-col flex-shrink-0 bg-blue-gray border-r border-gray-300">
     <header class="p-8">
       <img src="../../images/logo.png" alt="" />
     </header>
     <div class="flex flex-col justify-between flex-grow">
       <section class="flex flex-col w-full justify-center items-center">
         <router-link
-          :to="{ name: 'ticket-queue' }"
+          :to="{ name: 'tickets' }"
           class="flex gap-4 items-center py-4 px-8 font-semibold w-full"
         >
           <div class="w-8 h-8">

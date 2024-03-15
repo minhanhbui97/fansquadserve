@@ -9,7 +9,6 @@ class Ticket extends Model
 {
     use HasFactory;
 
-    // protected $appends = ['latest_status'];
     protected $appends = ['latest_status', 'details_url'];
 
     protected $guarded = [];
@@ -23,7 +22,7 @@ class Ticket extends Model
     }
 
     public function ticketStatuses() {
-        return $this->belongsToMany(TicketStatus::class);
+        return $this->belongsToMany(TicketStatus::class)->withTimestamps();
     }
 
     public function getLatestStatusAttribute() {

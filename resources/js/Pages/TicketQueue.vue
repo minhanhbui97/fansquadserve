@@ -25,14 +25,14 @@ async function submit(id) {
 
 <template>
   <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 justify-center">
-    <h1 class="text-amber-800 text-xl font-bold">Ticket Queue</h1>
+    <h1 class="text-amber-800 text-3xl font-bold">Ticket Queue</h1>
     <div class="flex-grow">
       <DataTable
         class="text-[14px]"
         :value="tickets"
         size="small"
         scrollable
-        scrollHeight="flex"
+        scrollHeight="500px"
         paginator
         :rows="20"
         stripedRows
@@ -63,7 +63,7 @@ async function submit(id) {
         ></Column>
         <Column
           field="tutor.full_name"
-          header="Assignee"
+          header="Tutor"
           sortable
           style="width: 130px"
         ></Column>

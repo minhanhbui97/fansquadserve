@@ -8,6 +8,8 @@ import UserManagement from '@/Pages/UserManagement.vue';
 import ServiceRequest from '@/Pages/ServiceRequest.vue';
 import { useAuthStore } from './Stores/AuthStore';
 import { storeToRefs } from 'pinia';
+import { h } from 'vue'
+import { RouterView } from 'vue-router'
 
 const routes = [
   {
@@ -19,21 +21,34 @@ const routes = [
     },
   },
   {
-    path: '/ticket-queue',
-    name: 'ticket-queue',
-    component: TicketQueue,
+    path: '/tickets',
+    name: 'tickets',
+    // component: { render: () => h(RouterView) },
     meta: {
       requiresAuth: true,
     },
+    redirect: '/tickets',
+    children: [
+      { 
+        path: '',
+        name: 'tickets',
+        component: TicketQueue
+      },
+      { 
+        path: ':id',
+        name: 'ticket-details',
+        component: TicketDetails
+      }
+    ]
   },
-  {
-    path: '/tickets/:id',
-    name: 'ticket-details',
-    component: TicketDetails,
-    meta: {
-      requiresAuth: true,
-    },
-  },
+  // {
+  //   path: '/tickets/:id',
+  //   name: 'ticket-details',
+  //   component: TicketDetails,
+  //   meta: {
+  //     requiresAuth: true,
+  //   },
+  // },
   {
     path: '/data-dashboard',
     name: 'data-dashboard',
@@ -95,7 +110,7 @@ router.beforeEach(async (to, from) => {
   }
 
   if (isLoggedIn.value && !needAuthentication) {
-    return { name: 'ticket-queue' };
+    return { name: 'tickets' };
   }
 });
 

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use App\Models\Course;
 use App\Models\Ticket;
+use Carbon\Carbon;
 
 class TicketController extends Controller
 {
@@ -13,7 +15,7 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::with(['student', 'tutor', 'priority', 'course', 'ticketStatuses'])->get();
+        $tickets = Ticket::with(['student', 'tutor', 'priority', 'course', 'ticketStatuses', 'program', 'typeOfMachine', 'operatingSystem'])->get();
         return $tickets;
     }
 
@@ -43,8 +45,9 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show(int $id)
     {
+        $ticket = Ticket::where('id', $id)->with(['student', 'tutor', 'priority', 'course', 'ticketStatuses', 'program', 'typeOfMachine', 'operatingSystem'])->first();
         return $ticket;
     }
 
@@ -62,7 +65,36 @@ class TicketController extends Controller
      */
     public function update(UpdateTicketRequest $request, Ticket $ticket)
     {
-        //
+        $body = $request->except('scheduled_start_time', 'scheduled_end_time');
+        $body['scheduled_start_time'] = date($request->get('scheduled_start_time')); // Convert datetime to timestamp
+        $body['scheduled_end_time'] = date($request->get('scheduled_end_time')); // Convert datetime to timestamp
+
+        $ticket->priority_id = $body['priority_id'];
+        $ticket->assigned_tutor_id = $body['tutor_id'];
+
+        // If new status is different from current status, then update
+        if ($ticket->latest_status->id != $body['ticket_status_id']) {
+            $ticket->ticketStatuses()->attach($body['ticket_status_id']);
+
+            // If status is moved to "In-progress", update actual_start_time
+            if ($body['ticket_status_id'] == 3) {
+                $ticket->actual_start_time = Carbon::now();
+            }
+            // If status is moved to "Resolved", update actual_end_time
+            else if ($body['ticket_status_id'] == 4) {
+                $ticket->actual_end_time = Carbon::now();
+            }
+        }
+
+        $ticket->scheduled_start_time = $body['scheduled_start_time'];
+        $ticket->scheduled_end_time = $body['scheduled_end_time'];
+        $ticket->tutor_note = $body['tutor_note'];
+
+        $ticket->save();
+        $ticket->refresh();
+
+        $ticket = Ticket::where('id', $ticket->id)->with(['student', 'tutor', 'priority', 'course', 'ticketStatuses', 'program', 'typeOfMachine', 'operatingSystem'])->first();
+        return $ticket;
     }
 
     /**
@@ -73,3 +105,5 @@ class TicketController extends Controller
         //
     }
 }
+
+// ErrorException: Object of class App\Models\TicketStatus could not be converted to int in file /Users/minhanhbui/fss-app/app/Http/Controllers/TicketController.php on line 74

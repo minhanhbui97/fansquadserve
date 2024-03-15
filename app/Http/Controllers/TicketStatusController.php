@@ -13,7 +13,8 @@ class TicketStatusController extends Controller
      */
     public function index()
     {
-        //
+        $ticket_statuses = TicketStatus::all();
+        return $ticket_statuses;
     }
 
     /**
