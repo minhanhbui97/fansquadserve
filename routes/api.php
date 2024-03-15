@@ -47,6 +47,8 @@ Route::get('/priorities', [PriorityController::class, 'index']);
 Route::get('/courses', [CourseController::class, 'index']);
 
 Route::get('/students/{student:fanshawe_id}', [StudentController::class,'show']);
+Route::post('/students', [StudentController::class,'store']);
+Route::put('/students/{student:fanshawe_id}', [StudentController::class,'update']);
 
 Route::get('/tickets', [TicketController::class, 'index']);
 
@@ -59,3 +61,7 @@ Route::get('/programs', [ProgramController::class, 'index']);
 Route::get('/ticket_statuses', [TicketStatusController::class, 'index']);
 
 Route::put('/tickets/{ticket}', [TicketController::class, 'update']);
+
+Route::get('/reference-number', function () {
+    return random_int(1000000, 9999999);
+});

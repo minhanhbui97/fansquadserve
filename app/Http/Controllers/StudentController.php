@@ -56,7 +56,9 @@ class StudentController extends Controller
      */
     public function update(UpdateStudentRequest $request, Student $student)
     {
-        //
+        $student->update($request->all());
+        $student->refresh();
+        return $student;
     }
 
     /**

@@ -5,8 +5,8 @@ import {
   getUsers as getAllUsers,
   getTicketById,
   updateTicket,
-  getAllOperatingSystem,
-  getAllProgram,
+  getAllOperatingSystems,
+  getAllPrograms,
   getAllTypeofMachines,
   getAllCourses,
 } from '@/Services/TicketService';
@@ -22,7 +22,7 @@ export const useTicketStore = defineStore('ticket', () => {
   const priorities = ref([]);
   const users = ref([]);
   const ticket_statuses = ref([]);
-  const operating_system = ref([]);
+  const operating_systems = ref([]);
   const programs = ref([]);
   const type_of_machines = ref([]);
   const courses = ref([]);
@@ -69,25 +69,25 @@ export const useTicketStore = defineStore('ticket', () => {
     isLoading.value = false;
   }
 
-  async function getOperatingSystem() {
+  async function getOperatingSystems() {
     isLoading.value = true;
-    const data = await getAllOperatingSystem();
-    operating_system.value = data;
+    const data = await getAllOperatingSystems();
+    operating_systems.value = data;
   }
 
-  async function getAllProgram() {
+  async function getPrograms() {
     isLoading.value = true;
-    const data = await getAllProgram();
+    const data = await getAllPrograms();
     programs.value = data;
   }
 
-  async function getAllTypeofMachines() {
+  async function getTypeofMachines() {
     isLoading.value = true;
     const data = await getAllTypeofMachines();
     type_of_machines.value = data;
   }
 
-  async function getAllCourses() {
+  async function getCourses() {
     isLoading.value = true;
     const data = await getAllCourses();
     courses.value = data;
@@ -96,7 +96,7 @@ export const useTicketStore = defineStore('ticket', () => {
   return {
     tickets,
     priorities,
-    operating_system,
+    operating_systems,
     programs,
     type_of_machines,
     courses,
@@ -107,10 +107,10 @@ export const useTicketStore = defineStore('ticket', () => {
     users,
     getTickets,
     getPriorities,
-    getOperatingSystem,
-    getAllProgram,
-    getAllTypeofMachines,
-    getAllCourses,
+    getOperatingSystems,
+    getPrograms,
+    getTypeofMachines,
+    getCourses,
     getCurrentTicket,
     getTicketStatuses,
     getUsers,

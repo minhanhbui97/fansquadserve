@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
-use App\Models\Course;
 use App\Models\Ticket;
 use Carbon\Carbon;
 
@@ -39,6 +38,7 @@ class TicketController extends Controller
         $ticket = Ticket::create($body);
         $ticket->ticketStatuses()->attach(1); // Newly created ticket has status "New" (id 1)
         $ticket->refresh();
+        $ticket = Ticket::where('id', $ticket->id)->with(['student', 'tutor', 'priority', 'course', 'ticketStatuses', 'program', 'typeOfMachine', 'operatingSystem'])->first();
         return $ticket;
     }
 

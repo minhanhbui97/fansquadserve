@@ -20,13 +20,12 @@ class UserController extends Controller
         $course = Course::find($course_id);
 
         if ($course) { // Get list of tutors available for a course
-            $tutors = $course->users;
+            $tutors = $course->users()->with(['schedule_page'])->get();
         } else {
             $tutors = User::all();
         }
         return $tutors;
     }
-
 
     /**
      * Store a newly created resource in storage.
