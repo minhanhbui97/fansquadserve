@@ -1,15 +1,31 @@
 <script setup>
 import { useTicketStore } from '@/Stores/TicketStore';
+import dayjs from 'dayjs';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useToast } from 'vue-toastification';
 
 const route = useRoute();
-// const router = useRouter();
-const ticketStore = useTicketStore();
-const { getPriorities } = ticketStore;
-const { priorities } = storeToRefs(ticketStore);
+const ticket_id = route.params.id;
 
+const ticketStore = useTicketStore();
+const {
+  getTicketStatuses,
+  getPriorities,
+  getUsers,
+  getCurrentTicket,
+  updateCurrentTicket,
+} = ticketStore;
+const {
+  priorities,
+  ticket_statuses,
+  users,
+  currentTicket: ticket,
+} = storeToRefs(ticketStore);
+
+const formRef = ref();
+const toast = useToast();
 
 const selectPriorityOptions = computed(() => {
   return priorities.value.map((priority) => {
@@ -20,38 +36,277 @@ const selectPriorityOptions = computed(() => {
   });
 });
 
+const selectTicketStatusOptions = computed(() => {
+  return ticket_statuses.value.map((ticket_status) => {
+    return {
+      value: ticket_status.id,
+      label: ticket_status.name,
+    };
+  });
+});
 
+const selectUserOptions = computed(() => {
+  return users.value.map((user) => {
+    return {
+      value: user.id,
+      label: user.full_name,
+    };
+  });
+});
+
+const allStatuses = computed(() => ticket.value?.ticket_statuses || []);
+
+const firstResponseTime = computed(() => {
+  if (!allStatuses.value.length) return 'N/A';
+
+  const status1 = allStatuses.value.find(
+    (status) => status.pivot.ticket_status_id === 1,
+  );
+  const status2 = allStatuses.value.find(
+    (status) => status.pivot.ticket_status_id === 2,
+  );
+  if (!status1 || !status2) return 'N/A';
+
+  const time1 = dayjs(status1.pivot.created_at);
+  const time2 = dayjs(status2.pivot.created_at);
+
+  return time2.diff(time1, 'h');
+});
+
+const resolutionTime = computed(() => {
+  if (!allStatuses.value.length) return 'N/A';
+
+  const status1 = allStatuses.value.find(
+    (status) => status.pivot.ticket_status_id === 3,
+  );
+  const status2 = allStatuses.value.find(
+    (status) => status.pivot.ticket_status_id === 4,
+  );
+
+  if (!status1 || !status2) return 'N/A';
+
+  const time1 = dayjs(status1.pivot.created_at);
+  const time2 = dayjs(status2.pivot.created_at);
+
+  return time2.diff(time1, 'h');
+});
+
+async function submitTicket(values) {
+  await updateCurrentTicket(ticket.value.id, values.data);
+  toast.success('Update ticket successfully!')
+}
 
 onMounted(() => {
+  getCurrentTicket(ticket_id);
   getPriorities();
-  
+  getTicketStatuses();
+});
+
+watch(ticket, () => {
+  console.log(ticket.value);
+  if (ticket.value) {
+    getUsers(ticket.value.course_id);
+  }
+});
+
+watch([users, priorities, ticket_statuses], () => {
+  if (ticket.value) {
+    formRef.value.el$('priority_id').update(ticket.value.priority_id);
+    formRef.value.el$('ticket_status_id').update(ticket.value.latest_status.id);
+    formRef.value.el$('tutor_id').update(ticket.value.assigned_tutor_id);
+    formRef.value
+      .el$('scheduled_start_time')
+      .update(
+        dayjs(ticket.value.scheduled_start_time).format('YYYY-MM-DD HH:mm'),
+      );
+    formRef.value
+      .el$('scheduled_end_time')
+      .update(
+        dayjs(ticket.value.scheduled_end_time).format('YYYY-MM-DD HH:mm'),
+      );
+    formRef.value.el$('tutor_note').update(ticket.value.tutor_note);
+  }
 });
 
 
 </script>
 
 <template>
-  <h1>This is Ticket Details page</h1>
-  <h1>{{ priorities }}</h1>
+  <div
+    class="max-w-6xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-auto flex-grow"
+  >
+    <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
+      Ticket Details
+    </h1>
 
-  <Vueform>
-    <!-- // https://vueform.com/reference/text-element
-    <TextElement name="“email”" label rules /> -->
-
-    <!-- // https://vueform.com/reference/select-element // get id & name from api // -->
-    <!-- value = id, label = name -->
-    <SelectElement
-      :native="false"
-      name="priority"
-      :items="selectPriorityOptions"
-    />
-
-    
-
-
-    <!-- // https://vueform.com/reference/date-element#option-time
-    <DateElement :date="true" :time="true" ... name />
-
-    <ButtonElement name="submit" submits> Submit </ButtonElement> -->
-  </Vueform>
+    <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
+      <h2 class="text-amber-800 text-lg font-bold">Request Details</h2>
+      <Vueform ref="formRef" @submit="submitTicket" :endpoint="false">
+        <StaticElement name="id" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Ticket ID:</span> {{ ticket?.id }}
+          </div>
+        </StaticElement>
+        <StaticElement name="id" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Request Type:</span>
+            {{ ticket?.course_id === 1 ? 'Tech/Lab Support' : 'Peer Tutoring' }}
+          </div>
+        </StaticElement>
+        <StaticElement name="reference_number" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Reference Number:</span>
+            {{ ticket?.reference_number }}
+          </div>
+        </StaticElement>
+        <StaticElement name="divider">
+          <hr />
+        </StaticElement>
+        <StaticElement name="actual_start_time" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Actual Start Time:</span>
+            {{
+              ticket?.actual_start_time
+                ? dayjs(ticket.actual_start_time).format('YYYY-MM-DD HH:MM')
+                : 'N/A'
+            }}
+          </div>
+        </StaticElement>
+        <StaticElement name="actual_end_time" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Actual End Time:</span>
+            {{
+              ticket?.actual_end_time
+                ? dayjs(ticket.actual_end_time).format('YYYY-MM-DD HH:MM')
+                : 'N/A'
+            }}
+          </div>
+        </StaticElement>
+        <StaticElement class="col-span-4 row-span-2" name="sla">
+          <div class="flex flex-col gap-4">
+            <h1 class="font-medium text-sm">SLA</h1>
+            <div class="text-sm">
+              First Response Time: {{ firstResponseTime }} hour(s)
+            </div>
+            <div class="text-sm">
+              Resolution Time: {{ resolutionTime }} hour(s)
+            </div>
+          </div>
+        </StaticElement>
+        <DateElement
+          :date="true"
+          :time="true"
+          name="scheduled_start_time"
+          class="col-span-4"
+          label="Scheduled Start Time"
+        />
+        <DateElement
+          :date="true"
+          :time="true"
+          name="scheduled_end_time"
+          class="col-span-4"
+          label="Scheduled End Time"
+        />
+        <StaticElement name="divider">
+          <hr />
+        </StaticElement>
+        <SelectElement
+          :native="false"
+          name="priority_id"
+          :items="selectPriorityOptions"
+          :default="ticket?.priority_id"
+          label="Priority"
+          class="col-span-4"
+        />
+        <SelectElement
+          :native="false"
+          name="ticket_status_id"
+          :items="selectTicketStatusOptions"
+          :default="ticket?.ticket_status_id"
+          label="Status"
+          class="col-span-4"
+        />
+        <SelectElement
+          :native="false"
+          name="tutor_id"
+          :items="selectUserOptions"
+          label="Assignee"
+          class="col-span-4"
+        />
+        <StaticElement name="divider">
+          <hr />
+        </StaticElement>
+        <StaticElement name="section_title">
+          <h2 class="text-amber-800 text-lg font-bold">Student Details</h2>
+        </StaticElement>
+        <StaticElement name="student_name" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Student Name:</span>
+            {{ ticket?.student.first_name }} {{ ticket?.student.last_name }}
+          </div>
+        </StaticElement>
+        <StaticElement name="student_name" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Program:</span>
+            {{ ticket?.program.name }}
+          </div>
+        </StaticElement>
+        <StaticElement name="description" class="col-span-4 row-span-2">
+          <div class="text-sm">
+            <div class="font-medium">Description</div>
+            <div>{{ ticket?.description }}</div>
+          </div>
+        </StaticElement>
+        <StaticElement name="student_name" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Student ID:</span>
+            {{ ticket?.student_id }}
+          </div>
+        </StaticElement>
+        <StaticElement name="student_name" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Program Level:</span>
+            {{ ticket?.program_level }}
+          </div>
+        </StaticElement>
+        <StaticElement name="student_email" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Student Email:</span>
+            {{ ticket?.student.email }}
+          </div>
+        </StaticElement>
+        <StaticElement name="student_email" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Course:</span>
+            {{ ticket?.course.name }}
+          </div>
+        </StaticElement>
+        <TextareaElement
+          name="tutor_note"
+          class="col-span-4 row-span-2"
+          label="Tutor's Note"
+        />
+        <StaticElement name="student_email" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Machine Type:</span>
+            {{ ticket?.type_of_machine.name }}
+          </div>
+        </StaticElement>
+        <StaticElement name="student_email" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Operating System:</span>
+            {{ ticket?.operating_system.name }}
+          </div>
+        </StaticElement>
+        <ButtonElement
+          name="button"
+          button-class="font-semibold "
+          danger
+          submits
+          class="mx-auto"
+          >Update Ticket</ButtonElement
+        >
+      </Vueform>
+    </div>
+  </div>
 </template>

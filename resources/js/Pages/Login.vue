@@ -14,7 +14,7 @@ async function submit(values) {
   console.log(values)
   await login({ email: values.data.email, password: values.data.password });
   if (!error) {
-    router.push({ name: 'ticket-queue' });
+    router.push({ name: 'tickets' });
   }
 }
 </script>

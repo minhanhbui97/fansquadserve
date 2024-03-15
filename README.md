@@ -45,7 +45,7 @@
 
 
 ### Ticket Queue Page (Homepage)
-- Route: /ticket-queue
+- Route: /tickets
 
 
 ### Ticket Detail Page
