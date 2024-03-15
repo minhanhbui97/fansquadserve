@@ -5,6 +5,10 @@ import {
   getUsers as getAllUsers,
   getTicketById,
   updateTicket,
+  getAllOperatingSystem,
+  getAllProgram,
+  getAllTypeofMachines,
+  getAllCourses,
 } from '@/Services/TicketService';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
@@ -18,6 +22,10 @@ export const useTicketStore = defineStore('ticket', () => {
   const priorities = ref([]);
   const users = ref([]);
   const ticket_statuses = ref([]);
+  const operating_system = ref([]);
+  const programs = ref([]);
+  const type_of_machines = ref([]);
+  const courses = ref([]);
 
   async function getTickets() {
     isLoading.value = true;
@@ -61,17 +69,49 @@ export const useTicketStore = defineStore('ticket', () => {
     isLoading.value = false;
   }
 
+  async function getOperatingSystem() {
+    isLoading.value = true;
+    const data = await getAllOperatingSystem();
+    operating_system.value = data;
+  }
+
+  async function getAllProgram() {
+    isLoading.value = true;
+    const data = await getAllProgram();
+    programs.value = data;
+  }
+
+  async function getAllTypeofMachines() {
+    isLoading.value = true;
+    const data = await getAllTypeofMachines();
+    type_of_machines.value = data;
+  }
+
+  async function getAllCourses() {
+    isLoading.value = true;
+    const data = await getAllCourses();
+    courses.value = data;
+  }
+
   return {
-    currentTicket,
     tickets,
     priorities,
-    ticket_statuses,
-    users,
+    operating_system,
+    programs,
+    type_of_machines,
+    courses,
     isLoading,
     error,
+    currentTicket,
+    ticket_statuses,
+    users,
     getTickets,
-    getCurrentTicket,
     getPriorities,
+    getOperatingSystem,
+    getAllProgram,
+    getAllTypeofMachines,
+    getAllCourses,
+    getCurrentTicket,
     getTicketStatuses,
     getUsers,
     updateCurrentTicket,

@@ -2,12 +2,12 @@
 
 <style>
 
-    /* @import '../../css/landingstyle.css';*/
+
 
 
 </style>
 <template>
- <div
+ <!--<div
     class="flex-grow bg-blue-gray items-center justify-center flex flex-col shadow"
   >
     <div
@@ -27,27 +27,41 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>-->
+  
+
+
+
+  <nav class="bg-slate-100	">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+         
+          <div class="hidden md:block">
+            
+          </div>
+        </div>
+      </div>
+      </div>
+      </nav>
+        <div class="hidden md:block">
+          <div class="ml-4 flex items-center md:ml-6">
+              
+  
+</div>
+</div>
+
  
 
- 
+<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+   LabSquad LogIn
+</button>
 
 
-<!--<nav>
-  <ul>
-     <button>LabSquad Login</button>
-  </ul>
-</nav>
 
-<!-- Your content here -->
 
-<div class="img">
-<!--<img src="../../css/logo.png" alt="fansquadservelogo"/>-->
-</div>
-<div style="padding:20px">
-  <h1>Your go-to booking solution for </h1><br>
-  <h1>all your LabSquad needs.</h1>
-</div>
-<!--<img src="../../css/contact.svg"/>-->
+
+
+
 </template>
 

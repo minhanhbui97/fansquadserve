@@ -127,6 +127,8 @@ watch([users, priorities, ticket_statuses], () => {
     formRef.value.el$('tutor_note').update(ticket.value.tutor_note);
   }
 });
+
+
 </script>
 
 <template>
