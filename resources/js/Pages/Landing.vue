@@ -43,25 +43,41 @@
         </div>
       </div>
       </div>
-      </nav>
-        <div class="hidden md:block">
-          <div class="ml-4 flex items-center md:ml-6">
-              
-  
-</div>
-</div>
-
- 
-
-<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-   LabSquad LogIn
-</button>
-
-
-
-
-
-
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-7  absolute  right-48 top-5 ">
+     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+     </svg>
+     <a class="text-red-700 font-bold absolute right-28 top-5">LabSquad</a><button class=" bg-blue-950 hover:bg-blue-950 text-white text-sm font-bold py-2 px-6 rounded-lg absolute top-3 right-5 h-10 w-30">
+    Log In
+    </button>
+    </nav>
+     <img class="max-w-md  max-h-lg  mt-20 ml-60" src="../../images/logo.png" alt="image description">
+      <p class="text-red-700 font-bold ml-60 mt-10 text-3xl">Your go-to booking solution for</p>
+      <p class="text-red-700 font-bold ml-60   text-3xl">&nbsp; &nbsp; &nbsp; &nbsp;all your <a class="text-black">LabSquad</a> needs.</p>
+      <button class=" bg-red-700 hover:bg-red-700 text-white text-sm font-bold py-2 px-6 rounded-lg absolute w-30 left-80  mt-20">
+      Book Appointment
+      </button>
+      <img class="ms-auto max-w-xl  absolute top-20 right-0" src="../../images/1.png" alt="image">
+     
+      <p class="text-red-700 font-bold text-4xl mt-80 mt-40 text-center ">We are the LabSquad!</p>
+      
+      <div class="flex mt-20">
+      <p class="font-bold ml-60" ><br><br><br>We are a small group of IT students here at<br>
+       London South Campus, dedicated to helping <br> our fellow students for any inquiries related<br> to IT courses or academic technical matters. </p>
+       <img class=" max-w-md absolute right-40  " src="../../images/2.png" alt="fanshawecampus">
+      </div>
+      <p class="text-red-700 font-bold text-4xl mt-60 text-center "> Meet Our Team</p>
+      <div class="flex justify-center mt-20 space-x-6 ">
+        <img class=" box-content h-40 w-40 p-2 border-2 max-w-md max-h-md " src="../../images/Destiny.png">
+        <img class="box-content h-40 w-40 p-2 border-2 max-w-xs max-h-xs" src="../../images/Ari.png">
+        <img class="box-content h-40 w-40 p-2 border-2 max-w-xs max-h-xs" src="../../images/Gaby.png">
+        </div>
+        <div class="flex justify-center space-x-16">
+         
+              <a class="text-red-700 font-bold"> Destiny Akabuogu</a>
+               <a class="text-red-700 font-bold">Arihanth Chilveri</a>
+               <a class="text-red-700 font-bold">Gabriella Mantilla</a>
+      
+        </div> 
 
 </template>
 
