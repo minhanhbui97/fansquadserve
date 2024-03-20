@@ -9,6 +9,8 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketStatusController;
 use App\Http\Controllers\TypeOfMachineController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
+
 use App\Models\TypeOfMachine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +59,8 @@ Route::post('/tickets', [TicketController::class, 'store']);
 Route::get('/tickets/{id}', [TicketController::class,'show']);
 
 Route::get('/programs', [ProgramController::class, 'index']);
+
+Route::get('/roles', [RoleController::class, 'index']);
 
 Route::get('/ticket_statuses', [TicketStatusController::class, 'index']);
 

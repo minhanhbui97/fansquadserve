@@ -11,7 +11,7 @@ const { user } = storeToRefs(authStore);
 <template>
   <main class="h-screen w-full flex flex-row">
     <Sidenav v-if="user" />
-    <div class="w-full overflow-hidden bg-white">
+    <div class="w-full bg-white">
       <router-view></router-view>
     </div>
   </main>

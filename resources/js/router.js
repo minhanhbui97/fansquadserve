@@ -5,6 +5,8 @@ import TicketDetails from '@/Pages/TicketDetails.vue';
 import Login from '@/Pages/Login.vue';
 import DataDashboard from '@/Pages/DataDashboard.vue';
 import UserManagement from '@/Pages/UserManagement.vue';
+import UserQueue from '@/Pages/UserQueue.vue';
+
 import ServiceRequest from '@/Pages/ServiceRequest.vue';
 import { useAuthStore } from './Stores/AuthStore';
 import { storeToRefs } from 'pinia';
@@ -57,7 +59,7 @@ const routes = [
       requiresAuth: true,
     },
   },
-  {
+{
     path: '/user-management',
     name: 'user-management',
     component: UserManagement,
@@ -65,6 +67,16 @@ const routes = [
       requiresAuth: true,
     },
   },
+
+  {
+    path: '/user-queue',
+    name: 'user-queue',
+    component: UserQueue,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+
   {
     path: '/login',
     name: 'login',

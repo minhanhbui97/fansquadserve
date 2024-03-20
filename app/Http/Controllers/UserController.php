@@ -13,9 +13,18 @@ class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
+     
      */
+
+     
+
     public function index()
+
     {
+
+        $users = User::with(['roles'])->get();
+         return $users;
+
         $course_id = request()->query('course_id');
         $course = Course::find($course_id);
 
