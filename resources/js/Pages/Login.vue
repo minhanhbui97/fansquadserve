@@ -8,10 +8,10 @@ const password = ref('');
 
 const router = useRouter();
 const authStore = useAuthStore();
-const { login, error } = authStore;
+const { login, error, clearError } = authStore;
 
 async function submit(values) {
-  console.log(values)
+  clearError();
   await login({ email: values.data.email, password: values.data.password });
   if (!error) {
     router.push({ name: 'tickets' });
@@ -20,7 +20,9 @@ async function submit(values) {
 </script>
 
 <template>
-  <div class="h-screen flex flex-col gap-8 justify-center items-center max-w-xl mx-auto">
+  <div
+    class="h-screen flex flex-col gap-8 justify-center items-center max-w-xl mx-auto"
+  >
     <div class="w-64 self-center">
       <img src="../../images/logo.png" alt="" />
     </div>

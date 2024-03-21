@@ -22,6 +22,7 @@ export const useAuthStore = defineStore('auth', () => {
       isLoggedIn.value = true;
     } catch (err) {
       error.value = err.response.data.message;
+      throw err;
     } finally {
       isLoading.value = false;
     }
@@ -46,5 +47,9 @@ export const useAuthStore = defineStore('auth', () => {
     isLoggedIn.value = false;
   }
 
-  return { user, error, isLoggedIn, isLoading, getAuthUser, login, reset, logout };
+  function clearError() {
+    error.value = null;
+  }
+
+  return { user, error, clearError, isLoggedIn, isLoading, getAuthUser, login, reset, logout };
 });

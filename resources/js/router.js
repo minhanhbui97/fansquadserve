@@ -101,6 +101,8 @@ router.beforeEach(async (to, from) => {
       await getAuthUser();
     } catch (err) {
       reset();
+      console.log('in here')
+
       return { name: 'login' };
     }
   }

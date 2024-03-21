@@ -169,7 +169,7 @@ const sla_chart_result = computed(() => {
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 justify-center">
+  <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 h-full overflow-auto">
     <h1 class="text-amber-800 text-3xl font-bold">Data Dashboard</h1>
     <Vueform ref="formRef" :endpoint="false">
       <SelectElement
