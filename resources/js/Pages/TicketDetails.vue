@@ -37,12 +37,56 @@ const selectPriorityOptions = computed(() => {
 });
 
 const selectTicketStatusOptions = computed(() => {
-  return ticket_statuses.value.map((ticket_status) => {
+  const all_ticket_statuses = ticket_statuses.value.map((ticket_status) => {
     return {
       value: ticket_status.id,
       label: ticket_status.name,
     };
   });
+
+  let possibleTicketStatusOptions = [];
+  if (ticket.value) {
+    // If latest_status is New, show New & Confirmed
+    if (ticket.value.latest_status.id === 1) {
+      possibleTicketStatusOptions.push(all_ticket_statuses[0]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[2]);
+    }
+    // If latest_status is Confirmed, show Confirmed & In-progress
+    else if (ticket.value.latest_status.id === 2) {
+      possibleTicketStatusOptions.push(all_ticket_statuses[1]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[2]);
+    }
+    // If latest_status is In-progress, show In-progress, Resolved, On-hold, or Escalated
+    else if (ticket.value.latest_status.id === 3) {
+      possibleTicketStatusOptions.push(all_ticket_statuses[2]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[3]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[4]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[5]);
+    }
+    // Ticket with latest_status Resoleved will be moved to Closed immediately
+    // This should not be possible 
+    else if (ticket.value.latest_status.id === 4) {
+      possibleTicketStatusOptions.push(all_ticket_statuses[3]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[6]);
+    }
+    // If latest_status is On-hold, show Resolved, On-hold, or Closed
+    else if (ticket.value.latest_status.id === 5) {
+      possibleTicketStatusOptions.push(all_ticket_statuses[3]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[4]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[6]);
+    }
+    // If latest_status is Escalated, show Resolved, Escalated, or Closed
+    else if (ticket.value.latest_status.id === 6) {
+      possibleTicketStatusOptions.push(all_ticket_statuses[3]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[5]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[6]);
+    }
+    // If latest_status is Closed
+    else if (ticket.value.latest_status.id === 7) {
+      possibleTicketStatusOptions.push(all_ticket_statuses[6]);
+    }
+  }
+  return possibleTicketStatusOptions;
 });
 
 const selectUserOptions = computed(() => {
@@ -93,7 +137,7 @@ const resolutionTime = computed(() => {
 
 async function submitTicket(values) {
   await updateCurrentTicket(ticket.value.id, values.data);
-  toast.success('Update ticket successfully!')
+  toast.success('Update ticket successfully!');
 }
 
 onMounted(() => {
@@ -127,8 +171,6 @@ watch([users, priorities, ticket_statuses], () => {
     formRef.value.el$('tutor_note').update(ticket.value.tutor_note);
   }
 });
-
-
 </script>
 
 <template>
@@ -222,9 +264,10 @@ watch([users, priorities, ticket_statuses], () => {
           :native="false"
           name="ticket_status_id"
           :items="selectTicketStatusOptions"
-          :default="ticket?.ticket_status_id"
+          :default="ticket?.latest_status.id"
           label="Status"
           class="col-span-4"
+          :disabled="ticket?.latest_status.id == 7"
         />
         <SelectElement
           :native="false"
