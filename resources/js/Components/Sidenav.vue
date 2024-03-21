@@ -43,7 +43,7 @@ async function handleLogout() {
           <div>Data Dashboard</div>
         </router-link>
         <router-link
-          :to="{ name: 'user-management' }"
+          :to="{ name: 'user-queue' }"
           class="flex gap-4 items-center py-4 px-8 font-semibold w-full"
         >
           <div class="w-8 h-8">
