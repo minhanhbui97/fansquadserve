@@ -17,14 +17,12 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 import _ from 'lodash';
 
-// const router = useRouter();
 const ticketStore = useTicketStore();
 const { getTickets, getUsers } = ticketStore;
 const { tickets, users } = storeToRefs(ticketStore);
 
 const selectUserOptions = computed(() => {
   if (!users.value) return [];
-  // console.log(users.value);
   return users.value.map((user) => {
     return {
       value: user.id,
@@ -38,12 +36,11 @@ onMounted(() => {
   getUsers();
 });
 
-//ref
+// Get date range option
 const format_string = ref('MMM DD');
 const date_diff = ref(7);
 
 function selectDateFilter(option) {
-  // console.log(option);
   if (option == 'hour') {
     format_string.value = 'MMM DD: HH:00';
     date_diff.value = 1;
@@ -58,8 +55,23 @@ function selectDateFilter(option) {
     date_diff.value = 365;
   }
 }
-const options = ref([]);
 
+// Get assignee option
+const options = ref([]);
+const assigneeFilter = ref('');
+
+// If get data for all assignees
+function selectAssigneeRadio(newValue) {
+  assigneeFilter.value = newValue;
+  if (newValue === 'Select all assignees') {
+    options.value = [];
+    options.value = users.value.map((user) => user.id);
+  } else if (newValue === 'Specify assignees to filter') {
+    options.value = [];
+  }
+}
+
+// If filter data by specifying assignees
 function selectAssigneeFilter(option) {
   options.value.push(option);
 }
@@ -74,7 +86,7 @@ function deselectAllAssigneeFilter() {
   options.value = [];
 }
 
-//computed
+// Get data for TicketByDateBarChart
 const date_chart_result = computed(() => {
   const tickets_filtered_by_date = _.filter(tickets.value, function (t) {
     return dayjs(t.created_at).isBetween(
@@ -90,14 +102,13 @@ const date_chart_result = computed(() => {
     },
   );
 
-  // console.log(tickets_filtered_by_date_and_assignee);
-
   return _(tickets_filtered_by_date_and_assignee)
     .groupBy((ticket) => dayjs(ticket.created_at).format(format_string.value))
     .mapValues((ticket) => ticket.length)
     .value();
 });
 
+// Get data for TicketByStatusBarChart
 const status_chart_result = computed(() => {
   const tickets_filtered_by_date = _.filter(tickets.value, function (t) {
     return dayjs(t.created_at).isBetween(
@@ -119,6 +130,7 @@ const status_chart_result = computed(() => {
     .value();
 });
 
+// Get data for AverageSLABarChart
 const sla_chart_result = computed(() => {
   const tickets_filtered_by_date = _.filter(tickets.value, function (t) {
     return dayjs(t.created_at).isBetween(
@@ -133,7 +145,6 @@ const sla_chart_result = computed(() => {
       return options.value.includes(t.assigned_tutor_id);
     },
   );
-  console.log(tickets_filtered_by_date_and_assignee);
 
   const tickets_filtered_by_date_and_assignee_and_excl_statuses = _.filter(
     tickets_filtered_by_date_and_assignee,
@@ -145,26 +156,156 @@ const sla_chart_result = computed(() => {
       );
     },
   );
-  console.log(tickets_filtered_by_date_and_assignee_and_excl_statuses);
-  // tickets_filtered_by_date_and_assignee.forEach(calculate_tfr_low_priority);
-  // const total_tfr_low_priority = 0;
-  // function calculate_tfr_low_priority(ticket) {
-  //   if(ticket.priority_id === 1){
-  //     if(ticket.ticketStatuses.includes(5) || ticket.ticketStatuses.includes(6)){
-  //       const no_of_ticket =
-  //       time_to_fr = ticket.ticketStatuses[1].created_at - ticket.ticketStatuses[0].created_at
-  //       total_tfr_low_priority += time_to_fr;
-  //     }
-  //   }
-  // const avg_tfr_low_priority = total_tfr_low_priority / 1;
-  //
-  // }
 
-  // return _(tickets_filtered_by_date_and_assignee)
-  //   .groupBy((ticket) => ticket.latest_status.name)
-  //   .mapValues((ticket) => ticket.length)
-  //   .value();
-  return;
+  // Calculate TFR & TR for Low priority tickets
+  let total_tfr_low_priority = 0;
+  let avg_tfr_low_priority = 0;
+  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+    calculate_tfr_low_priority,
+  );
+
+  function calculate_tfr_low_priority(ticket) {
+    if (
+      ticket.ticket_statuses.find((s) => s.id === 1) &&
+      ticket.ticket_statuses.find((s) => s.id === 2) &&
+      ticket.priority_id === 1
+    ) {
+      const time0 = dayjs(ticket.ticket_statuses[0].pivot.created_at);
+      const time1 = dayjs(ticket.ticket_statuses[1].pivot.created_at);
+
+      const time_to_fr = time1.diff(time0, 'h');
+      total_tfr_low_priority += time_to_fr;
+    }
+    avg_tfr_low_priority =
+      total_tfr_low_priority /
+      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+  }
+
+  let total_tr_low_priority = 0;
+  let avg_tr_low_priority = 0;
+  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+    calculate_tr_low_priority,
+  );
+
+  function calculate_tr_low_priority(ticket) {
+    if (
+      ticket.ticket_statuses.find((s) => s.id === 3) &&
+      ticket.ticket_statuses.find((s) => s.id === 4) &&
+      ticket.priority_id === 1
+    ) {
+      const time0 = dayjs(ticket.ticket_statuses[2].pivot.created_at);
+      const time1 = dayjs(ticket.ticket_statuses[3].pivot.created_at);
+
+      const time_to_r = time1.diff(time0, 'h');
+      total_tr_low_priority += time_to_r;
+    }
+    avg_tr_low_priority =
+      total_tr_low_priority /
+      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+  }
+
+  // Calculate TFR & TR for Medium priority tickets
+  let total_tfr_medium_priority = 0;
+  let avg_tfr_medium_priority = 0;
+  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+    calculate_tfr_medium_priority,
+  );
+
+  function calculate_tfr_medium_priority(ticket) {
+    if (
+      ticket.ticket_statuses.find((s) => s.id === 1) &&
+      ticket.ticket_statuses.find((s) => s.id === 2) &&
+      ticket.priority_id === 2
+    ) {
+      const time0 = dayjs(ticket.ticket_statuses[0].pivot.created_at);
+      const time1 = dayjs(ticket.ticket_statuses[1].pivot.created_at);
+
+      const time_to_fr = time1.diff(time0, 'h');
+      total_tfr_medium_priority += time_to_fr;
+    }
+    avg_tfr_medium_priority =
+      total_tfr_medium_priority /
+      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+  }
+
+  let total_tr_medium_priority = 0;
+  let avg_tr_medium_priority = 0;
+  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+    calculate_tr_medium_priority,
+  );
+
+  function calculate_tr_medium_priority(ticket) {
+    if (
+      ticket.ticket_statuses.find((s) => s.id === 3) &&
+      ticket.ticket_statuses.find((s) => s.id === 4) &&
+      ticket.priority_id === 2
+    ) {
+      const time0 = dayjs(ticket.ticket_statuses[2].pivot.created_at);
+      const time1 = dayjs(ticket.ticket_statuses[3].pivot.created_at);
+
+      const time_to_r = time1.diff(time0, 'h');
+      total_tr_medium_priority += time_to_r;
+    }
+    avg_tr_medium_priority =
+      total_tr_medium_priority /
+      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+  }
+
+  // Calculate TFR & TR for High priority tickets
+  let total_tfr_high_priority = 0;
+  let avg_tfr_high_priority = 0;
+  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+    calculate_tfr_high_priority,
+  );
+
+  function calculate_tfr_high_priority(ticket) {
+    if (
+      ticket.ticket_statuses.find((s) => s.id === 1) &&
+      ticket.ticket_statuses.find((s) => s.id === 2) &&
+      ticket.priority_id === 3
+    ) {
+      const time0 = dayjs(ticket.ticket_statuses[0].pivot.created_at);
+      const time1 = dayjs(ticket.ticket_statuses[1].pivot.created_at);
+
+      const time_to_fr = time1.diff(time0, 'h');
+      total_tfr_high_priority += time_to_fr;
+    }
+    avg_tfr_high_priority =
+      total_tfr_high_priority /
+      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+  }
+
+  let total_tr_high_priority = 0;
+  let avg_tr_high_priority = 0;
+  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+    calculate_tr_high_priority,
+  );
+
+  function calculate_tr_high_priority(ticket) {
+    if (
+      ticket.ticket_statuses.find((s) => s.id === 3) &&
+      ticket.ticket_statuses.find((s) => s.id === 4) &&
+      ticket.priority_id === 3
+    ) {
+      const time0 = dayjs(ticket.ticket_statuses[2].pivot.created_at);
+      const time1 = dayjs(ticket.ticket_statuses[3].pivot.created_at);
+
+      const time_to_r = time1.diff(time0, 'h');
+      total_tr_high_priority += time_to_r;
+    }
+    avg_tr_high_priority =
+      total_tr_high_priority /
+      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+  }
+
+  return {
+    'Low - TFR': avg_tfr_low_priority,
+    'Low - TR': avg_tr_low_priority,
+    'Medium - TFR': avg_tfr_medium_priority,
+    'Medium - TR': avg_tr_medium_priority,
+    'High - TFR': avg_tfr_high_priority,
+    'High - TR': avg_tr_high_priority,
+  };
 });
 </script>
 
@@ -188,6 +329,12 @@ const sla_chart_result = computed(() => {
         :can-clear="false"
         :can-deselect="false"
       />
+      <RadiogroupElement
+        name="radiogroup"
+        :items="['Select all assignees', 'Specify assignees to filter']"
+        @change="selectAssigneeRadio"
+      />
+
       <MultiselectElement
         name="assignee"
         label="Filter by Assignee:"
@@ -198,10 +345,10 @@ const sla_chart_result = computed(() => {
         :hide-selected="false"
         @select="selectAssigneeFilter"
         @deselect="deselectAssigneeFilter"
-        :search="true"
-        :default="users?.value"
         :can-clear="true"
         @clear="deselectAllAssigneeFilter"
+        :search="true"
+        v-if="assigneeFilter == 'Specify assignees to filter'"
       />
     </Vueform>
     <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
