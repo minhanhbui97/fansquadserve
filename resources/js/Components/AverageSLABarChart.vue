@@ -35,7 +35,7 @@ const chartData = computed(() => {
     datasets: [
       {
         data: Object.values(props.data),
-        label: 'Number of Tickets',
+        label: 'Hours',
         backgroundColor: '#B16CB5',
       },
     ],

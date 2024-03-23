@@ -6,8 +6,6 @@ import AverageSLABarChart from '@/Components/AverageSLABarChart.vue';
 import { useTicketStore } from '@/Stores/TicketStore';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref, watch, computed } from 'vue';
-import Column from 'primevue/column';
-import DataTable from 'primevue/datatable';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -84,6 +82,12 @@ function deselectAssigneeFilter(option) {
 
 function deselectAllAssigneeFilter() {
   options.value = [];
+}
+
+// Helper function to round to 2 decimal place
+function roundNum(num){
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+
 }
 
 // Get data for TicketByDateBarChart
@@ -299,12 +303,12 @@ const sla_chart_result = computed(() => {
   }
 
   return {
-    'Low - TFR': avg_tfr_low_priority,
-    'Low - TR': avg_tr_low_priority,
-    'Medium - TFR': avg_tfr_medium_priority,
-    'Medium - TR': avg_tr_medium_priority,
-    'High - TFR': avg_tfr_high_priority,
-    'High - TR': avg_tr_high_priority,
+    'Low - TFR': roundNum(avg_tfr_low_priority),
+    'Low - TR': roundNum(avg_tr_low_priority),
+    'Medium - TFR': roundNum(avg_tfr_medium_priority),
+    'Medium - TR': roundNum(avg_tr_medium_priority),
+    'High - TFR': roundNum(avg_tfr_high_priority),
+    'High - TR': roundNum(avg_tr_high_priority),
   };
 });
 </script>
@@ -373,6 +377,3 @@ const sla_chart_result = computed(() => {
     </div>
   </div>
 </template>
-
-// define components // props // ref, computed, watch // binding // hooks:
-onMounted
