@@ -52,7 +52,9 @@ export async function updateTicket(ticketId, data) {
   return response.data;
 }
 
-export async function createTicket(data) {
+export async function 
+
+createTicket(data) {
   const response = await axios.post(`/api/tickets/`, data);
   return response.data;
 }

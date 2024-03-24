@@ -1,153 +1,111 @@
 <script setup>
-import { createUser } from '@/Services/UserService';
-import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/Stores/UserStore';
-import { computed, onMounted, ref, watch } from 'vue';
-import Dialog from 'primevue/dialog';
-import PrimevueButton from 'primevue/button';
+import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
+import Column from 'primevue/column';
+import DataTable from 'primevue/datatable';
+import dayjs from 'dayjs';
+import { useRouter } from 'vue-router';
 
-
-
- const userStore = useUserStore();
- const {
-  getCourses,
-  getRoles,
-
-} = userStore;
-
-const {
-  
-  courses,
-  roles,
-} = storeToRefs(userStore);
-
-
-const formRef = ref(null);
-const visible = ref(false);
-const formData = ref(null);
-const user = ref(null);
-
-
-const selectCourseOptions = computed(() => {
-  return courses.value.map((course) => {
-    return {
-      value: course.id,
-      label: course.name,
-      code: course.code,
-    };
-  });
-});
-
-
-const selectRoleOptions = computed(() => {
-  return roles.value.map((role) => {
-    return {
-      value: role.id,
-      label: role.name,
-    };
-  });
-});
-
-
+const router = useRouter();
+const userStore = useUserStore();
+const { getUsers } = userStore;
+const { users } = storeToRefs(userStore);
 
 onMounted(() => {
-  getCourses();
-  getRoles();
+  getUsers();
 });
 
-async function submitUser(values) {
-  formData.value = values.data;
-  try {
-    const userData = await createUser(values.data);
-     console.log('User created successfully:', userData);
-  
-    } catch (error) {
-    
-    console.error('Error creating user:', error);
-  }
+
+async function submit(id) {
+  console.log(id)
+  router.push({ name: 'ticket-details', params: { id }})
 }
-
 </script>
+
 <template>
-  <h1 class="text-red-700 font-bold text-xl ml-20 mt-20">Add New User</h1>
-  <p class="text-gray-500 font-bold text-lg mt-10 ml-20"> Please provide information below to create a new user.</p>
-  
-  <Vueform  ref="formRef" @submit="submitUser" :endpoint="false">
-    <div class="">
-    <TextElement 
-     name="first_name"
-     label="FirstName"
-     input-type="text"
-     class="ml-20  mt-10 w-80"
-     :rules="['required', 'max:255']"
+  <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 justify-center">
+    <h1 class="text-amber-800 text-3xl font-bold">User Details </h1>
 
-    />
-    <br>
-   
-    <TextElement 
-     name="email"
-     label="Email"
-     input-type="email"
-     class="ml-20   w-80"
-     :rules="['required', 'email', 'max:255']"
+    <router-link to = "/add-user"> <button  class="bg-red-700 py-2 px-4 text-white rounded w-40 ">Add User</button>
+     </router-link>
 
-    />
-    <br>
-    <TextElement 
-    name="password"
-    label="Password"
-    input-type="password"
-    class="ml-20 w-80"
-    :rules="['required']"
+    <div class="flex-grow">
+      <DataTable
+        class="text-[14px]"
+        :value="users"
+        size="small"
+        scrollable
+        scrollHeight="500px"
+        paginator
+        :rows="20"
+        stripedRows
+        showGridlines
+      >
+        <Column
+          field="id"
+          header="User ID"
+          sortable
+          style="width: 100px"
+        ></Column>
+       
+        <Column
+          field="first_name"
+          header="First Name"
+          sortable
+          style="width: 100px"
+        ></Column>
+        <Column
+          field="last_name"
+          header="Last Name"
+          sortable
+          style="width: 130px"
+        ></Column>
 
-    />
-    <TextElement 
-    name="password"
-    label="Retype Password"
-    input-type="password"
-    class="ml-20 w-80 mt-6"
-    :rules="['required']"
+        
+        <Column field="roles" sortable header="Role">
+       <template #body="slotProps">
+         <!--{{ slotProps.data.roles[0].name }}-->
+       </template>
+        </Column>
 
-    />
+        <Column
+          field="email"
+          header="Email"
+          sortable
+          style="width: 100px"
+        ></Column>
+
+
+       <!--<Column field="description" header="Description" style="width: 200px">
+          <template #body="slotProps">
+            <div class="singleLine">
+              {{ slotProps.data.description }}
+            </div>
+          </template>
+        </Column>-->
+       
+        <Column field="last_used_at" sortable header="Last LogIn">
+          <template #body="slotProps">{{
+            dayjs(slotProps.data.last_used_at).format('MMM DD, YYYY HH:mm:ss')
+          }}</template>
+        </Column>
+        <Column header="Action">
+          <template #body="slotProps">
+          <router-link to="/user-details">   <button  class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View Details</button></router-link>
+          </template>
+        </Column>
+      </DataTable>
     </div>
-    <div class="container gap-y-20">
-    <TextElement 
-     name="last_name"
-     label="LastName"
-     input-type="text"
-     class="absolute right-80 mt-10 w-80"
-     :rules="['required','max:255']"
-
-    />
-    <br>
-    <SelectElement 
-     name="role"
-     label="Role"
-     :items="selectRoleOptions"
-     class="w-80 absolute right-80 mt-28"
-
-    />
-    <br>
-    <SelectElement 
-    name="course"
-    label="Course"
-    :items="selectCourseOptions"
-    class="w-80 absolute right-80 mt-44"
-
-    />
-    <TextElement 
-    name="tutor"
-    label="Tutor's Schedule"
-    class="w-80 absolute right-80 bottom-44 ml-10"
-
-    />
-    
-    </div>
-    <div class="absolute bottom-20 right-80">
-    <!--<ButtonElement @click="visible = false" name="button" danger submits class=" absolute bottom-0 ">Cancel</ButtonElement>-->
-    <ButtonElement name="button" type="submit" submits class=" ml-24" >
-          Add User
-        </ButtonElement>
-    </div>
-  </Vueform>
+  </div>
 </template>
+
+<style scoped lang="postcss">
+.singleLine {
+  width: 200px;
+  text-wrap: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export async function getAllUsers(){
     const response = await axios.get('/api/users');
     return response.data;
@@ -20,4 +22,6 @@ export async function getAllUsers(){
     return response.data;
   }
 
-  
+  export async function assignRoleToUser(data) {
+    const response = await axios.post(`/api/users/`,data);
+  }

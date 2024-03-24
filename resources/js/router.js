@@ -5,7 +5,9 @@ import TicketDetails from '@/Pages/TicketDetails.vue';
 import Login from '@/Pages/Login.vue';
 import DataDashboard from '@/Pages/DataDashboard.vue';
 import UserManagement from '@/Pages/UserManagement.vue';
-import UserQueue from '@/Pages/UserQueue.vue';
+import AddUser from '@/Pages/AddUser.vue';
+import UserDetails from '@/Pages/UserDetails.vue';
+
 
 import ServiceRequest from '@/Pages/ServiceRequest.vue';
 import { useAuthStore } from './Stores/AuthStore';
@@ -59,24 +61,50 @@ const routes = [
       requiresAuth: true,
     },
   },
-{
+
+ 
+  {
     path: '/user-management',
     name: 'user-management',
     component: UserManagement,
     meta: {
       requiresAuth: true,
     },
+
+    
   },
 
   {
-    path: '/user-queue',
-    name: 'user-queue',
-    component: UserQueue,
+    path: '/add-user',
+    name: 'add-user',
+    component: AddUser,
     meta: {
       requiresAuth: true,
     },
+
+    
   },
 
+  {
+    path: '/user-details',
+    name: 'user-details',
+    component: UserDetails,
+    meta: {
+      requiresAuth: true,
+    },
+
+    
+  },
+
+
+    
+  
+
+
+ 
+
+
+  
   {
     path: '/login',
     name: 'login',
