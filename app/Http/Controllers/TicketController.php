@@ -80,9 +80,10 @@ class TicketController extends Controller
             if ($body['ticket_status_id'] == 3) {
                 $ticket->actual_start_time = Carbon::now();
             }
-            // If status is moved to "Resolved", update actual_end_time
+            // If status is moved to "Resolved", update actual_end_time & move status to "Closed" immediately
             else if ($body['ticket_status_id'] == 4) {
                 $ticket->actual_end_time = Carbon::now();
+                $ticket->ticketStatuses()->attach(7); // Status "Close" (id 7)
             }
         }
 
