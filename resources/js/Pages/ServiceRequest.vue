@@ -193,13 +193,18 @@ watch(student, () => {
       Service Request Form
     </h1>
     <div class="bg-gray-50 p-8 overflow-auto" v-if="!is_submitted">
-      <Vueform ref="formRef" @submit="submitTicket" :endpoint="false" :display-errors="false">
+      <Vueform
+        ref="formRef"
+        @submit="submitTicket"
+        :endpoint="false"
+        :display-errors="false"
+      >
         <TextElement
           name="fanshawe_id"
           label="Fanshawe ID *"
           input-type="text"
           class="col-span-4"
-          :rules="['required','digits_between:7,10']"
+          :rules="['required', 'digits_between:7,10']"
         />
         <ButtonElement
           name="button"
@@ -213,21 +218,21 @@ watch(student, () => {
           label="Student Email *"
           input-type="email"
           class="col-span-6"
-          :rules="['required','email','between:15,320']"
+          :rules="['required', 'email', 'between:15,320']"
         />
         <TextElement
           name="first_name"
           label="First Name *"
           input-type="text"
           class="col-span-6"
-          :rules="['required','alpha','between:4,50']"
+          :rules="['required', 'alpha', 'between:4,50']"
         />
         <TextElement
           name="last_name"
           label="Last Name *"
           input-type="text"
           class="col-span-6"
-          :rules="['required','alpha','between:4,50']"
+          :rules="['required', 'alpha', 'between:4,50']"
         />
         <StaticElement name="divider">
           <hr />
@@ -238,6 +243,8 @@ watch(student, () => {
           :native="false"
           :items="selectProgramOptions"
           class="col-span-6"
+          :can-clear="false"
+          :can-deselect="false"
           :rules="['required']"
         />
         <TextElement
@@ -245,7 +252,7 @@ watch(student, () => {
           label="Program Level"
           input-type="text"
           class="col-span-6"
-          :rules="['nullable','digits_between:0,1']"
+          :rules="['nullable', 'digits_between:0,1']"
         />
         <StaticElement name="divider">
           <hr />
@@ -256,6 +263,7 @@ watch(student, () => {
           :native="false"
           :items="selectTypeofMachineOptions"
           class="col-span-6"
+          :can-deselect="false"
         />
         <SelectElement
           name="operating_system_id"
@@ -263,6 +271,7 @@ watch(student, () => {
           :native="false"
           :items="selectOperatingSystemOptions"
           class="col-span-6"
+          :can-deselect="false"
         />
         <StaticElement name="divider">
           <hr />
@@ -273,6 +282,7 @@ watch(student, () => {
           :native="false"
           :items="selectPriorityOptions"
           class="col-span-6"
+          :can-deselect="false"
         />
         <StaticElement name="divider">
           <hr />
@@ -282,7 +292,7 @@ watch(student, () => {
           label="Description *"
           input-type="message"
           class="col-span-12"
-          :rules="['required', 'between:50,5000']"
+          :rules="['required', 'between:10,500']"
         />
         <StaticElement name="divider">
           <hr />
@@ -294,6 +304,8 @@ watch(student, () => {
           :items="selectCourseOptions"
           class="col-span-6"
           @select="selectCourse"
+          :can-clear="false"
+          :can-deselect="false"
           :rules="['required']"
         >
           <template v-slot:option="{ option }">
@@ -306,7 +318,9 @@ watch(student, () => {
           :native="false"
           :items="selectUserOptions"
           class="col-span-6"
-          rules="required"
+          :can-clear="false"
+          :can-deselect="false"
+          :rules="['required']"
         >
           <template v-slot:description="{ el$ }">
             <div>
@@ -357,7 +371,7 @@ watch(student, () => {
           class="col-span-6"
           :date="true"
           :time="true"
-          :rules="['required']"
+          :rules="['required', 'after_or_equal:today']"
         />
         <DateElement
           name="scheduled_end_time"
@@ -370,9 +384,19 @@ watch(student, () => {
         <StaticElement name="divider">
           <hr />
         </StaticElement>
-        <ButtonElement class="bg-red-700 py-2 px-4 text-white rounded" name="button" type="submit" submits>
+        <!-- <ButtonElement class="bg-red-700 py-2 px-4 text-white rounded" name="button" type="submit" submits>
           Confirm Appointment
-        </ButtonElement>
+        </ButtonElement> -->
+
+        <ButtonElement
+          name="button"
+          button-class="font-semibold "
+          danger
+          type="submit"
+          submits
+          class="mx-auto mt-4"
+          >Confirm Appointment</ButtonElement
+        >
       </Vueform>
     </div>
 
@@ -408,15 +432,17 @@ watch(student, () => {
           </p>
           <p>
             Program Level:
-            {{ ticket?.program_level ? ticket?.program_level : "N/A" }}
+            {{ ticket?.program_level ? ticket?.program_level : 'N/A' }}
           </p>
           <p>
             Type of Machine:
-            {{ ticket?.type_of_machine ? ticket?.type_of_machine.name : "N/A" }}
+            {{ ticket?.type_of_machine ? ticket?.type_of_machine.name : 'N/A' }}
           </p>
           <p>
             Operating System:
-            {{ ticket?.operating_system ? ticket?.operating_system.name : "N/A" }}
+            {{
+              ticket?.operating_system ? ticket?.operating_system.name : 'N/A'
+            }}
           </p>
           <p>
             Description:
@@ -448,7 +474,8 @@ watch(student, () => {
         <router-link to="/"
           ><button class="bg-red-700 py-2 px-4 text-white rounded">
             Back to Home Page
-          </button></router-link>
+          </button></router-link
+        >
       </div>
     </div>
     <!-- </Dialog> -->

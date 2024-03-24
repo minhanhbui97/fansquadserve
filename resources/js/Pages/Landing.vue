@@ -31,7 +31,7 @@
       >
         Log In
       </button></router-link
-    >¸
+    >
   </nav>
   <img
     class="max-w-md max-h-lg mt-20 ml-60"
