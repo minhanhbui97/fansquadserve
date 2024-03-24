@@ -139,92 +139,83 @@ async function submitUser(values) {
 
 </script>
 <template>
-  <h1 class="text-red-700 font-bold text-xl ml-20 mt-20">Add New User</h1>
-  <p class="text-gray-500 font-bold text-lg mt-10 ml-20"> Please provide information below to create a new user.</p>
-  
-  <Vueform  ref="formRef" @submit="submitUser" :endpoint="false">
-    <div class="">
-    <TextElement 
-     name="first_name"
-     label="FirstName"
-     input-type="text"
-     class="ml-20  mt-10 w-80"
-     :rules="['required', 'max:255']"
+       <div class="max-w-4xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-auto flex-grow">
+        <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
+         Add User
+        </h1>
+        <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
+          <Vueform  ref="formRef" @submit="submitUser" :endpoint="false">
 
-    />
-    <br>
-   
-    <TextElement 
-     name="email"
-     label="Email"
-     input-type="email"
-     class="ml-20   w-80"
-     :rules="['required', 'email', 'max:255']"
+          <TextElement 
+            name="first_name"
+            label="FirstName"
+            input-type="text"
+            :rules="['required', 'max:255']"
+            class = "col-span-6"
+            />
 
-    />
-    <br>
-    <TextElement 
-    name="password"
-    label="Password"
-    input-type="password"
-    class="ml-20 w-80"
-    :rules="['required']"
+            <TextElement 
+           name="last_name"
+            label="LastName"
+            input-type="text"
+           class=" col-span-6"
+           :rules="['required','max:255']"
 
-    />
-    <TextElement 
-    name="repassword"
-    label="Retype Password"
-    input-type="password"
-    class="ml-20 w-80 mt-6"
-    :rules="['required']"
+            />
+                <TextElement 
+            name="email"
+            label="Email"
+            input-type="email"
+            :rules="['required', 'email', 'max:255']"
+            class = "col-span-6"
 
-    />
-    </div>
-    <div class="container gap-y-20">
-    <TextElement 
-     name="last_name"
-     label="LastName"
-     input-type="text"
-     class="absolute right-80 mt-10 w-80"
-     :rules="['required','max:255']"
+             />
+             <MultiselectElement
+               name="roles"
+              label="Role"
+               :native="false"
+               :items="selectRoleOptions"
+               class="col-span-6"
+               @select="selectedRoles"
+             />
+             <TextElement 
+              name="password"
+             label="Password"
+              input-type="password"
+              class="col-span-6"
 
-    />
-    <br>
+              :rules="['required']"
 
-    <MultiselectElement
-      name="roles"
-      label="Role"
-      :native="false"
-      :items="selectRoleOptions"
-      class="w-80 absolute right-80 mt-28"
-      @select="selectedRoles"
-    />
+                  />
 
-   
-    <br>
-    
-    <MultiselectElement 
-    name="courses"
-    label="Course"
-    :native="false"
-    :items="selectCourseOptions"
-    class="w-80 absolute right-80 mt-44"
-    @select="selectedCourses"
+          <MultiselectElement 
+            name="courses"
+           label="Course"
+            :native="false"
+          :items="selectCourseOptions"
+           @select="selectedCourses"
+           class="col-span-6"
 
-    /><br>
-    <TextElement 
-    name="tutor"
-    label="Tutor's Schedule"
-    class="w-80 absolute right-80 bottom-44 ml-10"
+          />
 
-    />
-    
-    </div>
-    <div class="absolute bottom-20 right-80">
-    <!--<ButtonElement @click="visible = false" name="button" danger submits class=" absolute bottom-0 ">Cancel</ButtonElement>-->
-    <ButtonElement name="button" type="submit" submits class=" ml-24" >
-          Add User
-        </ButtonElement>
-    </div>
-  </Vueform>
+          <TextElement 
+            name="repassword"
+            label="Retype Password"
+             input-type="password"
+            :rules="['required']"
+            class="col-span-6"
+
+            />
+
+            <TextElement 
+            name="tutor"
+            label="Tutor's Schedule"
+            class="col-span-6"
+            input-type="text"
+            />
+            <button  class="bg-red-700 h-12 w-40 text-white rounded">Create User</button>
+
+         </Vueform>
+      </div>
+  </div>
 </template>
