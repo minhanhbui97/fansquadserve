@@ -13,10 +13,10 @@
             <span class="font-medium">User ID:</span>
           </div>
         </StaticElement>
+
         <StaticElement name="first_name" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">First Name:</span>
-           
           </div>
         </StaticElement>
 

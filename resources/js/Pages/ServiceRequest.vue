@@ -9,8 +9,6 @@ import { createTicket } from '@/Services/TicketService';
 import { useTicketStore } from '@/Stores/TicketStore';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, watch } from 'vue';
-import Dialog from 'primevue/dialog';
-import PrimevueButton from 'primevue/button';
 
 const ticketStore = useTicketStore();
 const {
@@ -33,7 +31,6 @@ const {
 const student = ref(null);
 const formRef = ref(null);
 const referenceNumber = ref(null);
-const visible = ref(false);
 const formData = ref(null);
 const ticket = ref(null);
 
@@ -87,7 +84,6 @@ const selectCourseOptions = computed(() => {
 
 const selectUserOptions = computed(() => {
   if (!users.value) return [];
-  console.log(users.value);
   return users.value.map((user) => {
     return {
       value: user.id,
@@ -100,6 +96,8 @@ const selectUserOptions = computed(() => {
 function selectCourse(courseId) {
   getUsers(courseId);
 }
+
+const is_submitted = ref(false);
 
 async function submitTicket(values) {
   formData.value = values.data;
@@ -150,7 +148,7 @@ async function submitTicket(values) {
 
   const data = await createTicket(payload);
   ticket.value = data;
-  visible.value = true;
+  is_submitted.value = true;
 }
 
 async function search() {
@@ -166,11 +164,6 @@ async function search() {
 async function getReferenceNumber() {
   const data = await getReferenceNumberService();
   referenceNumber.value = data;
-}
-
-function reset() {
-  formRef.value.reset();
-  visible.value = false;
 }
 
 onMounted(() => {
@@ -193,10 +186,13 @@ watch(student, () => {
   <div
     class="max-w-4xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-hidden flex-grow"
   >
+    <div>
+      <img class="w-64" src="../../images/logo.png" alt="image description" />
+    </div>
     <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
       Service Request Form
     </h1>
-    <div class="bg-gray-50 p-8 overflow-auto">
+    <div class="bg-gray-50 p-8 overflow-auto" v-if="!is_submitted">
       <Vueform ref="formRef" @submit="submitTicket" :endpoint="false">
         <TextElement
           name="fanshawe_id"
@@ -368,20 +364,21 @@ watch(student, () => {
         </ButtonElement>
       </Vueform>
     </div>
-    <Dialog
-      v-model:visible="visible"
-      modal
-      header="Ticket created successfully"
-      :style="{ width: '50rem', padding: 32 }"
-    >
+
+    <div v-if="is_submitted" class="border-2 border-amber-800 rounded-md p-8">
+      <h2 class="text-black text-lg font-bold mb-4">Confirmation message</h2>
+
       <div class="flex flex-col gap-2 mb-4">
-        <p>Dear {{ formData?.first_name }} {{ formData?.last_name }}</p>
-        <p>
+        <p>Dear {{ formData?.first_name }} {{ formData?.last_name }},</p>
+        <p class="mb-4">
           Thank you for making a service request to the LabSquad at Fanshawe
           College London South! Your information has been recorded as follows:
         </p>
-        <div class="text-sm flex flex-col gap-2">
+
+        <div class="text-sm flex flex-col gap-2 mb-4">
           <p>Ticket Number: {{ ticket?.id }}</p>
+          <p>Reference Number: {{ ticket?.reference_number }}</p>
+
           <p>
             Type of Service:
             {{ ticket?.course_id === 1 ? 'Tech/Lab Support' : 'Peer Tutoring' }}
@@ -433,13 +430,17 @@ watch(student, () => {
         </div>
       </div>
       <p class="mb-8">
-        If you have any questions or need to modify your appointment please
-        contact the LabSquad
+        If you have any questions or need to modify your appointment details, please
+        contact the LabSquad at {email}
       </p>
       <div class="flex gap-8 justify-end">
-        <button @click="visible = false" class="text-red-500">Cancel</button>
-        <button @click="reset" class="bg-amber-800 py-2 px-4 text-white rounded">Create Another</button>
+        <router-link to="/"
+          ><button class="bg-amber-800 py-2 px-4 text-white rounded">
+            Back to Home Page
+          </button></router-link
+        >
       </div>
-    </Dialog>
+    </div>
+    <!-- </Dialog> -->
   </div>
 </template>
