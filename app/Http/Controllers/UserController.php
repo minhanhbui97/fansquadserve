@@ -16,24 +16,21 @@ class UserController extends Controller
      
      */
 
-     
+
 
     public function index()
-
     {
-
         $users = User::with(['roles'])->get();
-         return $users;
 
         $course_id = request()->query('course_id');
         $course = Course::find($course_id);
 
         if ($course) { // Get list of tutors available for a course
             $tutors = $course->users()->with(['schedule_page'])->get();
-        } else {
-            $tutors = User::all();
+            return $tutors;
         }
-        return $tutors;
+
+        return $users;
     }
 
     /**

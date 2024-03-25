@@ -7,6 +7,7 @@ import {
 } from '@/Services/StudentService';
 import { createTicket } from '@/Services/TicketService';
 import { useTicketStore } from '@/Stores/TicketStore';
+import { useClipboard } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, watch } from 'vue';
 
@@ -91,6 +92,14 @@ const selectUserOptions = computed(() => {
       url: user.schedule_page?.schedule_url,
     };
   });
+});
+
+const finalReferenceNumber = computed(() => {
+  return `${referenceNumber.value} - ${formRef.value.el$('fanshawe_id').value}`;
+});
+
+const { text, copy, copied, isSupported } = useClipboard({
+  source: finalReferenceNumber,
 });
 
 function selectCourse(courseId) {
@@ -219,7 +228,11 @@ watch(student, () => {
           input-type="email"
           class="col-span-6"
           :rules="['required', 'email', 'between:15,320']"
-        />
+        >
+          <template v-slot:description="{ el$ }">
+            <div>Please use your Fanshawe student email.</div>
+          </template>
+        </TextElement>
         <TextElement
           name="first_name"
           label="First Name *"
@@ -323,42 +336,41 @@ watch(student, () => {
           :rules="['required']"
         >
           <template v-slot:description="{ el$ }">
+            <div
+              v-if="
+                formRef?.el$('fanshawe_id').value &&
+                selectUserOptions.find((option) => option.value === el$.value)
+                  ?.url
+              "
+              class="mb-2"
+            >
+              Please use Reference Number
+              <span class="font-bold">{{ finalReferenceNumber }}</span>
+              <button
+                @click="copy(finalReferenceNumber)"
+                class="bg-gray-100 p-1 text-black rounded ml-1 hover:bg-gray-200"
+                type="button"
+              >
+                <font-awesome-icon icon="fa-regular fa-copy" v-if="!copied" />
+                <font-awesome-icon icon="fa-solid fa-copy" v-else />
+              </button>
+              in your booking.
+            </div>
             <div>
               <a
                 v-if="
                   selectUserOptions.find((option) => option.value === el$.value)
                     ?.url
                 "
-                class="text-blue-400"
+                class="text-blue-400 hover:underline"
                 :href="
                   selectUserOptions.find((option) => option.value === el$.value)
                     ?.url
                 "
               >
-                Please click here to confirm booking from the Tutor's Schedule
-                page</a
+                Click here to confirm booking from the Tutor's Schedule
+                page.</a
               >
-              <div
-                v-if="
-                  formRef?.el$('fanshawe_id').value &&
-                  selectUserOptions.find((option) => option.value === el$.value)
-                    ?.url
-                "
-              >
-                Please use Reference Number
-                <span class="font-bold"
-                  >{{ referenceNumber }}-{{
-                    formRef?.el$('fanshawe_id').value
-                  }}</span
-                >
-                in your booking
-              </div>
-            </div>
-          </template>
-          <template v-slot:option="{ option }">
-            <div class="flex justify-between items-center w-full">
-              <div>{{ option.label }}</div>
-              <div class="text-blue-500">{{ option.url || '' }}</div>
             </div>
           </template>
         </SelectElement>
@@ -381,13 +393,6 @@ watch(student, () => {
           :time="true"
           :rules="['required', 'after_or_equal:scheduled_start_time']"
         />
-        <StaticElement name="divider">
-          <hr />
-        </StaticElement>
-        <!-- <ButtonElement class="bg-red-700 py-2 px-4 text-white rounded" name="button" type="submit" submits>
-          Confirm Appointment
-        </ButtonElement> -->
-
         <ButtonElement
           name="button"
           button-class="font-semibold "
