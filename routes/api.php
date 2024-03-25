@@ -39,6 +39,8 @@ Route::get('/users', [UserController::class, 'index']);
 Route::post('/users', [UserController::class, 'store']);
 
 Route::put('/users/{user}', [UserController::class, 'update']);
+Route::get('/users/{id}', [UserController::class,'show']);
+
 
 Route::get('/type_of_machines', [TypeOfMachineController::class, 'index']);
 

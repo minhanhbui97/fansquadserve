@@ -19,7 +19,7 @@ onMounted(() => {
 
 async function submit(id) {
   console.log(id)
-  router.push({ name: 'ticket-details', params: { id }})
+  router.push({ name: 'user-details', params: { id }})
 }
 </script>
 
