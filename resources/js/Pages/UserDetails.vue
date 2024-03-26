@@ -50,11 +50,11 @@ const selectRoleOptions = computed(() => {
   });
 });
 
-/*async function submitUser(values) {
+async function submitUser(values) {
   await updateCurrentUser(user.value.id, values.data);
   toast.success('Update User successfully!');
 }
-*/
+
 
 
 let s_roles = ref([]);
@@ -136,10 +136,6 @@ function deselectAllCourses() {
 
 
 
-async function submitUser(values) {
-  await updateCurrentUser(user.value.id, values.data);
-  toast.success('Update User successfully!');
-}
 
 onMounted(() => {
   getCurrentUser(user_id);
@@ -184,7 +180,7 @@ const isActive = ref(true); // Default value is true, so the checkbox is checked
 
         <TextElement name="schedule_page" label="Tutor's Schedule" class="col-span-6" input-type="text" />
 
-        <CheckboxElement  name="is_active" label="Is Active"  true-value="1" false-value="0" />
+        <CheckboxElement  name="is_active" label="Is Active"  true-value= 1 false-value= 0 />
 
        
      
