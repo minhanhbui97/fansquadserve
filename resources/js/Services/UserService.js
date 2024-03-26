@@ -25,3 +25,10 @@ export async function getAllUsers(){
   export async function assignRoleToUser(data) {
     const response = await axios.post(`/api/users/`,data);
   }
+
+
+  export async function updateUser(userId, data) {
+    const response = await axios.put(`/api/users/${userId}`, data);
+    return response.data;
+  }
+  

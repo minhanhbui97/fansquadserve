@@ -78,4 +78,15 @@ class UserController extends Controller
         $user->save();
         return $user;
     }
+
+    
+    /**
+     * Display the specified resource.
+     */
+    public function show(int $id)
+    {
+        $user = User::where('id', $id)->with(['roles','courses','schedule_pages'])->first();
+        return $user;
+    }
+
 }

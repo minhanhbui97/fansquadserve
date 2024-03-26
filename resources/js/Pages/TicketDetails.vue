@@ -332,13 +332,13 @@ watch([users, priorities, ticket_statuses], () => {
         <StaticElement name="student_email" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">Machine Type:</span>
-            {{ ticket?.type_of_machine.name }}
+            {{ ticket?.type_of_machine?.name }}
           </div>
         </StaticElement>
         <StaticElement name="student_email" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">Operating System:</span>
-            {{ ticket?.operating_system.name }}
+            {{ ticket?.operating_system?.name }}
           </div>
         </StaticElement>
         <ButtonElement
