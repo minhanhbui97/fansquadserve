@@ -92,7 +92,12 @@ async function submit(id) {
         </Column>
         <Column header="Action">
           <template #body="slotProps">
-          <router-link to="/user-details">   <button  class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View Details</button></router-link>
+            <button
+              @click="() => submit(slotProps.data.id)"
+              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            >
+              View Details
+            </button>
           </template>
         </Column>
       </DataTable>

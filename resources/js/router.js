@@ -71,8 +71,35 @@ const routes = [
       requiresAuth: true,
     },
 
-    
+},
+
+//
+{
+  path: '/user-management',
+  name: 'user-management',
+  // component: { render: () => h(RouterView) },
+  meta: {
+    requiresAuth: true,
   },
+  redirect: '/user-management',
+  children: [
+    { 
+      path: '',
+      name: 'user-management',
+      component: UserManagement
+    },
+    { 
+      path: ':id',
+      name: 'user-details',
+      component: UserDetails
+    }
+  ]
+},
+
+
+
+
+//
 
   {
     path: '/add-user',
@@ -85,7 +112,7 @@ const routes = [
     
   },
 
-  {
+  /*{
     path: '/user-details',
     name: 'user-details',
     component: UserDetails,
@@ -94,7 +121,7 @@ const routes = [
     },
 
     
-  },
+  },*/
 
 
     

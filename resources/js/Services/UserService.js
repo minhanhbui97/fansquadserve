@@ -10,6 +10,11 @@ export async function getAllUsers(){
     return response.data;
   }
 
+  export async function getUserById(id) {
+    const response = await axios.get(`/api/users/${id}`);
+    return response.data;
+  }
+
 
   export async function getAllRoles() {
     const response = await axios.get('/api/roles');

@@ -1,25 +1,34 @@
 <script setup>
 import { useUserStore } from '@/Stores/UserStore';
-import dayjs from 'dayjs';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useToast } from 'vue-toastification';
-//const route = useRoute();
+
+
+
+const route = useRoute();
+const user_id = route.params.id;
 
 const userStore = useUserStore();
 const {
   getRoles,
   getCourses,
- // getCurrentUser,
-  //updateCurrentUser,
+  getCurrentUser,
+  updateCurrentUser,
 } = userStore;
 
 const {
 
 courses,
 roles,
+currentUser: user,
+
 } = storeToRefs(userStore);
+
+const formRef = ref();
+const toast = useToast();
+
 
 const selectCourseOptions = computed(() => {
   return courses.value.map((course) => {
@@ -41,12 +50,105 @@ const selectRoleOptions = computed(() => {
   });
 });
 
+/*async function submitUser(values) {
+  await updateCurrentUser(user.value.id, values.data);
+  toast.success('Update User successfully!');
+}
+*/
 
+
+let s_roles = ref([]);
+let s_courses = ref([]);
+
+// const role = ["tutor","staff","admin"];
+// role.forEach(function(s_roles.value)
+// {
+//     const selectedOption ={};
+//    selectedOption ['id'] = '';
+//    selectedOption ['value'] = s_roles.value;
+// });
+
+let selectedRolesArr = [];
+
+function selectedRoles(option) {
+  s_roles.value.push(option);
+
+  console.log(s_roles.value);
+  var roleObj = {};
+  roleObj['id'] = option;
+  selectedRolesArr.push(roleObj);
+  console.log(roleObj);
+  console.log(selectedRolesArr);
+
+}
+
+function deselectRoles(option) {
+  console.log("hereeeeeee");
+
+
+  selectedRolesArr = selectedRolesArr.filter(function(roleObj){
+
+    return roleObj.id !== option;
+  });
+  console.log(selectedRolesArr);
+
+}
+
+function deselectAllRoles() {
+  selectedRolesArr = [];
+  console.log(selectedRolesArr);
+
+}
+
+
+
+let selectedCoursesArr = [];
+
+function selectedCourses(option) {
+  s_courses.value.push(option);
+
+  console.log(s_courses.value);
+  var courseObj = {};
+  courseObj['id'] = option;
+  selectedCoursesArr.push(courseObj);
+  console.log(courseObj);
+  console.log(selectedCoursesArr);
+
+}
+
+function deselectCourses(option) {
+  console.log("hereeeeeee");
+
+
+  selectedCoursesArr = selectedCoursesArr.filter(function(courseObj){
+
+    return courseObj.id !== option;
+  });
+  console.log(selectedCoursesArr);
+
+}
+
+function deselectAllCourses() {
+  selectedCoursesArr = [];
+  console.log(selectedCoursesArr);
+
+}
+
+
+
+async function submitUser(values) {
+  await updateCurrentUser(user.value.id, values.data);
+  toast.success('Update User successfully!');
+}
 
 onMounted(() => {
+  getCurrentUser(user_id);
+
   getCourses();
   getRoles();
 });
+
+const isActive = ref(true); // Default value is true, so the checkbox is checked by default
 
 
 
@@ -79,7 +181,15 @@ onMounted(() => {
         <TextElement name="repassword" label="Retype Password" input-type="password" :rules="['required']"
           class="col-span-6" />
 
+
         <TextElement name="schedule_page" label="Tutor's Schedule" class="col-span-6" input-type="text" />
+
+        <CheckboxElement  name="is_active" label="Is Active"  true-value="1" false-value="0" />
+
+       
+     
+
+
         <button class="bg-red-700 h-12 w-40 text-white rounded">Update User</button>
 
       </Vueform>

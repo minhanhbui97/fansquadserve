@@ -2,8 +2,8 @@ import {
     getAllUsers,
     getAllCourses,
     getAllRoles,
-    //getUserById,
-    //updateUser,
+    getUserById,
+    updateUser,
     
 
 
@@ -17,7 +17,7 @@ import { ref } from 'vue';
   export const useUserStore = defineStore('user', () => {
     const isLoading = ref(false);
     const error = ref(null);
-    //const currentUser = ref(null);
+  const currentUser = ref(null);
 
     const users = ref([]);
     const courses = ref([]);
@@ -31,7 +31,7 @@ import { ref } from 'vue';
     }
   
     //getcurrentuser
-    /* async function getCurrentUser(id) {
+   async function getCurrentUser(id) {
       isLoading.value = true;
       const data = await getUserById(id);
       currentUser.value = data;
@@ -45,7 +45,7 @@ import { ref } from 'vue';
       currentUser.value = data;
       isLoading.value = false;
     }
-*/
+
      async function getRoles() {
       isLoading.value = true;
       const data = await getAllRoles();
@@ -65,14 +65,14 @@ import { ref } from 'vue';
       courses,
       roles,
       isLoading,
-     // currentUser,
+     currentUser,
 
       error,
       getUsers,
       getRoles,
       getCourses,
-      // getCurrentUser,
-     //updateCurrentUser,
+       getCurrentUser,
+     updateCurrentUser,
 
 
       
