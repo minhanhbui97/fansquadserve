@@ -61,14 +61,13 @@ const routes = [
       requiresAuth: true,
     },
   },
-
- 
   {
     path: '/user-management',
     name: 'user-management',
     component: UserManagement,
     meta: {
       requiresAuth: true,
+      requiresAdmin: true,
     },
 
 },
@@ -107,9 +106,8 @@ const routes = [
     component: AddUser,
     meta: {
       requiresAuth: true,
+      requiresAdmin: true,
     },
-
-    
   },
 
   /*{
@@ -118,6 +116,7 @@ const routes = [
     component: UserDetails,
     meta: {
       requiresAuth: true,
+      requiresAdmin: true,
     },
 
     
@@ -162,6 +161,9 @@ router.beforeEach(async (to, from) => {
   const needAuthentication = to.matched.some(
     (route) => route.meta.requiresAuth,
   );
+  const needAdmin = to.matched.some(
+    (route) => route.meta.requiresAdmin,
+  );
 
   if (to.name !== 'login' && isLoggedIn.value && user.value === null) {
     try {
@@ -180,6 +182,10 @@ router.beforeEach(async (to, from) => {
 
   if (isLoggedIn.value && !needAuthentication) {
     return { name: 'tickets' };
+  }
+
+  if (needAdmin && !user.value.roles.find(role => role.name === 'Admin')) {
+    return { name: 'tickets' }
   }
 });
 

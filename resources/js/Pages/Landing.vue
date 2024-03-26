@@ -1,21 +1,12 @@
 <script setup></script>
 
-<style>
-
-
-
-
-</style>
+<style></style>
 <template>
- 
- <nav class="bg-slate-100	">
+  <nav class="bg-slate-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4">
       <div class="flex items-center justify-between h-12">
         <div class="flex items-center">
-         
-          <div class="hidden md:block">
-            
-          </div>
+          <div class="hidden md:block"></div>
         </div>
       </div>
       </div>
@@ -96,7 +87,95 @@ Connect with FanSquadServe today and experience the difference!
             <!-- Add more columns or links as needed -->
 </footer>
 
+  <p class="text-red-700 font-bold text-4xl mt-80 mt-20 text-center">
+    We are the LabSquad!
+  </p>
 
+  <div class="flex mt-20">
+    <p class="font-bold ml-60">
+      <br /><br /><br />We are a small group of IT students here at<br />
+      London South Campus, dedicated to helping <br />
+      our fellow students for any inquiries related<br />
+      to IT courses or academic technical matters.
+    </p>
+    <img
+      class="max-w-md absolute right-40"
+      src="../../images/2.png"
+      alt="fanshawecampus"
+    />
+  </div>
+  <p class="text-red-700 font-bold text-4xl mt-40 text-center">Meet Our Team</p>
+  <div class="flex justify-center mt-20 space-x-6">
+    <img
+      class="box-content h-40 w-40 p-2 border-2 max-w-md max-h-md"
+      src="../../images/Destiny.png"
+    />
+    <img
+      class="box-content h-40 w-40 p-2 border-2 max-w-xs max-h-xs"
+      src="../../images/Ari.png"
+    />
+    <img
+      class="box-content h-40 w-40 p-2 border-2 max-w-xs max-h-xs"
+      src="../../images/Gaby.png"
+    />
+  </div>
 
+  <div class="flex justify-center space-x-16">
+    <a class="text-red-700 font-bold"> Destiny Akabuogu</a>
+    <a class="text-red-700 font-bold">Arihanth Chilveri</a>
+    <a class="text-red-700 font-bold">Gabriella Mantilla</a>
+  </div>
+  <div class="flex justify-center">
+    <p class="text-red-700 font-bold mt-40 text-4xl">Our Service</p>
+  </div>
+
+  <div class="flex mt-20">
+    <p class="font-bold ml-60 text-bold text-red-700">
+      <br /><br /><br />Peer Tutoring<br />
+      <a class="text-black"
+        ><br />Seeking to improve your understanding or performance <br />
+        in your IT related courses? We've got you covered!</a
+      ><br /><a class="text-black"
+        ><br />The LabSquad team offers peer tutoring to help enhance<br />your
+        learning and confidence on your academic journey<br />
+        here at Fanshawe.</a
+      >
+    </p>
+    <img
+      class="max-w-md absolute right-40"
+      src="../../images/3.png"
+      alt="fanshawecampus"
+    />
+  </div>
+
+  <div class="flex mt-60">
+    <img
+      class="max-w-md absolute left-40"
+      src="../../images/4.png"
+      alt="fanshawecampus"
+    />
+
+    <p class="font-bold text-bold text-red-700 absolute right-40">
+      <br /><br /><br />Lab_Tech Support<br />
+      <a class="text-black"
+        ><br />Experiencing technical issues with your <br />
+        laptop or software installation? we've got your back!</a
+      ><br /><a class="text-black"
+        ><br />The LabSquad team provides lab and tech support to<br />assist
+        you with academic software installation and <br />
+        trobleshooting activities.</a
+      >
+    </p>
+  </div>
+
+  <footer class="bg-gray-900 text-white mt-80">
+    <div class="container mx-auto py-8 px-2">
+      <div class="flex flex-wrap">
+        <div class="w-full lg:w-1/2 px-4">
+          <!-- Add other content here -->
+        </div>
+        <!-- Add more columns or links as needed -->
+      </div>
+    </div>
+  </footer>
 </template>
-
