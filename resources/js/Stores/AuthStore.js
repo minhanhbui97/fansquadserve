@@ -19,6 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
     return user.value.roles.find((role) => role.name === 'Admin');
   });
 
+
   async function getAuthUser() {
     isLoading.value = true;
 

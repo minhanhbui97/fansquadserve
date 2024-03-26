@@ -1,4 +1,5 @@
 <script setup>
+import { useAuthStore } from '@/Stores/AuthStore';
 import { useTicketStore } from '@/Stores/TicketStore';
 import dayjs from 'dayjs';
 import { storeToRefs } from 'pinia';
@@ -23,9 +24,20 @@ const {
   users,
   currentTicket: ticket,
 } = storeToRefs(ticketStore);
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
 const formRef = ref();
 const toast = useToast();
+
+const isAssignedTutor = computed(() => {
+  if (!user.value || !ticket.value) return false;
+
+  return (
+    user.value.roles.find((role) => role.name === 'Tutor') &&
+    ticket.value.assigned_tutor_id === user.value.id
+  );
+});
 
 const selectPriorityOptions = computed(() => {
   return priorities.value.map((priority) => {
@@ -147,7 +159,6 @@ onMounted(() => {
 });
 
 watch(ticket, () => {
-  console.log(ticket.value);
   if (ticket.value) {
     getUsers(ticket.value.course_id);
   }
@@ -246,7 +257,7 @@ watch([users, priorities, ticket_statuses], () => {
           name="scheduled_start_time"
           class="col-span-4"
           label="Scheduled Start Time *"
-          :rules="['required', 'after_or_equal:today']"
+          :rules="['required']"
         />
         <DateElement
           :date="true"
@@ -318,10 +329,11 @@ watch([users, priorities, ticket_statuses], () => {
             {{ ticket?.student.first_name }} {{ ticket?.student.last_name }}
           </div>
         </StaticElement>
-        <StaticElement name="program" class="col-span-4">
+
+        <StaticElement name="student_email" class="col-span-4">
           <div class="text-sm">
-            <span class="font-medium">Program:</span>
-            {{ ticket?.program.name }}
+            <span class="font-medium">Student Email:</span>
+            {{ ticket?.student.email }}
           </div>
         </StaticElement>
 
@@ -331,16 +343,16 @@ watch([users, priorities, ticket_statuses], () => {
             {{ ticket?.student_id }}
           </div>
         </StaticElement>
+        <StaticElement name="program" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Program:</span>
+            {{ ticket?.program.name }}
+          </div>
+        </StaticElement>
         <StaticElement name="program_level" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">Program Level:</span>
             {{ ticket?.program_level ? ticket?.program_level : 'N/A' }}
-          </div>
-        </StaticElement>
-        <StaticElement name="student_email" class="col-span-4">
-          <div class="text-sm">
-            <span class="font-medium">Student Email:</span>
-            {{ ticket?.student.email }}
           </div>
         </StaticElement>
         <StaticElement name="course" class="col-span-4">
@@ -364,6 +376,7 @@ watch([users, priorities, ticket_statuses], () => {
           </div>
         </StaticElement>
         <ButtonElement
+          v-if="isAssignedTutor"
           name="button"
           button-class="font-semibold "
           danger
