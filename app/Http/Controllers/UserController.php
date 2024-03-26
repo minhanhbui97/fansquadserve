@@ -26,7 +26,7 @@ class UserController extends Controller
         $course = Course::find($course_id);
 
         if ($course) { // Get list of tutors available for a course
-            $tutors = $course->users()->with(['schedule_page'])->get();
+            $tutors = $course->users()->with(['schedule_page', 'roles'])->get();
             return $tutors;
         }
 

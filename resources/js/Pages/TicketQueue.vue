@@ -93,7 +93,7 @@ const initFilters = () => {
           </template>
         </Column>
 
-        <Column header="Request Type" style="width: 100px">
+        <Column header="Request Type" style="max-width: 130px">
           <template #body="slotProps">
             <div class="singleLine">
               {{
@@ -109,7 +109,7 @@ const initFilters = () => {
           field="priority.name"
           header="Priority"
           sortable
-          style="width: 100px"
+          style="max-width: 80px"
         >
         <template #body="slotProps">
             <div class="singleLine">

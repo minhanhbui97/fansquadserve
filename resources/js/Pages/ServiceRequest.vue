@@ -238,14 +238,14 @@ watch(student, () => {
           label="First Name *"
           input-type="text"
           class="col-span-6"
-          :rules="['required', 'alpha', 'between:4,50']"
+          :rules="['required', 'alpha', 'between:3,50']"
         />
         <TextElement
           name="last_name"
           label="Last Name *"
           input-type="text"
           class="col-span-6"
-          :rules="['required', 'alpha', 'between:4,50']"
+          :rules="['required', 'alpha', 'between:3,50']"
         />
         <StaticElement name="divider">
           <hr />

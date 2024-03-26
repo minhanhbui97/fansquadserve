@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const authStore = useAuthStore();
-const { user } = storeToRefs(authStore);
+const { user, isAdmin } = storeToRefs(authStore);
 const { logout } = authStore;
 
 async function handleLogout() {
@@ -18,7 +18,9 @@ async function handleLogout() {
 </script>
 
 <template>
-<div class="w-[280px] flex flex-col flex-shrink-0 bg-blue-gray border-r border-gray-300">
+  <div
+    class="w-[280px] flex flex-col flex-shrink-0 bg-blue-gray border-r border-gray-300"
+  >
     <header class="p-8">
       <img src="../../images/logo.png" alt="" />
     </header>
@@ -43,6 +45,7 @@ async function handleLogout() {
           <div>Data Dashboard</div>
         </router-link>
         <router-link
+          v-if="isAdmin"
           :to="{ name: 'user-management' }"
           class="flex gap-4 items-center py-4 px-8 font-semibold w-full"
         >
@@ -52,9 +55,16 @@ async function handleLogout() {
           <div>User Management</div>
         </router-link>
       </section>
-      <section class="flex flex-col gap-4 justify-center items-center p-8 font-bold">
+      <section
+        class="flex flex-col gap-4 justify-center items-center p-8 font-bold"
+      >
         <h1 class="font-bold">{{ user.first_name }} {{ user.last_name }}</h1>
-        <button @click="handleLogout" class="py-2 px-4 bg-red-500 rounded text-white hover:bg-red-500/90">Log Out</button>
+        <button
+          @click="handleLogout"
+          class="py-2 px-4 bg-red-500 rounded text-white hover:bg-red-500/90"
+        >
+          Log Out
+        </button>
       </section>
     </div>
   </div>
