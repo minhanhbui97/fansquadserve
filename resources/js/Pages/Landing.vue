@@ -67,7 +67,6 @@
        <img class=" max-w-md absolute right-40  " src="../../images/3.png" alt="fanshawecampus">
       </div>
          
-
       <div class="flex mt-60 ">
         <img class=" max-w-md absolute left-40  " src="../../images/4.png" alt="fanshawecampus">
 
@@ -76,16 +75,25 @@
       </div>
 
       
-      <footer class="bg-gray-900 text-white mt-80">
-    <div class="container mx-auto py-8 px-2">
-        <div class="flex flex-wrap ">
-            <div class="w-full lg:w-1/2 px-4 ">
-               
+      <div class="flex mt-80 ">
+     <p class="absolute right-40  mr-40 mt-48 font-bold">  CONTACT US</p><br>
+        <p class="absolute right-48 mt-60 text-sm font-bold "> 2nd Floor, Room-204<br>Fanshawe London South Campus<br>Office hours: <br>Monday to Friday 9Am to 9PM<br> By Appointment</p>
+        <img class = "max-w-md absolute left-10 mt-40 " src="../../images/footer.png">
+       <p class="absolute left-20 mt-64  text-sm font-bold "> Join us at FanSquadServe, your dedicated tech support team at Fanshawe College's South Campus.<br>
+With our expert assistance, personalized solutions, and commitment to efficiency, we're here to <br>empower your tech journey. Say goodbye to tech troubles and hello to seamless productivity.<br>
+Connect with FanSquadServe today and experience the difference!
+     </p>      
+</div>
+      
+      <footer class="bg-gray-900 text-white mt-80  p-8 ">
+         
+
+              <p class="text-center ">© 2024 Copyright: Fanshawe Project Proposal Management System </p>
+          
+         
                 <!-- Add other content here -->
-            </div>
+       
             <!-- Add more columns or links as needed -->
-        </div>
-    </div>
 </footer>
 
 

@@ -126,7 +126,7 @@ const initFilters = () => {
           </template>
         </Column>
 
-        <Column field="description" header="Description" style="width: 200px">
+        <Column field="description" header="Description" style="width: 200px">3
           <template #filter="{ filterModel }">
             <InputText
               v-model="filterModel.value"

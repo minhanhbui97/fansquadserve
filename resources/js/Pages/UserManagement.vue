@@ -1,11 +1,14 @@
 <script setup>
 import { useUserStore } from '@/Stores/UserStore';
 import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
 import dayjs from 'dayjs';
 import { useRouter } from 'vue-router';
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import InputText from 'primevue/inputtext';
+import Dropdown from 'primevue/dropdown';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -14,6 +17,8 @@ const { users } = storeToRefs(userStore);
 
 onMounted(() => {
   getUsers();
+  initFilters();
+
 });
 
 
@@ -21,6 +26,30 @@ async function submit(id) {
   console.log(id)
   router.push({ name: 'user-details', params: { id }})
 }
+
+const filters = ref();
+
+
+const initFilters = () => {
+  filters.value = {
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    id: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+    },
+    first_name: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+    },
+    
+    last_name: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+    },
+    
+  };
+};
+
 </script>
 
 <template>
@@ -41,26 +70,58 @@ async function submit(id) {
         :rows="20"
         stripedRows
         showGridlines
+        v-model:filters="filters"
+        filterDisplay="menu"
+        :globalFilterFields="['id','first_name', 'last_name']"
+        sortField="id"
+        :sortOrder="-1"
       >
         <Column
           field="id"
           header="User ID"
           sortable
           style="width: 100px"
-        ></Column>
+        >
+        <template #filter="{ filterModel }">
+            <InputText
+              v-model="filterModel.value"
+              type="text"
+              class="p-column-filter"
+              placeholder="Search by ID"
+            />
+          </template>
+      </Column>
        
         <Column
           field="first_name"
           header="First Name"
           sortable
           style="width: 100px"
-        ></Column>
+        >
+        <template #filter="{ filterModel }">
+            <InputText
+              v-model="filterModel.value"
+              type="text"
+              class="p-column-filter"
+              placeholder="Search by First Name"
+            />
+          </template>
+      </Column>
         <Column
           field="last_name"
           header="Last Name"
           sortable
           style="width: 130px"
-        ></Column>
+        >
+        <template #filter="{ filterModel }">
+            <InputText
+              v-model="filterModel.value"
+              type="text"
+              class="p-column-filter"
+              placeholder="Search by Last Name"
+            />
+          </template>
+      </Column>
 
         
         <Column field="roles" sortable header="Role">
