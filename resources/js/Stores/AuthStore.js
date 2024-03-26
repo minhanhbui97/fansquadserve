@@ -5,13 +5,20 @@ import {
   login as authServiceLogin,
   logout as authServiceLogout,
 } from '@/Services/AuthService';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null);
   const isLoggedIn = useStorage('isLoggedIn', false);
   const isLoading = ref(false);
   const error = ref(null);
+
+  const isAdmin = computed(() => {
+    if (!user.value) return false;
+
+    return user.value.roles.find((role) => role.name === 'Admin');
+  });
+
 
   async function getAuthUser() {
     isLoading.value = true;
@@ -51,5 +58,16 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null;
   }
 
-  return { user, error, clearError, isLoggedIn, isLoading, getAuthUser, login, reset, logout };
+  return {
+    user,
+    error,
+    clearError,
+    isLoggedIn,
+    isLoading,
+    getAuthUser,
+    login,
+    reset,
+    logout,
+    isAdmin,
+  };
 });

@@ -15,11 +15,25 @@ import PrimeVue from 'primevue/config';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+/* import specific icons */
+import { faCopy } from '@fortawesome/free-regular-svg-icons'
+import { faCopy as faCopySolid } from '@fortawesome/free-solid-svg-icons'
+
+/* add icons to the library */
+library.add(faCopy, faCopySolid)
+
 const app = createApp(App);
 const pinia = createPinia();
 
 app.component('DataTable', DataTable);
 app.component('Column', Column);
+app.component('font-awesome-icon', FontAwesomeIcon)
 
 app.use(router);
 app.use(pinia);

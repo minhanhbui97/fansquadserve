@@ -7,6 +7,7 @@ import {
 } from '@/Services/StudentService';
 import { createTicket } from '@/Services/TicketService';
 import { useTicketStore } from '@/Stores/TicketStore';
+import { useClipboard } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, watch } from 'vue';
 
@@ -91,6 +92,14 @@ const selectUserOptions = computed(() => {
       url: user.schedule_page?.schedule_url,
     };
   });
+});
+
+const finalReferenceNumber = computed(() => {
+  return `${referenceNumber.value} - ${formRef.value.el$('fanshawe_id').value}`;
+});
+
+const { text, copy, copied, isSupported } = useClipboard({
+  source: finalReferenceNumber,
 });
 
 function selectCourse(courseId) {
@@ -193,12 +202,18 @@ watch(student, () => {
       Service Request Form
     </h1>
     <div class="bg-gray-50 p-8 overflow-auto" v-if="!is_submitted">
-      <Vueform ref="formRef" @submit="submitTicket" :endpoint="false">
+      <Vueform
+        ref="formRef"
+        @submit="submitTicket"
+        :endpoint="false"
+        :display-errors="false"
+      >
         <TextElement
           name="fanshawe_id"
-          label="Fanshawe ID"
+          label="Fanshawe ID *"
           input-type="text"
           class="col-span-4"
+          :rules="['required', 'digits_between:7,10']"
         />
         <ButtonElement
           name="button"
@@ -209,37 +224,48 @@ watch(student, () => {
         >
         <TextElement
           name="email"
-          label="Student Email"
+          label="Student Email *"
           input-type="email"
           class="col-span-6"
-        />
+          :rules="['required', 'email', 'between:15,320']"
+        >
+          <template v-slot:description="{ el$ }">
+            <div>Please use your Fanshawe student email.</div>
+          </template>
+        </TextElement>
         <TextElement
           name="first_name"
-          label="First Name"
+          label="First Name *"
           input-type="text"
           class="col-span-6"
+          :rules="['required', 'alpha', 'between:3,50']"
         />
         <TextElement
           name="last_name"
-          label="Last Name"
+          label="Last Name *"
           input-type="text"
           class="col-span-6"
+          :rules="['required', 'alpha', 'between:3,50']"
         />
         <StaticElement name="divider">
           <hr />
         </StaticElement>
         <SelectElement
           name="program_id"
-          label="Program"
+          label="Program *"
           :native="false"
           :items="selectProgramOptions"
           class="col-span-6"
+          :can-clear="false"
+          :can-deselect="false"
+          :rules="['required']"
         />
         <TextElement
           name="program_level"
-          label="Program Level*"
+          label="Program Level"
           input-type="text"
           class="col-span-6"
+          :rules="['nullable', 'digits_between:0,1']"
         />
         <StaticElement name="divider">
           <hr />
@@ -250,6 +276,7 @@ watch(student, () => {
           :native="false"
           :items="selectTypeofMachineOptions"
           class="col-span-6"
+          :can-deselect="false"
         />
         <SelectElement
           name="operating_system_id"
@@ -257,6 +284,7 @@ watch(student, () => {
           :native="false"
           :items="selectOperatingSystemOptions"
           class="col-span-6"
+          :can-deselect="false"
         />
         <StaticElement name="divider">
           <hr />
@@ -267,26 +295,31 @@ watch(student, () => {
           :native="false"
           :items="selectPriorityOptions"
           class="col-span-6"
+          :can-deselect="false"
         />
         <StaticElement name="divider">
           <hr />
         </StaticElement>
         <TextareaElement
           name="description"
-          label="Description"
+          label="Description *"
           input-type="message"
           class="col-span-12"
+          :rules="['required', 'between:10,500']"
         />
         <StaticElement name="divider">
           <hr />
         </StaticElement>
         <SelectElement
           name="course_id"
-          label="Course"
+          label="Course *"
           :native="false"
           :items="selectCourseOptions"
           class="col-span-6"
           @select="selectCourse"
+          :can-clear="false"
+          :can-deselect="false"
+          :rules="['required']"
         >
           <template v-slot:option="{ option }">
             {{ option.code }} - {{ option.label }}
@@ -294,48 +327,50 @@ watch(student, () => {
         </SelectElement>
         <SelectElement
           name="assigned_tutor_id"
-          label="Tutor"
+          label="Tutor *"
           :native="false"
           :items="selectUserOptions"
           class="col-span-6"
+          :can-clear="false"
+          :can-deselect="false"
+          :rules="['required']"
         >
           <template v-slot:description="{ el$ }">
+            <div
+              v-if="
+                formRef?.el$('fanshawe_id').value &&
+                selectUserOptions.find((option) => option.value === el$.value)
+                  ?.url
+              "
+              class="mb-2"
+            >
+              Please use Reference Number
+              <span class="font-bold">{{ finalReferenceNumber }}</span>
+              <button
+                @click="copy(finalReferenceNumber)"
+                class="bg-gray-100 p-1 text-black rounded ml-1 hover:bg-gray-200"
+                type="button"
+              >
+                <font-awesome-icon icon="fa-regular fa-copy" v-if="!copied" />
+                <font-awesome-icon icon="fa-solid fa-copy" v-else />
+              </button>
+              in your booking.
+            </div>
             <div>
               <a
                 v-if="
                   selectUserOptions.find((option) => option.value === el$.value)
                     ?.url
                 "
-                class="text-blue-400"
+                class="text-blue-400 hover:underline"
                 :href="
                   selectUserOptions.find((option) => option.value === el$.value)
                     ?.url
                 "
               >
-                Please click here to confirm booking from the Tutor's Schedule
-                page</a
+                Click here to confirm booking from the Tutor's Schedule
+                page.</a
               >
-              <div
-                v-if="
-                  formRef?.el$('fanshawe_id').value &&
-                  selectUserOptions.find((option) => option.value === el$.value)
-                    ?.url
-                "
-              >
-                Please use Reference Number
-                <span class="font-bold"
-                  >{{ referenceNumber }}-{{
-                    formRef?.el$('fanshawe_id').value
-                  }}</span
-                >
-                in your booking
-              </div>
-            </div>
-          </template>
-          <template v-slot:option="{ option }">
-            <div class="flex justify-between items-center w-full">
-              <div>{{ option.label }}</div>
-              <div class="text-blue-500">{{ option.url || '' }}</div>
             </div>
           </template>
         </SelectElement>
@@ -344,24 +379,29 @@ watch(student, () => {
         </StaticElement>
         <DateElement
           name="scheduled_start_time"
-          label="Start Time"
+          label="Start Time *"
           class="col-span-6"
           :date="true"
           :time="true"
+          :rules="['required', 'after_or_equal:today']"
         />
         <DateElement
           name="scheduled_end_time"
-          label="End Time"
+          label="End Time *"
           class="col-span-6"
           :date="true"
           :time="true"
+          :rules="['required', 'after_or_equal:scheduled_start_time']"
         />
-        <StaticElement name="divider">
-          <hr />
-        </StaticElement>
-        <ButtonElement name="button" type="submit" submits>
-          Confirm Appointment
-        </ButtonElement>
+        <ButtonElement
+          name="button"
+          button-class="font-semibold "
+          danger
+          type="submit"
+          submits
+          class="mx-auto mt-4"
+          >Confirm Appointment</ButtonElement
+        >
       </Vueform>
     </div>
 
@@ -397,15 +437,17 @@ watch(student, () => {
           </p>
           <p>
             Program Level:
-            {{ ticket?.program_level }}
+            {{ ticket?.program_level ? ticket?.program_level : 'N/A' }}
           </p>
           <p>
             Type of Machine:
-            {{ ticket?.type_of_machine.name }}
+            {{ ticket?.type_of_machine ? ticket?.type_of_machine.name : 'N/A' }}
           </p>
           <p>
             Operating System:
-            {{ ticket?.operating_system.name }}
+            {{
+              ticket?.operating_system ? ticket?.operating_system.name : 'N/A'
+            }}
           </p>
           <p>
             Description:
@@ -430,12 +472,12 @@ watch(student, () => {
         </div>
       </div>
       <p class="mb-8">
-        If you have any questions or need to modify your appointment details, please
-        contact the LabSquad at {email}
+        If you have any questions or need to modify your appointment details,
+        please contact the LabSquad at {email}
       </p>
       <div class="flex gap-8 justify-end">
         <router-link to="/"
-          ><button class="bg-amber-800 py-2 px-4 text-white rounded">
+          ><button class="bg-red-700 py-2 px-4 text-white rounded">
             Back to Home Page
           </button></router-link
         >

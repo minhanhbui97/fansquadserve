@@ -62,7 +62,6 @@ const assigneeFilter = ref('');
 function selectAssigneeRadio(newValue) {
   assigneeFilter.value = newValue;
   if (newValue === 'Select all assignees') {
-    options.value = [];
     options.value = users.value.map((user) => user.id);
   } else if (newValue === 'Specify assignees to filter') {
     options.value = [];
@@ -85,9 +84,8 @@ function deselectAllAssigneeFilter() {
 }
 
 // Helper function to round to 2 decimal place
-function roundNum(num){
+function roundNum(num) {
   return Math.round((num + Number.EPSILON) * 100) / 100;
-
 }
 
 // Get data for TicketByDateBarChart
@@ -124,7 +122,9 @@ const status_chart_result = computed(() => {
   const tickets_filtered_by_date_and_assignee = _.filter(
     tickets_filtered_by_date,
     function (t) {
-      return options.value.includes(t.assigned_tutor_id);
+      return (
+        options.value.includes(t.assigned_tutor_id) && t.latest_status !== null
+      );
     },
   );
 
@@ -311,68 +311,76 @@ const sla_chart_result = computed(() => {
     'High - TR': roundNum(avg_tr_high_priority),
   };
 });
+
+watch(users, () => {
+  options.value = users.value.map((user) => user.id);
+});
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 h-full overflow-auto">
-    <h1 class="text-amber-800 text-3xl font-bold">Data Dashboard</h1>
-    <Vueform ref="formRef" :endpoint="false">
-      <SelectElement
-        name="date_range"
-        label="Filter by Date:"
-        :native="false"
-        :items="[
-          { value: 'hour', label: 'Last 24 hours' },
-          { value: 'day-7', label: 'Last 7 days' },
-          { value: 'day-30', label: 'Last 30 days' },
-          { value: 'month', label: 'Last year' },
-        ]"
-        class="col-span-6"
-        @select="selectDateFilter"
-        default="day-7"
-        :can-clear="false"
-        :can-deselect="false"
-      />
-      <RadiogroupElement
-        name="radiogroup"
-        :items="['Select all assignees', 'Specify assignees to filter']"
-        @change="selectAssigneeRadio"
-      />
-
-      <MultiselectElement
-        name="assignee"
-        label="Filter by Assignee:"
-        :native="false"
-        :items="selectUserOptions"
-        class="col-span-6"
-        :close-on-select="false"
-        :hide-selected="false"
-        @select="selectAssigneeFilter"
-        @deselect="deselectAssigneeFilter"
-        :can-clear="true"
-        @clear="deselectAllAssigneeFilter"
-        :search="true"
-        v-if="assigneeFilter == 'Specify assignees to filter'"
-      />
-    </Vueform>
-    <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
-      <h2 class="text-amber-800 text-lg font-bold">Tickets by Date</h2>
-      <div>
-        <TicketByDateBarChart :data="date_chart_result" />
+  <div class="max-w-full mx-auto p-8 h-full overflow-auto">
+    <div class="flex flex-col gap-8 max-w-6xl mx-auto">
+      <h1 class="text-amber-800 text-3xl font-bold">Data Dashboard</h1>
+      <Vueform ref="formRef" :endpoint="false">
+        <SelectElement
+          name="date_range"
+          label="Filter by Date:"
+          :native="false"
+          :items="[
+            { value: 'hour', label: 'Last 24 hours' },
+            { value: 'day-7', label: 'Last 7 days' },
+            { value: 'day-30', label: 'Last 30 days' },
+            { value: 'month', label: 'Last year' },
+          ]"
+          class="col-span-6"
+          @select="selectDateFilter"
+          default="day-7"
+          :can-clear="false"
+          :can-deselect="false"
+        />
+        <RadiogroupElement
+          name="radiogroup"
+          :items="['Select all assignees', 'Specify assignees to filter']"
+          @change="selectAssigneeRadio"
+          default="Select all assignees"
+        />
+        <MultiselectElement
+          name="assignee"
+          label="Filter by Assignee:"
+          :native="false"
+          :items="selectUserOptions"
+          class="col-span-6"
+          :close-on-select="false"
+          :hide-selected="false"
+          @select="selectAssigneeFilter"
+          @deselect="deselectAssigneeFilter"
+          :can-clear="true"
+          @clear="deselectAllAssigneeFilter"
+          :search="true"
+          v-if="assigneeFilter == 'Specify assignees to filter'"
+        />
+      </Vueform>
+      <div class="flex gap-8 w-full">
+        <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50 basis-1/2">
+          <h2 class="text-amber-800 text-lg font-bold">Tickets by Date</h2>
+          <div>
+            <TicketByDateBarChart :data="date_chart_result" />
+          </div>
+        </div>
+        <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50 basis-1/2">
+          <h2 class="text-amber-800 text-lg font-bold">Tickets by Status</h2>
+          <div>
+            <TicketByStatusBarChart :data="status_chart_result" />
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
-      <h2 class="text-amber-800 text-lg font-bold">Tickets by Status</h2>
-      <div>
-        <TicketByStatusBarChart :data="status_chart_result" />
-      </div>
-    </div>
-
-    <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
-      <h2 class="text-amber-800 text-lg font-bold">Average SLA By Priority</h2>
-      <div>
-        <AverageSLABarChart :data="sla_chart_result" />
+      <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
+        <h2 class="text-amber-800 text-lg font-bold">
+          Average SLA By Priority
+        </h2>
+        <div>
+          <AverageSLABarChart :data="sla_chart_result" />
+        </div>
       </div>
     </div>
   </div>

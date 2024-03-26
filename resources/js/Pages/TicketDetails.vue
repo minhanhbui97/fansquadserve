@@ -1,4 +1,5 @@
 <script setup>
+import { useAuthStore } from '@/Stores/AuthStore';
 import { useTicketStore } from '@/Stores/TicketStore';
 import dayjs from 'dayjs';
 import { storeToRefs } from 'pinia';
@@ -23,9 +24,20 @@ const {
   users,
   currentTicket: ticket,
 } = storeToRefs(ticketStore);
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
 const formRef = ref();
 const toast = useToast();
+
+const isAssignedTutor = computed(() => {
+  if (!user.value || !ticket.value) return false;
+
+  return (
+    user.value.roles.find((role) => role.name === 'Tutor') &&
+    ticket.value.assigned_tutor_id === user.value.id
+  );
+});
 
 const selectPriorityOptions = computed(() => {
   return priorities.value.map((priority) => {
@@ -49,7 +61,7 @@ const selectTicketStatusOptions = computed(() => {
     // If latest_status is New, show New & Confirmed
     if (ticket.value.latest_status.id === 1) {
       possibleTicketStatusOptions.push(all_ticket_statuses[0]);
-      possibleTicketStatusOptions.push(all_ticket_statuses[2]);
+      possibleTicketStatusOptions.push(all_ticket_statuses[1]);
     }
     // If latest_status is Confirmed, show Confirmed & In-progress
     else if (ticket.value.latest_status.id === 2) {
@@ -64,7 +76,7 @@ const selectTicketStatusOptions = computed(() => {
       possibleTicketStatusOptions.push(all_ticket_statuses[5]);
     }
     // Ticket with latest_status Resoleved will be moved to Closed immediately
-    // This should not be possible 
+    // This should not be possible
     else if (ticket.value.latest_status.id === 4) {
       possibleTicketStatusOptions.push(all_ticket_statuses[3]);
       possibleTicketStatusOptions.push(all_ticket_statuses[6]);
@@ -147,7 +159,6 @@ onMounted(() => {
 });
 
 watch(ticket, () => {
-  console.log(ticket.value);
   if (ticket.value) {
     getUsers(ticket.value.course_id);
   }
@@ -183,22 +194,27 @@ watch([users, priorities, ticket_statuses], () => {
 
     <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
       <h2 class="text-amber-800 text-lg font-bold">Request Details</h2>
-      <Vueform ref="formRef" @submit="submitTicket" :endpoint="false">
+      <Vueform
+        ref="formRef"
+        @submit="submitTicket"
+        :endpoint="false"
+        :display-errors="false"
+      >
         <StaticElement name="id" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">Ticket ID:</span> {{ ticket?.id }}
-          </div>
-        </StaticElement>
-        <StaticElement name="id" class="col-span-4">
-          <div class="text-sm">
-            <span class="font-medium">Request Type:</span>
-            {{ ticket?.course_id === 1 ? 'Tech/Lab Support' : 'Peer Tutoring' }}
           </div>
         </StaticElement>
         <StaticElement name="reference_number" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">Reference Number:</span>
             {{ ticket?.reference_number }}
+          </div>
+        </StaticElement>
+        <StaticElement name="id" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Request Type:</span>
+            {{ ticket?.course_id === 1 ? 'Tech/Lab Support' : 'Peer Tutoring' }}
           </div>
         </StaticElement>
         <StaticElement name="divider">
@@ -240,14 +256,16 @@ watch([users, priorities, ticket_statuses], () => {
           :time="true"
           name="scheduled_start_time"
           class="col-span-4"
-          label="Scheduled Start Time"
+          label="Scheduled Start Time *"
+          :rules="['required']"
         />
         <DateElement
           :date="true"
           :time="true"
           name="scheduled_end_time"
           class="col-span-4"
-          label="Scheduled End Time"
+          label="Scheduled End Time *"
+          :rules="['required', 'after_or_equal:scheduled_start_time']"
         />
         <StaticElement name="divider">
           <hr />
@@ -259,22 +277,45 @@ watch([users, priorities, ticket_statuses], () => {
           :default="ticket?.priority_id"
           label="Priority"
           class="col-span-4"
+          :can-deselect="false"
         />
         <SelectElement
           :native="false"
           name="ticket_status_id"
           :items="selectTicketStatusOptions"
           :default="ticket?.latest_status.id"
-          label="Status"
+          label="Status *"
           class="col-span-4"
           :disabled="ticket?.latest_status.id == 7"
+          :rules="['required']"
+          :can-clear="false"
+          :can-deselect="false"
         />
         <SelectElement
           :native="false"
           name="tutor_id"
           :items="selectUserOptions"
-          label="Assignee"
+          label="Assignee *"
           class="col-span-4"
+          :rules="['required']"
+          :can-clear="false"
+          :can-deselect="false"
+        />
+        <StaticElement name="divider">
+          <hr />
+        </StaticElement>
+        <StaticElement name="description" class="col-span-6 row-span-2">
+          <div class="text-sm">
+            <div class="font-medium">Description</div>
+            <div>{{ ticket?.description }}</div>
+          </div>
+        </StaticElement>
+
+        <TextareaElement
+          name="tutor_note"
+          class="col-span-6 row-span-2"
+          label="Tutor's Note"
+          :rules="['between:0,500']"
         />
         <StaticElement name="divider">
           <hr />
@@ -288,65 +329,59 @@ watch([users, priorities, ticket_statuses], () => {
             {{ ticket?.student.first_name }} {{ ticket?.student.last_name }}
           </div>
         </StaticElement>
-        <StaticElement name="student_name" class="col-span-4">
-          <div class="text-sm">
-            <span class="font-medium">Program:</span>
-            {{ ticket?.program.name }}
-          </div>
-        </StaticElement>
-        <StaticElement name="description" class="col-span-4 row-span-2">
-          <div class="text-sm">
-            <div class="font-medium">Description</div>
-            <div>{{ ticket?.description }}</div>
-          </div>
-        </StaticElement>
-        <StaticElement name="student_name" class="col-span-4">
-          <div class="text-sm">
-            <span class="font-medium">Student ID:</span>
-            {{ ticket?.student_id }}
-          </div>
-        </StaticElement>
-        <StaticElement name="student_name" class="col-span-4">
-          <div class="text-sm">
-            <span class="font-medium">Program Level:</span>
-            {{ ticket?.program_level }}
-          </div>
-        </StaticElement>
+
         <StaticElement name="student_email" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">Student Email:</span>
             {{ ticket?.student.email }}
           </div>
         </StaticElement>
-        <StaticElement name="student_email" class="col-span-4">
+
+        <StaticElement name="student_id" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Student ID:</span>
+            {{ ticket?.student_id }}
+          </div>
+        </StaticElement>
+        <StaticElement name="program" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Program:</span>
+            {{ ticket?.program.name }}
+          </div>
+        </StaticElement>
+        <StaticElement name="program_level" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Program Level:</span>
+            {{ ticket?.program_level ? ticket?.program_level : 'N/A' }}
+          </div>
+        </StaticElement>
+        <StaticElement name="course" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">Course:</span>
             {{ ticket?.course.name }}
           </div>
         </StaticElement>
-        <TextareaElement
-          name="tutor_note"
-          class="col-span-4 row-span-2"
-          label="Tutor's Note"
-        />
         <StaticElement name="student_email" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">Machine Type:</span>
-            {{ ticket?.type_of_machine?.name }}
+            {{ ticket?.type_of_machine ? ticket?.type_of_machine.name : 'N/A' }}
           </div>
         </StaticElement>
         <StaticElement name="student_email" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">Operating System:</span>
-            {{ ticket?.operating_system?.name }}
+            {{
+              ticket?.operating_system ? ticket?.operating_system.name : 'N/A'
+            }}
           </div>
         </StaticElement>
         <ButtonElement
+          v-if="isAssignedTutor"
           name="button"
           button-class="font-semibold "
           danger
           submits
-          class="mx-auto"
+          class="mx-auto mt-4"
           >Update Ticket</ButtonElement
         >
       </Vueform>

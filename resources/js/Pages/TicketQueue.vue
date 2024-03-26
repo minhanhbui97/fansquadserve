@@ -77,6 +77,8 @@ const initFilters = () => {
         v-model:filters="filters"
         filterDisplay="menu"
         :globalFilterFields="['id', 'tutor.full_name', 'description', 'latest_status.name']"
+        sortField="id"
+        :sortOrder="-1"
       >
         <template #empty> No tickets found. </template>
         
@@ -91,7 +93,7 @@ const initFilters = () => {
           </template>
         </Column>
 
-        <Column header="Request Type" style="width: 100px">
+        <Column header="Request Type" style="max-width: 130px">
           <template #body="slotProps">
             <div class="singleLine">
               {{
@@ -107,8 +109,18 @@ const initFilters = () => {
           field="priority.name"
           header="Priority"
           sortable
-          style="width: 100px"
-        ></Column>
+          style="max-width: 80px"
+        >
+        <template #body="slotProps">
+            <div class="singleLine">
+              {{
+                slotProps.data.priority 
+                  ? slotProps.data.priority.name
+                  : 'N/A'
+              }}
+            </div>
+          </template>
+      </Column>
 
         <Column
           field="tutor.full_name"
@@ -158,9 +170,6 @@ const initFilters = () => {
               style="min-width: 12rem"
               :showClear="true"
             >
-              <!-- <template #option="slotProps">
-                <Tag :value="slotProps.option" />
-              </template> -->
             </Dropdown>
           </template>
         </Column>

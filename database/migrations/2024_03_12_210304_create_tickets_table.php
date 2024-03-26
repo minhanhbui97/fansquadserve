@@ -14,21 +14,21 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->string('reference_number', 20);
-            $table->tinyInteger('program_level');
-            $table->text('description', 5000);
+            $table->tinyInteger('program_level')->nullable();
+            $table->text('description', 500);
             $table->timestamp('scheduled_start_time');
             $table->timestamp('scheduled_end_time');
             $table->timestamp('actual_start_time')->nullable();
             $table->timestamp('actual_end_time')->nullable();
-            $table->text('tutor_note', 5000)->nullable();
+            $table->text('tutor_note', 500)->nullable();
             $table->timestamps();
 
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('assigned_tutor_id');
             $table->unsignedBigInteger('course_id');
-            $table->unsignedBigInteger('type_of_machine_id');
-            $table->unsignedBigInteger('operating_system_id');
-            $table->unsignedBigInteger('priority_id');
+            $table->unsignedBigInteger('type_of_machine_id')->nullable();
+            $table->unsignedBigInteger('operating_system_id')->nullable();
+            $table->unsignedBigInteger('priority_id')->nullable();
             $table->unsignedBigInteger('program_id');
 
             $table->foreign('student_id')->references('id')->on('students');
