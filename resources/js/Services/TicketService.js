@@ -43,7 +43,6 @@ export async function getUsers(course_id) {
       course_id,
     },
   });
-  //Need to pass course_id to get list of assignee available for that course only
   return response.data;
 }
 

@@ -24,6 +24,7 @@ const {
   users,
   currentTicket: ticket,
 } = storeToRefs(ticketStore);
+
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 

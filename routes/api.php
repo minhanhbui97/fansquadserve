@@ -31,16 +31,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    
 });
 
 Route::get('/users', [UserController::class, 'index']);
 
 Route::post('/users', [UserController::class, 'store']);
 
-Route::put('/users/{user}', [UserController::class, 'update']);
-Route::get('/users/{id}', [UserController::class,'show']);
+Route::get('/users/{id}', [UserController::class, 'show']);
 
+Route::put('/users/{user}', [UserController::class, 'update']);
 
 Route::get('/type_of_machines', [TypeOfMachineController::class, 'index']);
 
@@ -50,22 +49,23 @@ Route::get('/priorities', [PriorityController::class, 'index']);
 
 Route::get('/courses', [CourseController::class, 'index']);
 
-Route::get('/students/{student:fanshawe_id}', [StudentController::class,'show']);
-Route::post('/students', [StudentController::class,'store']);
-Route::put('/students/{student:fanshawe_id}', [StudentController::class,'update']);
+Route::get('/programs', [ProgramController::class, 'index']);
+
+Route::get('/roles', [RoleController::class, 'index']);
+
+Route::get('/ticket_statuses', [TicketStatusController::class, 'index']);
+
+Route::get('/students/{student:fanshawe_id}', [StudentController::class, 'show']);
+
+Route::post('/students', [StudentController::class, 'store']);
+
+Route::put('/students/{student:fanshawe_id}', [StudentController::class, 'update']);
 
 Route::get('/tickets', [TicketController::class, 'index']);
 
 Route::post('/tickets', [TicketController::class, 'store']);
 
-Route::get('/tickets/{id}', [TicketController::class,'show']);
-
-Route::get('/programs', [ProgramController::class, 'index']);
-
-Route::get('/roles', [RoleController::class, 'index']);
-
-
-Route::get('/ticket_statuses', [TicketStatusController::class, 'index']);
+Route::get('/tickets/{id}', [TicketController::class, 'show']);
 
 Route::put('/tickets/{ticket}', [TicketController::class, 'update']);
 

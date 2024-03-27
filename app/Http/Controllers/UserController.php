@@ -71,19 +71,51 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->is_active = $request->get('is_active');
+        $body = $request;
+        $user->first_name = $body->get('first_name');
+        $user->last_name = $body->get('last_name');
+        $user->email = $body->get('email');
+
+        if ($body->get('password')) {
+            $user->password = $body->get('password');
+        }
+
+        $role_ids = $body->get('roles');
+        $user->roles()->sync($role_ids);
+
+        if (in_array(1, $role_ids)) {
+            $course_ids = $body->get('courses');
+            $user->courses()->sync($course_ids);
+
+            if ($user->schedule_page === null) {
+                $schedule_page = new SchedulePage();
+                $schedule_page->schedule_url = $body->get('schedule_page');
+                $user->schedule_page()->save($schedule_page);
+            } else {
+                $user->schedule_page->update([
+                    'schedule_url' => $body->get('schedule_page')
+                ]);
+            }
+        } else {
+            $user->courses()->detach();
+            $user->schedule_page()->delete();
+        }
+
+        $user->is_active = $body->get('is_active');
+
         $user->save();
+        $user->refresh();
+        $user = User::where('id', $user->id)->with(['roles', 'courses', 'schedule_page'])->first();
         return $user;
     }
 
-    
+
     /**
      * Display the specified resource.
      */
     public function show(int $id)
     {
-        $user = User::where('id', $id)->with(['roles','courses','schedule_page'])->first();
+        $user = User::where('id', $id)->with(['roles', 'courses', 'schedule_page'])->first();
         return $user;
     }
-
 }

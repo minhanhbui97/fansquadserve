@@ -53,8 +53,7 @@ export const useTicketStore = defineStore('ticket', () => {
     priorities.value = data;
   }
 
-  // Need to get the users available for the course
-  // Need to get the user assigned for the ticket
+
   async function getUsers(courseId) {
     isLoading.value = true;
     const data = await getAllUsers(courseId);
