@@ -31,10 +31,7 @@ class TicketFactory extends Factory
             'description' => fake()->paragraph(),
             'scheduled_start_time' => fake()->dateTime(),
             'scheduled_end_time' => fake()->dateTime(),
-            // 'actual_start_time' => fake()->dateTime(),
-            // 'actual_end_time' => fake()->dateTime(),
             'tutor_note' => fake()->paragraph(),
-
             'student_id' => Student::factory(),
             'program_id' => Program::all()->random(),
             'type_of_machine_id' => TypeOfMachine::all()->random(),

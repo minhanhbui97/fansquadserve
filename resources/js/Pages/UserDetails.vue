@@ -54,7 +54,7 @@ onMounted(() => {
 let selectedRoleIds = ref([]);
 let selectedRolesArr = ref([]);
 
-function selectedRoles(option) {
+function selectRoles(option) {
   selectedRoleIds.value.push(option);
   if (option === 1) {
     is_tutor.value = true;
@@ -87,7 +87,7 @@ function deselectRoles(option) {
 let selectedCourseIds = ref([]);
 let selectedCoursesArr = ref([]);
 
-function selectedCourses(option) {
+function selectCourses(option) {
   selectedCourseIds.value.push(option);
 
   var courseObj = {};
@@ -146,8 +146,6 @@ watch(is_tutor, () => {
 });
 
 watch(user, () => {
-  // const existingRoleIds = [];
-
   if (user.value) {
     formRef.value.el$('first_name').update(user.value.first_name);
     formRef.value.el$('last_name').update(user.value.last_name);
@@ -165,7 +163,7 @@ watch(user, () => {
       console.log(is_tutor.value);
     }
 
-    if (user.value.is_active === 1) {
+    if (user.value.is_active === true) {
       formRef.value.el$('is_active').check();
     }
   }
@@ -180,7 +178,7 @@ watch(user, () => {
       <Vueform ref="formRef" @submit="submitUser" :endpoint="false">
         <TextElement
           name="first_name"
-          label="FirstName"
+          label="First Name"
           input-type="text"
           :rules="['max:255']"
           class="col-span-6"
@@ -188,7 +186,7 @@ watch(user, () => {
 
         <TextElement
           name="last_name"
-          label="LastName"
+          label="Last Name"
           input-type="text"
           class="col-span-6"
           :rules="['max:255']"
@@ -226,7 +224,7 @@ watch(user, () => {
           class="col-span-6"
           :close-on-select="false"
           :hide-selected="false"
-          @select="selectedRoles"
+          @select="selectRoles"
           @deselect="deselectRoles"
           :can-clear="false"
         />
@@ -238,22 +236,18 @@ watch(user, () => {
           class="col-span-6"
           :close-on-select="false"
           :hide-selected="false"
-          @select="selectedCourses"
+          @select="selectCourses"
           @deselect="deselectCourses"
+          :can-clear="false"
           :search="true"
-          :conditions="[
-  (form$, el$) => form$.el$('roles')?.value.includes(1)
-]"
-  
+          :conditions="[(form$, el$) => form$.el$('roles')?.value.includes(1)]"
         />
         <TextElement
           name="schedule_page"
           label="Tutor's Schedule"
           class="col-span-6"
           input-type="text"
-          :conditions="[
-  (form$, el$) => form$.el$('roles')?.value.includes(1)
-]"
+          :conditions="[(form$, el$) => form$.el$('roles')?.value.includes(1)]"
         />
         <StaticElement name="divider">
           <hr />

@@ -1,44 +1,44 @@
 export async function getAllTickets() {
-  const response = await axios.get('/api/tickets');
+  const response = await axios.get('/_api/tickets');
   return response.data;
 }
 
 export async function getTicketById(id) {
-  const response = await axios.get(`/api/tickets/${id}`);
+  const response = await axios.get(`/_api/tickets/${id}`);
   return response.data;
 }
 
 export async function getAllPriorities() {
-  const response = await axios.get('/api/priorities');
+  const response = await axios.get('/_api/priorities');
   return response.data;
 }
 
 export async function getAllTicketStatuses() {
-  const response = await axios.get('/api/ticket_statuses');
+  const response = await axios.get('/_api/ticket_statuses');
   return response.data;
 }
 export async function getAllOperatingSystems() {
-  const response = await axios.get('/api/operating_systems');
+  const response = await axios.get('/_api/operating_systems');
   return response.data;
 }
 
 export async function getAllPrograms() {
-  const response = await axios.get('/api/programs');
+  const response = await axios.get('/_api/programs');
   return response.data;
 }
 
 export async function getAllTypeofMachines() {
-  const response = await axios.get('/api/type_of_machines');
+  const response = await axios.get('/_api/type_of_machines');
   return response.data;
 }
 
 export async function getAllCourses() {
-  const response = await axios.get('/api/courses');
+  const response = await axios.get('/_api/courses');
   return response.data;
 }
 
 export async function getUsers(course_id) {
-  const response = await axios.get('/api/users', {
+  const response = await axios.get('/_api/users', {
     params: {
       course_id,
     },
@@ -47,13 +47,13 @@ export async function getUsers(course_id) {
 }
 
 export async function updateTicket(ticketId, data) {
-  const response = await axios.put(`/api/tickets/${ticketId}`, data);
+  const response = await axios.put(`/_api/tickets/${ticketId}`, data);
   return response.data;
 }
 
 export async function 
 
 createTicket(data) {
-  const response = await axios.post(`/api/tickets/`, data);
+  const response = await axios.post(`/_api/tickets/`, data);
   return response.data;
 }

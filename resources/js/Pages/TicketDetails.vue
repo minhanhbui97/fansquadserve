@@ -379,7 +379,7 @@ watch([users, priorities, ticket_statuses], () => {
         <ButtonElement
           v-if="isAssignedTutor"
           name="button"
-          button-class="font-semibold "
+          button-class="font-semibold"
           danger
           submits
           class="mx-auto mt-4"

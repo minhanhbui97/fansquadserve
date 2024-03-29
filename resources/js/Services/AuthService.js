@@ -4,7 +4,7 @@ export async function login(payload) {
 }
 
 export async function fetchAuthUser() {
-  const data = await axios.get('/api/user');
+  const data = await axios.get('/_api/user');
   return data.data;
 }
 
