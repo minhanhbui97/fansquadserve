@@ -2,10 +2,17 @@
 import { useAuthStore } from '@/Stores/AuthStore';
 import { useTicketStore } from '@/Stores/TicketStore';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useToast } from 'vue-toastification';
+
+// Get local timezone to display Actual Start/End Time
+const localTz = dayjs.tz.guess();
 
 const route = useRoute();
 const ticket_id = route.params.id;
@@ -221,37 +228,6 @@ watch([users, priorities, ticket_statuses], () => {
         <StaticElement name="divider">
           <hr />
         </StaticElement>
-        <StaticElement name="actual_start_time" class="col-span-4">
-          <div class="text-sm">
-            <span class="font-medium">Actual Start Time:</span>
-            {{
-              ticket?.actual_start_time
-                ? dayjs(ticket.actual_start_time).format('YYYY-MM-DD HH:MM')
-                : 'N/A'
-            }}
-          </div>
-        </StaticElement>
-        <StaticElement name="actual_end_time" class="col-span-4">
-          <div class="text-sm">
-            <span class="font-medium">Actual End Time:</span>
-            {{
-              ticket?.actual_end_time
-                ? dayjs(ticket.actual_end_time).format('YYYY-MM-DD HH:MM')
-                : 'N/A'
-            }}
-          </div>
-        </StaticElement>
-        <StaticElement class="col-span-4 row-span-2" name="sla">
-          <div class="flex flex-col gap-4">
-            <h1 class="font-medium text-sm">SLA</h1>
-            <div class="text-sm">
-              First Response Time: {{ firstResponseTime }} hour(s)
-            </div>
-            <div class="text-sm">
-              Resolution Time: {{ resolutionTime }} hour(s)
-            </div>
-          </div>
-        </StaticElement>
         <DateElement
           :date="true"
           :time="true"
@@ -268,6 +244,45 @@ watch([users, priorities, ticket_statuses], () => {
           label="Scheduled End Time *"
           :rules="['required', 'after_or_equal:scheduled_start_time']"
         />
+        <StaticElement class="col-span-4" name="sla">
+          <div class="flex flex-col gap-4">
+            <h1 class="font-medium text-sm">SLA</h1>
+            <div class="text-sm">
+              First Response Time: {{ firstResponseTime }} hour(s)
+            </div>
+            <div class="text-sm">
+              Resolution Time: {{ resolutionTime }} hour(s)
+            </div>
+          </div>
+        </StaticElement>
+        <StaticElement name="actual_start_time" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Actual Start Time:</span>
+            {{
+              ticket?.actual_start_time
+                ? dayjs.utc(ticket.actual_start_time).tz(localTz).format('YYYY-MM-DD HH:mm')
+                : 'N/A'
+            }}
+          </div>
+        </StaticElement>
+        <StaticElement name="actual_end_time" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Actual End Time:</span>
+            {{
+              ticket?.actual_end_time
+                ? dayjs.utc(ticket.actual_end_time).tz(localTz).format('YYYY-MM-DD HH:mm')
+                : 'N/A'
+            }}
+          </div>
+        </StaticElement>
+        <StaticElement name="created_at" class="col-span-4">
+          <div class="text-sm">
+            <span class="font-medium">Created At:</span>
+            {{
+              dayjs.utc(ticket?.created_at).tz(localTz).format('YYYY-MM-DD HH:mm')
+            }}
+          </div>
+        </StaticElement>
         <StaticElement name="divider">
           <hr />
         </StaticElement>
