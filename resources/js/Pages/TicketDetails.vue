@@ -120,6 +120,11 @@ const selectUserOptions = computed(() => {
 
 const allStatuses = computed(() => ticket.value?.ticket_statuses || []);
 
+// Helper function to round to 2 decimal place
+function roundNum(num) {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+}
+
 const firstResponseTime = computed(() => {
   if (!allStatuses.value.length) return 'N/A';
 
@@ -133,8 +138,8 @@ const firstResponseTime = computed(() => {
 
   const time1 = dayjs(status1.pivot.created_at);
   const time2 = dayjs(status2.pivot.created_at);
-
-  return time2.diff(time1, 'h');
+  
+  return roundNum(time2.diff(time1, 'h', true));
 });
 
 const resolutionTime = computed(() => {
@@ -152,7 +157,7 @@ const resolutionTime = computed(() => {
   const time1 = dayjs(status1.pivot.created_at);
   const time2 = dayjs(status2.pivot.created_at);
 
-  return time2.diff(time1, 'h');
+  return roundNum(time2.diff(time1, 'h', true));
 });
 
 async function submitTicket(values) {
