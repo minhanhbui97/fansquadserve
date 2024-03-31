@@ -35,7 +35,6 @@ export const useUserStore = defineStore('user', () => {
     isLoading.value = true;
     const data = await updateUser(userId, payload);
     currentUser.value = data;
-    console.log(currentUser.value);
     isLoading.value = false;
   }
 
@@ -43,12 +42,15 @@ export const useUserStore = defineStore('user', () => {
     isLoading.value = true;
     const data = await getAllRoles();
     roles.value = data;
+    isLoading.value = false;
+
   }
 
   async function getCourses() {
     isLoading.value = true;
     const data = await getAllCourses();
     courses.value = data;
+    isLoading.value = false;
   }
 
   return {

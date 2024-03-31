@@ -62,8 +62,8 @@ const routes = [
     },
   },
   {
-    path: '/user-management',
-    name: 'user-management',
+    path: '/users',
+    name: 'users',
     component: UserManagement,
     meta: {
       requiresAuth: true,
@@ -74,17 +74,17 @@ const routes = [
 
 //
 {
-  path: '/user-management',
-  name: 'user-management',
+  path: '/users',
+  name: 'users',
   // component: { render: () => h(RouterView) },
   meta: {
     requiresAuth: true,
   },
-  redirect: '/user-management',
+  redirect: '/users',
   children: [
     { 
       path: '',
-      name: 'user-management',
+      name: 'users',
       component: UserManagement
     },
     { 
@@ -168,6 +168,7 @@ router.beforeEach(async (to, from) => {
   if (to.name !== 'login' && isLoggedIn.value && user.value === null) {
     try {
       await getAuthUser();
+      return;
     } catch (err) {
       reset();
 

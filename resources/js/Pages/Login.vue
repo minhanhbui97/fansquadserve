@@ -2,9 +2,12 @@
 import { ref } from 'vue';
 import { useAuthStore } from '@/Stores/AuthStore';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 
 const email = ref('');
 const password = ref('');
+const toast = useToast();
+
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -12,9 +15,11 @@ const { login, error, clearError } = authStore;
 
 async function submit(values) {
   clearError();
-  await login({ email: values.data.email, password: values.data.password });
-  if (!error) {
+  try {
+    await login({ email: values.data.email, password: values.data.password });
     router.push({ name: 'tickets' });
+  } catch {
+    toast.error('Unable to login. Please use your valid email address and password!');
   }
 }
 </script>

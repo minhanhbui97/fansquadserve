@@ -19,7 +19,6 @@ onMounted(() => {
 });
 
 async function submit(id) {
-  console.log(id);
   router.push({ name: 'user-details', params: { id } });
 }
 

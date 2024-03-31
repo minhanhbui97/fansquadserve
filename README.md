@@ -57,4 +57,4 @@
 
 
 ### User Management Page 
-- Route: /user-management
+- Route: /users

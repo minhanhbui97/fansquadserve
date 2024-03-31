@@ -15,7 +15,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAdmin = computed(() => {
     if (!user.value) return false;
-    console.log(user.value);
     if (user.value.roles) {
       return user.value.roles.find((role) => role.name === 'Admin');
     }

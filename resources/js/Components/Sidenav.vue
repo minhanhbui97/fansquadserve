@@ -28,30 +28,24 @@ async function handleLogout() {
       <section class="flex flex-col w-full justify-center items-center">
         <router-link
           :to="{ name: 'tickets' }"
-          class="flex gap-4 items-center py-4 px-8 font-semibold w-full"
+          class="flex gap-5 items-center py-4 px-8 font-semibold w-full"
         >
-          <div class="w-8 h-8">
-            <DocIcon class="h-full w-full" />
-          </div>
+          <font-awesome-icon icon="fa-file-lines" size="2xl" />
           <div>Ticket Queue</div>
         </router-link>
         <router-link
           :to="{ name: 'data-dashboard' }"
           class="flex gap-4 py-4 px-8 items-center font-semibold w-full"
         >
-          <div class="w-8 h-8">
-            <GraphIcon class="h-full w-full" />
-          </div>
+          <font-awesome-icon icon="fa-chart-simple" size="2xl" />
           <div>Data Dashboard</div>
         </router-link>
         <router-link
           v-if="isAdmin"
-          :to="{ name: 'user-management' }"
-          class="flex gap-4 items-center py-4 px-8 font-semibold w-full"
+          :to="{ name: 'users' }"
+          class="flex gap-3.5 items-center py-4 px-8 font-semibold w-full"
         >
-          <div class="w-8 h-8">
-            <PeopleIcon class="h-full w-full" />
-          </div>
+          <font-awesome-icon icon="fa-users" size="xl" />
           <div>User Management</div>
         </router-link>
       </section>

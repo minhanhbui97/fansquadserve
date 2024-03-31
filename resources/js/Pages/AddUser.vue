@@ -14,7 +14,6 @@ const { courses, roles } = storeToRefs(userStore);
 
 const formRef = ref(null);
 const visible = ref(false);
-const formData = ref(null);
 const user = ref(null);
 const toast = useToast();
 
@@ -111,7 +110,7 @@ async function submitUser(values) {
       formRef.value.reset();
 
       toast.success('Create user successfully!');
-      router.push({ name: 'user-management' });
+      router.push({ name: 'users' });
     } catch {
       toast.error('Unable to create user. Please try again!');
     }

@@ -14,6 +14,7 @@ const userStore = useUserStore();
 const { getRoles, getCourses, getCurrentUser, updateCurrentUser } = userStore;
 
 const { courses, roles, currentUser: user } = storeToRefs(userStore);
+const isLoading = ref(false);
 
 const formRef = ref();
 const toast = useToast();
@@ -37,10 +38,16 @@ const selectRoleOptions = computed(() => {
   });
 });
 
+async function initialize() {
+  isLoading.value = true;
+  await getCurrentUser(user_id);
+  await getCourses();
+  await getRoles();
+  isLoading.value = false;
+}
+
 onMounted(() => {
-  getCurrentUser(user_id);
-  getCourses();
-  getRoles();
+  initialize();
 });
 
 // Handle Role MultiSelect element
@@ -142,7 +149,6 @@ watch(user, () => {
 
     if (selectedRoleIds.value.includes(1)) {
       is_tutor.value = true;
-      console.log(is_tutor.value);
     }
 
     if (user.value.is_active === true) {
@@ -157,8 +163,6 @@ async function submitUser(values) {
   let submitted_email_domain = submitted_email.split('@')[1];
   if (allowed_domains.includes(submitted_email_domain)) {
     try {
-      console.log(submitted_email_domain);
-
       await updateCurrentUser(user.value.id, values.requestData);
       toast.success('Update user successfully!');
     } catch {
@@ -177,6 +181,7 @@ async function submitUser(values) {
   >
     <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
       User Details
+      <font-awesome-icon icon="fa-spinner" v-if="isLoading" class="fa-spin" />
     </h1>
     <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
       <Vueform
@@ -279,5 +284,6 @@ async function submitUser(values) {
         </button>
       </Vueform>
     </div>
+    
   </div>
 </template>
