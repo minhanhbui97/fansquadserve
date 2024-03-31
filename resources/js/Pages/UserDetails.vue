@@ -278,10 +278,15 @@ async function submitUser(values) {
           true-value="1"
           false-value="0"
         />
-
-        <button class="bg-red-700 h-12 w-40 text-white rounded">
-          Update User
-        </button>
+        <ButtonElement
+          name="button"
+          button-class="font-semibold"
+          danger
+          submits
+          class="mx-auto mt-4"
+        >
+        Update User
+        </ButtonElement>
       </Vueform>
     </div>
     
