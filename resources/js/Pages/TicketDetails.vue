@@ -37,6 +37,7 @@ const { user } = storeToRefs(authStore);
 
 const formRef = ref();
 const toast = useToast();
+const isLoading = ref(false);
 
 const isAssignedTutor = computed(() => {
   if (!user.value || !ticket.value) return false;
@@ -138,7 +139,7 @@ const firstResponseTime = computed(() => {
 
   const time1 = dayjs(status1.pivot.created_at);
   const time2 = dayjs(status2.pivot.created_at);
-  
+
   return roundNum(time2.diff(time1, 'h', true));
 });
 
@@ -165,10 +166,16 @@ async function submitTicket(values) {
   toast.success('Update ticket successfully!');
 }
 
+async function initialize() {
+  isLoading.value = true;
+  await getCurrentTicket(ticket_id);
+  await getPriorities();
+  await getTicketStatuses();
+  isLoading.value = false;
+}
+
 onMounted(() => {
-  getCurrentTicket(ticket_id);
-  getPriorities();
-  getTicketStatuses();
+  initialize();
 });
 
 watch(ticket, () => {
@@ -201,12 +208,12 @@ watch([users, priorities, ticket_statuses], () => {
   <div
     class="max-w-6xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-auto flex-grow"
   >
-    <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
+  <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
       Ticket Details
+      <font-awesome-icon icon="fa-spinner" v-if="isLoading" class="fa-spin" />
     </h1>
 
     <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
-      <h2 class="text-amber-800 text-lg font-bold">Ticket Details</h2>
       <Vueform
         ref="formRef"
         @submit="submitTicket"
@@ -265,7 +272,10 @@ watch([users, priorities, ticket_statuses], () => {
             <span class="font-medium">Actual Start Time:</span>
             {{
               ticket?.actual_start_time
-                ? dayjs.utc(ticket.actual_start_time).tz(localTz).format('YYYY-MM-DD HH:mm')
+                ? dayjs
+                    .utc(ticket.actual_start_time)
+                    .tz(localTz)
+                    .format('YYYY-MM-DD HH:mm')
                 : 'N/A'
             }}
           </div>
@@ -275,7 +285,10 @@ watch([users, priorities, ticket_statuses], () => {
             <span class="font-medium">Actual End Time:</span>
             {{
               ticket?.actual_end_time
-                ? dayjs.utc(ticket.actual_end_time).tz(localTz).format('YYYY-MM-DD HH:mm')
+                ? dayjs
+                    .utc(ticket.actual_end_time)
+                    .tz(localTz)
+                    .format('YYYY-MM-DD HH:mm')
                 : 'N/A'
             }}
           </div>
@@ -284,7 +297,10 @@ watch([users, priorities, ticket_statuses], () => {
           <div class="text-sm">
             <span class="font-medium">Created At:</span>
             {{
-              dayjs.utc(ticket?.created_at).tz(localTz).format('YYYY-MM-DD HH:mm')
+              dayjs
+                .utc(ticket?.created_at)
+                .tz(localTz)
+                .format('YYYY-MM-DD HH:mm')
             }}
           </div>
         </StaticElement>
@@ -403,8 +419,7 @@ watch([users, priorities, ticket_statuses], () => {
           danger
           submits
           class="mx-auto mt-4"
-          >Update Ticket</ButtonElement
-        >
+          >Update Ticket</ButtonElement>
       </Vueform>
     </div>
   </div>
