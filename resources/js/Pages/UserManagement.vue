@@ -4,11 +4,9 @@ import { storeToRefs } from 'pinia';
 import { onMounted, ref, computed } from 'vue';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
-import dayjs from 'dayjs';
 import { useRouter } from 'vue-router';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import InputText from 'primevue/inputtext';
-import Dropdown from 'primevue/dropdown';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -18,16 +16,14 @@ const { users } = storeToRefs(userStore);
 onMounted(() => {
   getUsers();
   initFilters();
-
 });
 
 async function submit(id) {
-  console.log(id)
-  router.push({ name: 'user-details', params: { id }})
+  console.log(id);
+  router.push({ name: 'user-details', params: { id } });
 }
 
 const filters = ref();
-
 
 const initFilters = () => {
   filters.value = {
@@ -40,15 +36,13 @@ const initFilters = () => {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
     },
-    
+
     last_name: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
     },
-    
   };
 };
-
 </script>
 
 <template>
@@ -74,17 +68,12 @@ const initFilters = () => {
         showGridlines
         v-model:filters="filters"
         filterDisplay="menu"
-        :globalFilterFields="['id','first_name', 'last_name']"
+        :globalFilterFields="['id', 'first_name', 'last_name']"
         sortField="id"
         :sortOrder="-1"
       >
-        <Column
-          field="id"
-          header="User ID"
-          sortable
-          style="width: 100px"
-        >
-        <template #filter="{ filterModel }">
+        <Column field="id" header="User ID" sortable style="width: 100px">
+          <template #filter="{ filterModel }">
             <InputText
               v-model="filterModel.value"
               type="text"
@@ -92,15 +81,14 @@ const initFilters = () => {
               placeholder="Search by ID"
             />
           </template>
-      </Column>
-       
+        </Column>
         <Column
           field="first_name"
           header="First Name"
           sortable
           style="width: 100px"
         >
-        <template #filter="{ filterModel }">
+          <template #filter="{ filterModel }">
             <InputText
               v-model="filterModel.value"
               type="text"
@@ -108,14 +96,14 @@ const initFilters = () => {
               placeholder="Search by First Name"
             />
           </template>
-      </Column>
+        </Column>
         <Column
           field="last_name"
           header="Last Name"
           sortable
           style="width: 130px"
         >
-        <template #filter="{ filterModel }">
+          <template #filter="{ filterModel }">
             <InputText
               v-model="filterModel.value"
               type="text"
@@ -123,33 +111,30 @@ const initFilters = () => {
               placeholder="Search by Last Name"
             />
           </template>
-      </Column>
-
+        </Column>
         <Column field="roles" sortable header="Role">
           <template #body="slotProps">
-            <!--{{ slotProps.data.roles[0].name }}-->
+            <template v-for="role in slotProps?.data.roles">
+              <ul>
+                {{
+                  role.name
+                }}
+              </ul></template
+            >
           </template>
         </Column>
-
         <Column
           field="email"
           header="Email"
           sortable
           style="width: 100px"
         ></Column>
-
-        <!--<Column field="description" header="Description" style="width: 200px">
+        <Column field="is_active" header="Status" style="width: 100px">
           <template #body="slotProps">
             <div class="singleLine">
-              {{ slotProps.data.description }}
+              {{ slotProps.data.is_active === true ? 'Active' : 'Inactive' }}
             </div>
           </template>
-        </Column>-->
-
-        <Column field="last_used_at" sortable header="Last LogIn">
-          <template #body="slotProps">{{
-            dayjs(slotProps.data.last_used_at).format('MMM DD, YYYY HH:mm:ss')
-          }}</template>
         </Column>
         <Column header="Action">
           <template #body="slotProps">

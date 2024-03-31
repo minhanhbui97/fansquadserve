@@ -43,18 +43,16 @@ class UserController extends Controller
 
         $user = User::create($body_user);
 
-        $roles = $body['roles'];
-        $role_ids = array_map(fn ($value): int => $value['id'], $roles);
+        $role_ids = $body['roles'];
 
         // Attach many-to-many relationshup with role
         $user->roles()->attach($role_ids);
 
         // If roles_ids contain 1 (role tutor)
-        if (array_search(1, array_column($roles, 'id')) !== false) {
+        if (array_search(1, $role_ids) !== false) {
             //Attach many-to-many relationship with course 
-            $courses = $body['courses'];
-            $courses_ids = array_map(fn ($value): int => $value['id'], $courses);
-            $user->courses()->attach($courses_ids);
+            $course_ids = $body['courses'];
+            $user->courses()->attach($course_ids);
 
             // Add one-to-one relationship with schedule_page 
             $schedule_page = new SchedulePage();

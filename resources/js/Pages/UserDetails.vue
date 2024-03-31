@@ -37,13 +37,6 @@ const selectRoleOptions = computed(() => {
   });
 });
 
-async function submitUser(values) {
-  console.log(user.value.id);
-  console.log(values.requestData);
-  await updateCurrentUser(user.value.id, values.requestData);
-  toast.success('Update user successfully!');
-}
-
 onMounted(() => {
   getCurrentUser(user_id);
   getCourses();
@@ -79,10 +72,6 @@ function deselectRoles(option) {
   });
 }
 
-// function deselectAllRoles() {
-//   selectedRolesArr.value = [];
-// }
-
 // Handle Course MultiSelect element
 let selectedCourseIds = ref([]);
 let selectedCoursesArr = ref([]);
@@ -109,10 +98,6 @@ function deselectCourses(option) {
   );
 }
 
-// function deselectAllCourses() {
-//   selectedCoursesArr.value = [];
-// }
-
 const is_tutor = ref(false);
 
 watch(user, () => {
@@ -123,8 +108,6 @@ watch(user, () => {
   }
 });
 
-// const existingCourseIds = ref([]);
-
 watch(is_tutor, () => {
   if (is_tutor) {
     if (is_tutor.value) {
@@ -134,7 +117,6 @@ watch(is_tutor, () => {
           formRef.value.el$('courses').select(course.id);
         }
       });
-      console.log(selectedCourseIds.value);
 
       if (user.value.schedule_page) {
         formRef.value
@@ -168,57 +150,90 @@ watch(user, () => {
     }
   }
 });
+
+async function submitUser(values) {
+  const allowed_domains = ['fanshaweonline.ca', 'fanshawec.ca'];
+  let submitted_email = values.requestData.email;
+  let submitted_email_domain = submitted_email.split('@')[1];
+  if (allowed_domains.includes(submitted_email_domain)) {
+    try {
+      console.log(submitted_email_domain);
+
+      await updateCurrentUser(user.value.id, values.requestData);
+      toast.success('Update user successfully!');
+    } catch {
+      toast.error('Unable to update user. Please try again!');
+    }
+  } else {
+    toast.error(
+      'Unable to update user. Please use your @fanshaweonline.ca or @fanshawec.ca email address!',
+    );
+  }
+}
 </script>
 <template>
   <div
     class="max-w-4xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-auto flex-grow"
   >
-    <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">User Details</h1>
+    <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
+      User Details
+    </h1>
     <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
-      <Vueform ref="formRef" @submit="submitUser" :endpoint="false">
+      <Vueform
+        ref="formRef"
+        @submit="submitUser"
+        :endpoint="false"
+        :display-errors="false"
+      >
         <TextElement
           name="first_name"
-          label="First Name"
+          label="First Name *"
           input-type="text"
-          :rules="['max:255']"
+          :rules="['required', 'alpha', 'between:3,50']"
           class="col-span-6"
         />
 
         <TextElement
           name="last_name"
-          label="Last Name"
+          label="Last Name *"
           input-type="text"
           class="col-span-6"
-          :rules="['max:255']"
+          :rules="['required', 'alpha', 'between:3,50']"
         />
         <TextElement
           name="email"
-          label="Email"
+          label="Email *"
           input-type="email"
-          :rules="['email', 'max:255']"
+          :rules="['required', 'email']"
           class="col-span-6"
-        />
+        >
+          <template v-slot:description="{ el$ }">
+            <div>Please use your Fanshawe domain email.</div>
+          </template>
+        </TextElement>
         <StaticElement name="divider">
           <hr />
         </StaticElement>
         <TextElement
           name="password"
-          label="Password"
+          label="Password *"
           input-type="password"
           class="col-span-6"
+          :rules="['between:8,255', 'confirmed']"
         />
         <TextElement
-          name="repassword"
-          label="Retype Password"
+          name="password_confirmation"
+          label="Password Confirmation *"
           input-type="password"
           class="col-span-6"
+          :rules="['between:8,255']"
         />
         <StaticElement name="divider">
           <hr />
         </StaticElement>
         <MultiselectElement
           name="roles"
-          label="Role"
+          label="Role *"
           :native="false"
           :items="selectRoleOptions"
           class="col-span-6"

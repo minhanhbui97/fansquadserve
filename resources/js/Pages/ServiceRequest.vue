@@ -227,7 +227,7 @@ watch(student, () => {
           label="Student Email *"
           input-type="email"
           class="col-span-6"
-          :rules="['required', 'email', 'between:15,320']"
+          :rules="['required', 'email']"
         >
           <template v-slot:description="{ el$ }">
             <div>Please use your Fanshawe student email.</div>
