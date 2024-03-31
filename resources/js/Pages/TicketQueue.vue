@@ -61,7 +61,7 @@ const initFilters = () => {
 
 <template>
   <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 justify-center">
-    <h1 class="text-amber-800 text-3xl font-bold">Ticket Queue</h1>
+    <h1 class="text-amber-800 text-3xl font-bold">List of Tickets</h1>
     <div class="flex-grow">
 
       <DataTable

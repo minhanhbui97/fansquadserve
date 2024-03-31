@@ -206,7 +206,7 @@ watch([users, priorities, ticket_statuses], () => {
     </h1>
 
     <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
-      <h2 class="text-amber-800 text-lg font-bold">Request Details</h2>
+      <h2 class="text-amber-800 text-lg font-bold">Ticket Details</h2>
       <Vueform
         ref="formRef"
         @submit="submitTicket"
