@@ -208,7 +208,7 @@ watch([users, priorities, ticket_statuses], () => {
   <div
     class="max-w-6xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-auto flex-grow"
   >
-  <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
+  <h1 class="text-red-700 text-3xl font-bold flex-shrink-0">
       Ticket Details
       <font-awesome-icon icon="fa-spinner" v-if="isLoading" class="fa-spin" />
     </h1>

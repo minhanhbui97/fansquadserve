@@ -36,7 +36,6 @@ const filters = ref();
 
 const initFilters = () => {
   filters.value = {
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     id: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
@@ -60,7 +59,7 @@ const initFilters = () => {
 
 <template>
   <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 justify-center">
-    <h1 class="text-amber-800 text-3xl font-bold">List of Tickets</h1>
+    <h1 class="text-red-700 text-3xl font-bold">List of Tickets</h1>
     <div class="flex-grow">
 
       <DataTable
@@ -75,7 +74,6 @@ const initFilters = () => {
         showGridlines
         v-model:filters="filters"
         filterDisplay="menu"
-        :globalFilterFields="['id', 'tutor.full_name', 'description', 'latest_status.name']"
         sortField="id"
         :sortOrder="-1"
       >

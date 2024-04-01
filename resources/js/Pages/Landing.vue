@@ -163,7 +163,7 @@
 
   <footer class="bg-gray-900 text-white mt-80 p-8">
     <p class="text-center">
-      © 2024 Copyright: Fanshawe Project Proposal Management System
+      Copyright © 2024 Business & Information Systems Architecture Cohort
     </p>
 
   </footer>

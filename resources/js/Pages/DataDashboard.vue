@@ -320,7 +320,7 @@ watch(users, () => {
 <template>
   <div class="max-w-full mx-auto p-8 h-full overflow-auto">
     <div class="flex flex-col gap-8 max-w-6xl mx-auto">
-      <h1 class="text-amber-800 text-3xl font-bold">Data Dashboard</h1>
+      <h1 class="text-red-700 text-3xl font-bold">Data Dashboard</h1>
       <Vueform ref="formRef" :endpoint="false">
         <SelectElement
           name="date_range"
@@ -362,20 +362,20 @@ watch(users, () => {
       </Vueform>
       <div class="flex gap-8 w-full">
         <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50 basis-1/2">
-          <h2 class="text-amber-800 text-lg font-bold">Tickets by Date</h2>
+          <h2 class="text-red-700 text-lg font-bold">Tickets by Date</h2>
           <div>
             <TicketByDateBarChart :data="date_chart_result" />
           </div>
         </div>
         <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50 basis-1/2">
-          <h2 class="text-amber-800 text-lg font-bold">Tickets by Status</h2>
+          <h2 class="text-red-700 text-lg font-bold">Tickets by Status</h2>
           <div>
             <TicketByStatusBarChart :data="status_chart_result" />
           </div>
         </div>
       </div>
       <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
-        <h2 class="text-amber-800 text-lg font-bold">
+        <h2 class="text-red-700 text-lg font-bold">
           Average SLA By Priority
         </h2>
         <div>

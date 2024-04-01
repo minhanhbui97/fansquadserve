@@ -412,7 +412,7 @@ watch(student, () => {
         <p>Dear {{ formData?.first_name }} {{ formData?.last_name }},</p>
         <p class="mb-4">
           Thank you for making a service request to the LabSquad at Fanshawe
-          College London South! Your information has been recorded as follows:
+          College London South Campus! Your information has been recorded as follows:
         </p>
 
         <div class="text-sm flex flex-col gap-2 mb-4">

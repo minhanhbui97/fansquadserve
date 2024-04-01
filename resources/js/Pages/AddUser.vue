@@ -125,7 +125,7 @@ async function submitUser(values) {
   <div
     class="max-w-4xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-auto flex-grow"
   >
-    <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">Add User</h1>
+    <h1 class="text-red-700 text-3xl font-bold flex-shrink-0">Add User</h1>
     <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
       <Vueform
         ref="formRef"
