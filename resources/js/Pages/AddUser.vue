@@ -189,6 +189,7 @@ async function submitUser(values) {
           @select="selectRoles"
           @deselect="deselectRoles"
           :can-clear="false"
+          :rules="['required']"
         />
         <MultiselectElement
           name="courses"
