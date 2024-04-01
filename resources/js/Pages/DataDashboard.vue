@@ -158,12 +158,22 @@ const status_chart_result = computed(() => {
 
 // Get data for AverageSLABarChart
 const sla_chart_result = computed(() => {
-  const tickets_filtered_by_date = _.filter(tickets.value, function (t) {
-    return dayjs(t.created_at).isBetween(
-      dayjs(),
-      dayjs().subtract(date_diff.value, 'day'),
-    );
-  });
+  const tickets_filtered_by_active_tutor = _.filter(
+    tickets.value,
+    function (t) {
+      return t.tutor.is_active == true;
+    },
+  );
+
+  const tickets_filtered_by_date = _.filter(
+    tickets_filtered_by_active_tutor,
+    function (t) {
+      return dayjs(t.created_at).isBetween(
+        dayjs(),
+        dayjs().subtract(date_diff.value, 'day'),
+      );
+    },
+  );
 
   const tickets_filtered_by_date_and_assignee = _.filter(
     tickets_filtered_by_date,

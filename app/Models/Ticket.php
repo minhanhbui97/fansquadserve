@@ -22,11 +22,11 @@ class Ticket extends Model
     }
 
     public function ticketStatuses() {
-        return $this->belongsToMany(TicketStatus::class)->withTimestamps();
+        return $this->belongsToMany(TicketStatus::class)->withTimestamps()->withPivot('id');
     }
 
     public function getLatestStatusAttribute() {
-        return $this->ticketStatuses()->latest()->first();
+        return $this->ticketStatuses()->latest('ticket_ticket_status.id')->first();
     }
 
     public function course() {
