@@ -262,7 +262,11 @@ async function submitUser(values) {
           :can-clear="false"
           :search="true"
           :conditions="[(form$, el$) => form$.el$('roles')?.value.includes(1)]"
-        />
+        >
+          <template v-slot:option="{ option }">
+            {{ option.code }} - {{ option.label }}
+          </template>
+        </MultiselectElement>
         <TextElement
           name="schedule_page"
           label="Tutor's Schedule"
@@ -286,10 +290,9 @@ async function submitUser(values) {
           submits
           class="mx-auto mt-4"
         >
-        Update User
+          Update User
         </ButtonElement>
       </Vueform>
     </div>
-    
   </div>
 </template>
