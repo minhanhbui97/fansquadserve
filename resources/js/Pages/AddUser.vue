@@ -190,7 +190,14 @@ async function submitUser(values) {
           @deselect="deselectRoles"
           :can-clear="false"
           :rules="['required']"
-        />
+        >
+          <template v-slot:description="{ el$ }">
+            <div>
+              Course and Tutor's Schedule Page fields are required if role Tutor
+              is selected.
+            </div>
+          </template>
+        </MultiselectElement>
         <MultiselectElement
           name="courses"
           label="Course"
@@ -207,7 +214,7 @@ async function submitUser(values) {
         />
         <TextElement
           name="schedule_page"
-          label="Tutor's Schedule"
+          label="Tutor's Schedule Page"
           class="col-span-6"
           input-type="text"
           :conditions="[(form$, el$) => form$.el$('roles')?.value.includes(1)]"

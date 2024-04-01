@@ -221,14 +221,14 @@ async function submitUser(values) {
         </StaticElement>
         <TextElement
           name="password"
-          label="Password *"
+          label="Password"
           input-type="password"
           class="col-span-6"
           :rules="['between:8,255', 'confirmed']"
         />
         <TextElement
           name="password_confirmation"
-          label="Password Confirmation *"
+          label="Password Confirmation"
           input-type="password"
           class="col-span-6"
           :rules="['between:8,255']"
@@ -248,7 +248,11 @@ async function submitUser(values) {
           @deselect="deselectRoles"
           :can-clear="false"
           :rules="['required']"
-        />
+        >
+          <template v-slot:description="{ el$ }">
+            <div>Course and Tutor's Schedule Page fields are required if role Tutor is selected.</div>
+          </template>
+        </MultiselectElement>
         <MultiselectElement
           name="courses"
           label="Course"
@@ -269,7 +273,7 @@ async function submitUser(values) {
         </MultiselectElement>
         <TextElement
           name="schedule_page"
-          label="Tutor's Schedule"
+          label="Tutor's Schedule Page"
           class="col-span-6"
           input-type="text"
           :conditions="[(form$, el$) => form$.el$('roles')?.value.includes(1)]"
