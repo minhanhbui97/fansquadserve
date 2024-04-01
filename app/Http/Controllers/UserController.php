@@ -22,11 +22,13 @@ class UserController extends Controller
     {
         $users = User::with(['roles'])->get();
 
+
+        // Get list of tutors available for a course
         $course_id = request()->query('course_id');
         $course = Course::find($course_id);
 
-        if ($course) { // Get list of tutors available for a course
-            $tutors = $course->users()->with(['schedule_page', 'roles'])->get();
+        if ($course) { 
+            $tutors = $course->users()->where('is_active', '=', true)->with(['schedule_page', 'roles'])->get();
             return $tutors;
         }
 

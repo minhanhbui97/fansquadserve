@@ -85,7 +85,7 @@ const selectTicketStatusOptions = computed(() => {
       possibleTicketStatusOptions.push(all_ticket_statuses[5]);
     }
     // Ticket with latest_status Resoleved will be moved to Closed immediately
-    // This should not be possible
+    // This should not be possible under normal circumstances
     else if (ticket.value.latest_status.id === 4) {
       possibleTicketStatusOptions.push(all_ticket_statuses[3]);
       possibleTicketStatusOptions.push(all_ticket_statuses[6]);
@@ -395,7 +395,7 @@ watch([users, priorities, ticket_statuses], () => {
         <StaticElement name="course" class="col-span-4">
           <div class="text-sm">
             <span class="font-medium">Course:</span>
-            {{ ticket?.course.name }}
+            {{ ticket?.course.code }} - {{ ticket?.course.name }}
           </div>
         </StaticElement>
         <StaticElement name="student_email" class="col-span-4">

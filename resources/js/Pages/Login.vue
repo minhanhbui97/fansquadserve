@@ -4,8 +4,6 @@ import { useAuthStore } from '@/Stores/AuthStore';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
-const email = ref('');
-const password = ref('');
 const toast = useToast();
 
 

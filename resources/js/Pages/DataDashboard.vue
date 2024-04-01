@@ -90,17 +90,29 @@ function roundNum(num) {
 
 // Get data for TicketByDateBarChart
 const date_chart_result = computed(() => {
-  const tickets_filtered_by_date = _.filter(tickets.value, function (t) {
-    return dayjs(t.created_at).isBetween(
-      dayjs(),
-      dayjs().subtract(date_diff.value, 'day'),
-    );
-  });
+  const tickets_filtered_by_active_tutor = _.filter(
+    tickets.value,
+    function (t) {
+      return t.tutor.is_active == true;
+    },
+  );
+
+  const tickets_filtered_by_date = _.filter(
+    tickets_filtered_by_active_tutor,
+    function (t) {
+      return dayjs(t.created_at).isBetween(
+        dayjs(),
+        dayjs().subtract(date_diff.value, 'day'),
+      );
+    },
+  );
 
   const tickets_filtered_by_date_and_assignee = _.filter(
     tickets_filtered_by_date,
     function (t) {
-      return options.value.includes(t.assigned_tutor_id);
+      return (
+        options.value.includes(t.assigned_tutor_id) && t.latest_status !== null
+      );
     },
   );
 
@@ -112,12 +124,22 @@ const date_chart_result = computed(() => {
 
 // Get data for TicketByStatusBarChart
 const status_chart_result = computed(() => {
-  const tickets_filtered_by_date = _.filter(tickets.value, function (t) {
-    return dayjs(t.created_at).isBetween(
-      dayjs(),
-      dayjs().subtract(date_diff.value, 'day'),
-    );
-  });
+  const tickets_filtered_by_active_tutor = _.filter(
+    tickets.value,
+    function (t) {
+      return t.tutor.is_active == true;
+    },
+  );
+
+  const tickets_filtered_by_date = _.filter(
+    tickets_filtered_by_active_tutor,
+    function (t) {
+      return dayjs(t.created_at).isBetween(
+        dayjs(),
+        dayjs().subtract(date_diff.value, 'day'),
+      );
+    },
+  );
 
   const tickets_filtered_by_date_and_assignee = _.filter(
     tickets_filtered_by_date,
@@ -146,7 +168,9 @@ const sla_chart_result = computed(() => {
   const tickets_filtered_by_date_and_assignee = _.filter(
     tickets_filtered_by_date,
     function (t) {
-      return options.value.includes(t.assigned_tutor_id);
+      return (
+        options.value.includes(t.assigned_tutor_id) && t.latest_status !== null
+      );
     },
   );
 
@@ -163,6 +187,7 @@ const sla_chart_result = computed(() => {
 
   // Calculate TFR & TR for Low priority tickets
   let total_tfr_low_priority = 0;
+  let num_of_tickets_tfr_low_priority = 0;
   let avg_tfr_low_priority = 0;
   tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
     calculate_tfr_low_priority,
@@ -177,15 +202,16 @@ const sla_chart_result = computed(() => {
       const time0 = dayjs(ticket.ticket_statuses[0].pivot.created_at);
       const time1 = dayjs(ticket.ticket_statuses[1].pivot.created_at);
 
-      const time_to_fr = time1.diff(time0, 'h');
+      const time_to_fr = roundNum(time1.diff(time0, 'h', true));
       total_tfr_low_priority += time_to_fr;
+      num_of_tickets_tfr_low_priority += 1;
     }
     avg_tfr_low_priority =
-      total_tfr_low_priority /
-      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+      total_tfr_low_priority / num_of_tickets_tfr_low_priority;
   }
 
   let total_tr_low_priority = 0;
+  let num_of_tickets_tr_low_priority = 0;
   let avg_tr_low_priority = 0;
   tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
     calculate_tr_low_priority,
@@ -200,16 +226,17 @@ const sla_chart_result = computed(() => {
       const time0 = dayjs(ticket.ticket_statuses[2].pivot.created_at);
       const time1 = dayjs(ticket.ticket_statuses[3].pivot.created_at);
 
-      const time_to_r = time1.diff(time0, 'h');
+      const time_to_r = roundNum(time1.diff(time0, 'h', true));
       total_tr_low_priority += time_to_r;
+      num_of_tickets_tr_low_priority += 1;
     }
     avg_tr_low_priority =
-      total_tr_low_priority /
-      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+      total_tr_low_priority / num_of_tickets_tr_low_priority;
   }
 
   // Calculate TFR & TR for Medium priority tickets
   let total_tfr_medium_priority = 0;
+  let num_of_tickets_tfr_medium_priority = 0;
   let avg_tfr_medium_priority = 0;
   tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
     calculate_tfr_medium_priority,
@@ -224,15 +251,16 @@ const sla_chart_result = computed(() => {
       const time0 = dayjs(ticket.ticket_statuses[0].pivot.created_at);
       const time1 = dayjs(ticket.ticket_statuses[1].pivot.created_at);
 
-      const time_to_fr = time1.diff(time0, 'h');
+      const time_to_fr = roundNum(time1.diff(time0, 'h', true));
       total_tfr_medium_priority += time_to_fr;
+      num_of_tickets_tfr_medium_priority += 1;
     }
     avg_tfr_medium_priority =
-      total_tfr_medium_priority /
-      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+      total_tfr_medium_priority / num_of_tickets_tfr_medium_priority;
   }
 
   let total_tr_medium_priority = 0;
+  let num_of_tickets_tr_medium_priority = 0;
   let avg_tr_medium_priority = 0;
   tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
     calculate_tr_medium_priority,
@@ -247,16 +275,17 @@ const sla_chart_result = computed(() => {
       const time0 = dayjs(ticket.ticket_statuses[2].pivot.created_at);
       const time1 = dayjs(ticket.ticket_statuses[3].pivot.created_at);
 
-      const time_to_r = time1.diff(time0, 'h');
+      const time_to_r = roundNum(time1.diff(time0, 'h', true));
       total_tr_medium_priority += time_to_r;
+      num_of_tickets_tr_medium_priority += 1;
     }
     avg_tr_medium_priority =
-      total_tr_medium_priority /
-      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+      total_tr_medium_priority / num_of_tickets_tr_medium_priority;
   }
 
   // Calculate TFR & TR for High priority tickets
   let total_tfr_high_priority = 0;
+  let num_of_tickets_tfr_high_priority = 0;
   let avg_tfr_high_priority = 0;
   tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
     calculate_tfr_high_priority,
@@ -271,15 +300,16 @@ const sla_chart_result = computed(() => {
       const time0 = dayjs(ticket.ticket_statuses[0].pivot.created_at);
       const time1 = dayjs(ticket.ticket_statuses[1].pivot.created_at);
 
-      const time_to_fr = time1.diff(time0, 'h');
+      const time_to_fr = roundNum(time1.diff(time0, 'h', true));
       total_tfr_high_priority += time_to_fr;
+      num_of_tickets_tfr_high_priority += 1;
     }
     avg_tfr_high_priority =
-      total_tfr_high_priority /
-      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+      total_tfr_high_priority / num_of_tickets_tfr_high_priority;
   }
 
   let total_tr_high_priority = 0;
+  let num_of_tickets_tr_high_priority = 0;
   let avg_tr_high_priority = 0;
   tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
     calculate_tr_high_priority,
@@ -294,12 +324,12 @@ const sla_chart_result = computed(() => {
       const time0 = dayjs(ticket.ticket_statuses[2].pivot.created_at);
       const time1 = dayjs(ticket.ticket_statuses[3].pivot.created_at);
 
-      const time_to_r = time1.diff(time0, 'h');
+      const time_to_r = roundNum(time1.diff(time0, 'h', true));
       total_tr_high_priority += time_to_r;
+      num_of_tickets_tr_high_priority += 1;
     }
     avg_tr_high_priority =
-      total_tr_high_priority /
-      tickets_filtered_by_date_and_assignee_and_excl_statuses.length;
+      total_tr_high_priority / num_of_tickets_tr_high_priority;
   }
 
   return {
@@ -361,13 +391,17 @@ watch(users, () => {
         />
       </Vueform>
       <div class="flex gap-8 w-full">
-        <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50 basis-1/2">
+        <div
+          class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50 basis-1/2"
+        >
           <h2 class="text-red-700 text-lg font-bold">Tickets by Date</h2>
           <div>
             <TicketByDateBarChart :data="date_chart_result" />
           </div>
         </div>
-        <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50 basis-1/2">
+        <div
+          class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50 basis-1/2"
+        >
           <h2 class="text-red-700 text-lg font-bold">Tickets by Status</h2>
           <div>
             <TicketByStatusBarChart :data="status_chart_result" />
@@ -375,9 +409,7 @@ watch(users, () => {
         </div>
       </div>
       <div class="p-8 shadow flex flex-col gap-4 flex-grow bg-gray-50">
-        <h2 class="text-red-700 text-lg font-bold">
-          Average SLA By Priority
-        </h2>
+        <h2 class="text-red-700 text-lg font-bold">Average SLA By Priority</h2>
         <div>
           <AverageSLABarChart :data="sla_chart_result" />
         </div>

@@ -26,7 +26,7 @@ class Ticket extends Model
     }
 
     public function getLatestStatusAttribute() {
-        return $this->ticketStatuses->reverse()->first();
+        return $this->ticketStatuses()->latest()->first();
     }
 
     public function course() {
