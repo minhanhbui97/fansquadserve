@@ -141,6 +141,7 @@
               class="text-red-500"
             />
             <div>
+              <p>Location:</p>
               <p>2nd Floor, Room 204</p>
               <p>Fanshawe London South Campus</p>
             </div>
