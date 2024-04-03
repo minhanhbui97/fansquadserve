@@ -320,6 +320,7 @@ watch(student, () => {
           :can-clear="false"
           :can-deselect="false"
           :rules="['required']"
+          :search="true"
         >
           <template v-slot:option="{ option }">
             {{ option.code }} - {{ option.label }}
