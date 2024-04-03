@@ -17,7 +17,7 @@ async function submit(values) {
     await login({ email: values.data.email, password: values.data.password });
     router.push({ name: 'tickets' });
   } catch {
-    toast.error('Unable to login. Please use your valid email address and password!');
+    toast.error('Unable to login. Please use your valid Fanshawe email and password!');
   }
 }
 </script>
