@@ -122,7 +122,9 @@ async function submitTicket(values) {
     !email.includes('@fanshaweonline.ca') &&
     !email.includes('@fanshawec.ca')
   ) {
-    toast.error("Unable to create ticket. Please use your @fanshaweonline.ca or @fanshawec.ca email address!");
+    toast.error(
+      'Unable to create ticket. Please use your @fanshaweonline.ca or @fanshawec.ca email address!',
+    );
     return;
   }
 
@@ -203,11 +205,11 @@ watch(student, () => {
 });
 </script>
 <template>
-  <div
-    class="max-w-4xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-hidden flex-grow"
-  >
+  <div class="max-w-4xl mx-auto p-8 flex flex-col gap-8 flex-grow">
     <div>
-      <img class="w-64" src="../../images/logo.png" alt="image description" />
+      <router-link :to="{ name: 'landing' }">
+        <img class="w-64" src="../../images/logo.png" alt="image description" />
+      </router-link>
     </div>
     <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
       Service Request Form
