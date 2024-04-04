@@ -3,8 +3,10 @@ import PeopleIcon from '@/Components/SVGIcons/PeopleIcon.vue';
 import GraphIcon from '@/Components/SVGIcons/GraphIcon.vue';
 import DocIcon from '@/Components/SVGIcons/DocIcon.vue';
 import { useAuthStore } from '@/Stores/AuthStore';
+import { useUserStore } from '@/Stores/UserStore';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import { ref, watch } from 'vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -14,6 +16,10 @@ const { logout } = authStore;
 async function handleLogout() {
   await logout();
   router.push('login');
+}
+
+async function submit() {
+  router.push({ name: 'user-profile' });
 }
 </script>
 
@@ -49,10 +55,20 @@ async function handleLogout() {
           <div>User Management</div>
         </router-link>
       </section>
-      <section
-        class="flex flex-col gap-4 justify-center items-center p-8 font-bold"
-      >
-        <h1 class="font-bold">{{ user.first_name }} {{ user.last_name }}</h1>
+      <section class="flex flex-col gap-4 justify-center items-center p-8">
+        <div class="flex gap-4 items-center">
+          <font-awesome-icon icon="fa-solid fa-user" size="2xl" />
+          <h1 class="font-bold">{{ user.first_name }} {{ user.last_name }}</h1>
+        </div>
+        <div class="mb-4">
+          <button
+            @click="() => submit()"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+          >
+            View Your Profile
+          </button>
+        </div>
+
         <button
           @click="handleLogout"
           class="py-2 px-4 bg-red-500 rounded text-white hover:bg-red-500/90"

@@ -23,10 +23,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
 import { faCopy } from '@fortawesome/free-regular-svg-icons'
-import { faCopy as faCopySolid, faSpinner, faFileLines, faChartSimple, faUsers, faHome, faPhone } from '@fortawesome/free-solid-svg-icons'
+import { faCopy as faCopySolid, faSpinner, faFileLines, faChartSimple, faUsers, faHome, faPhone, faUser } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faCopy, faCopySolid, faSpinner, faFileLines, faChartSimple, faUsers, faHome, faPhone)
+library.add(faCopy, faCopySolid, faSpinner, faFileLines, faChartSimple, faUsers, faHome, faPhone, faUser)
 
 const app = createApp(App);
 const pinia = createPinia();

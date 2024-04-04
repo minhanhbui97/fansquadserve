@@ -15,20 +15,16 @@ class UserController extends Controller
      * Display a listing of the resource.
      
      */
-
-
-
     public function index()
     {
         $users = User::with(['roles'])->get();
-
 
         // Get list of tutors available for a course
         $course_id = request()->query('course_id');
         $course = Course::find($course_id);
 
         if ($course) { 
-            $tutors = $course->users()->where('is_active', '=', true)->with(['schedule_page', 'roles'])->get();
+            $tutors = $course->users()->where('is_active', '=', true)->with(['schedule_page', 'roles','courses'])->get();
             return $tutors;
         }
 

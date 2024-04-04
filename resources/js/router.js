@@ -7,13 +7,13 @@ import DataDashboard from '@/Pages/DataDashboard.vue';
 import UserManagement from '@/Pages/UserManagement.vue';
 import AddUser from '@/Pages/AddUser.vue';
 import UserDetails from '@/Pages/UserDetails.vue';
-
+import UserProfile from '@/Pages/UserProfile.vue';
 
 import ServiceRequest from '@/Pages/ServiceRequest.vue';
 import { useAuthStore } from './Stores/AuthStore';
 import { storeToRefs } from 'pinia';
-import { h } from 'vue'
-import { RouterView } from 'vue-router'
+import { h } from 'vue';
+import { RouterView } from 'vue-router';
 
 const routes = [
   {
@@ -27,32 +27,23 @@ const routes = [
   {
     path: '/tickets',
     name: 'tickets',
-    // component: { render: () => h(RouterView) },
     meta: {
       requiresAuth: true,
     },
     redirect: '/tickets',
     children: [
-      { 
+      {
         path: '',
         name: 'tickets',
-        component: TicketQueue
+        component: TicketQueue,
       },
-      { 
+      {
         path: ':id',
         name: 'ticket-details',
-        component: TicketDetails
-      }
-    ]
+        component: TicketDetails,
+      },
+    ],
   },
-  // {
-  //   path: '/tickets/:id',
-  //   name: 'ticket-details',
-  //   component: TicketDetails,
-  //   meta: {
-  //     requiresAuth: true,
-  //   },
-  // },
   {
     path: '/data-dashboard',
     name: 'data-dashboard',
@@ -69,36 +60,27 @@ const routes = [
       requiresAuth: true,
       requiresAdmin: true,
     },
-
-},
-
-//
-{
-  path: '/users',
-  name: 'users',
-  // component: { render: () => h(RouterView) },
-  meta: {
-    requiresAuth: true,
   },
-  redirect: '/users',
-  children: [
-    { 
-      path: '',
-      name: 'users',
-      component: UserManagement
+  {
+    path: '/users',
+    name: 'users',
+    meta: {
+      requiresAuth: true,
     },
-    { 
-      path: ':id',
-      name: 'user-details',
-      component: UserDetails
-    }
-  ]
-},
-
-
-
-
-//
+    redirect: '/users',
+    children: [
+      {
+        path: '',
+        name: 'users',
+        component: UserManagement,
+      },
+      {
+        path: ':id',
+        name: 'user-details',
+        component: UserDetails,
+      },
+    ],
+  },
 
   {
     path: '/add-user',
@@ -109,28 +91,14 @@ const routes = [
       requiresAdmin: true,
     },
   },
-
-  /*{
-    path: '/user-details',
-    name: 'user-details',
-    component: UserDetails,
+  {
+    path: '/user-profile',
+    name: 'user-profile',
+    component: UserProfile,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true,
     },
-
-    
-  },*/
-
-
-    
-  
-
-
- 
-
-
-  
+  },
   {
     path: '/login',
     name: 'login',
@@ -161,9 +129,7 @@ router.beforeEach(async (to, from) => {
   const needAuthentication = to.matched.some(
     (route) => route.meta.requiresAuth,
   );
-  const needAdmin = to.matched.some(
-    (route) => route.meta.requiresAdmin,
-  );
+  const needAdmin = to.matched.some((route) => route.meta.requiresAdmin);
 
   if (to.name !== 'login' && isLoggedIn.value && user.value === null) {
     try {
@@ -184,8 +150,8 @@ router.beforeEach(async (to, from) => {
     return { name: 'tickets' };
   }
 
-  if (needAdmin && !user.value.roles.find(role => role.name === 'Admin')) {
-    return { name: 'tickets' }
+  if (needAdmin && !user.value.roles.find((role) => role.name === 'Admin')) {
+    return { name: 'tickets' };
   }
 });
 
