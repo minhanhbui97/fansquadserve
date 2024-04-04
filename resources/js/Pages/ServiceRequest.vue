@@ -10,6 +10,9 @@ import { useTicketStore } from '@/Stores/TicketStore';
 import { useClipboard } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, watch } from 'vue';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 const ticketStore = useTicketStore();
 const {
@@ -113,6 +116,16 @@ async function submitTicket(values) {
   // search again for student
   const fanshawe_id = formRef.value.el$('fanshawe_id').value;
 
+  const { first_name, last_name, email } = values.data;
+
+  if (
+    !email.includes('@fanshaweonline.ca') &&
+    !email.includes('@fanshawec.ca')
+  ) {
+    toast.error("Please use your @fanshaweonline.ca or @fanshawec.ca email address.");
+    return;
+  }
+
   try {
     const studentData = await getStudent(fanshawe_id);
     student.value = studentData;
@@ -120,8 +133,6 @@ async function submitTicket(values) {
     console.log(err);
     student.value = null;
   }
-
-  const { first_name, last_name, email } = values.data;
 
   try {
     if (student.value) {
@@ -369,8 +380,7 @@ watch(student, () => {
                     ?.url
                 "
               >
-                Click here to confirm booking from the Tutor's Schedule
-                page.</a
+                Click here to confirm booking from the Tutor's Schedule page.</a
               >
             </div>
           </template>
@@ -413,7 +423,8 @@ watch(student, () => {
         <p>Dear {{ formData?.first_name }} {{ formData?.last_name }},</p>
         <p class="mb-4">
           Thank you for making a service request to the LabSquad at Fanshawe
-          College London South Campus! Your information has been recorded as follows:
+          College London South Campus! Your information has been recorded as
+          follows:
         </p>
 
         <div class="text-sm flex flex-col gap-2 mb-4">
