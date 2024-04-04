@@ -47,10 +47,11 @@ const initFilters = () => {
   <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 justify-center">
     <h1 class="text-red-700 text-3xl font-bold">List of Users</h1>
 
-    <router-link to="/add-user">
-      <button class="bg-red-500 py-2 px-4 text-white rounded w-40">
-        Add User
-      </button>
+    <router-link class="btn w-48 bg-red-700 hover:bg-red-700 text-white text-md font-bold" to="/add-user"> 
+    <button class="">
+      Add User
+    </button>  
+
     </router-link>
 
     <div class="flex-grow">
