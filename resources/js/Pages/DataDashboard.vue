@@ -35,21 +35,21 @@ onMounted(() => {
 });
 
 // Get date range option
-const format_string = ref('MMM DD');
+const format_string = ref('MM/DD');
 const date_diff = ref(7);
 
 function selectDateFilter(option) {
   if (option == 'hour') {
-    format_string.value = 'MMM DD: HH:00';
+    format_string.value = 'MM/DD: HH:00';
     date_diff.value = 1;
   } else if (option == 'day-7') {
-    format_string.value = 'MMM DD';
+    format_string.value = 'MM/DD';
     date_diff.value = 7;
   } else if (option == 'day-30') {
-    format_string.value = 'MMM DD';
+    format_string.value = 'MM/DD';
     date_diff.value = 30;
   } else if (option == 'month') {
-    format_string.value = 'MMM';
+    format_string.value = 'MM';
     date_diff.value = 365;
   }
 }
@@ -116,10 +116,17 @@ const date_chart_result = computed(() => {
     },
   );
 
-  return _(tickets_filtered_by_date_and_assignee)
+  let data_obj = _(tickets_filtered_by_date_and_assignee)
     .groupBy((ticket) => dayjs(ticket.created_at).format(format_string.value))
     .mapValues((ticket) => ticket.length)
     .value();
+  // Sort chart data by date in ascending order
+  let sortedKeys = Object.keys(data_obj).sort();
+  const sortedObj = {};
+  sortedKeys.forEach((key) => {
+    sortedObj[key] = data_obj[key];
+  });
+  return sortedObj;
 });
 
 // Get data for TicketByStatusBarChart
@@ -150,10 +157,25 @@ const status_chart_result = computed(() => {
     },
   );
 
-  return _(tickets_filtered_by_date_and_assignee)
+  let data_obj = _(tickets_filtered_by_date_and_assignee)
     .groupBy((ticket) => ticket.latest_status.name)
     .mapValues((ticket) => ticket.length)
     .value();
+  // Sort chart data by status
+  let sortedKeys = [
+    'New',
+    'Confirmed',
+    'In-progress',
+    'Resolved',
+    'Escalated',
+    'On-hold',
+    'Closed',
+  ];
+  const sortedObj = {};
+  sortedKeys.forEach((key) => {
+    sortedObj[key] = data_obj[key];
+  });
+  return sortedObj;
 });
 
 // Get data for AverageSLABarChart
