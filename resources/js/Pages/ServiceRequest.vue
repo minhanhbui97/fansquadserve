@@ -380,7 +380,7 @@ watch(student, () => {
                 :href="
                   selectUserOptions.find((option) => option.value === el$.value)
                     ?.url
-                "
+                " target=”_blank”
               >
                 Click here to confirm booking from the Tutor's Schedule page.</a
               >
