@@ -122,7 +122,7 @@ async function submitTicket(values) {
     !email.includes('@fanshaweonline.ca') &&
     !email.includes('@fanshawec.ca')
   ) {
-    toast.error("Please use your @fanshaweonline.ca or @fanshawec.ca email address.");
+    toast.error("Unable to create ticket. Please use your @fanshaweonline.ca or @fanshawec.ca email address!");
     return;
   }
 

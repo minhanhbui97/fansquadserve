@@ -5,8 +5,6 @@ import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
-
-
 const router = useRouter();
 const authStore = useAuthStore();
 const { login, error, clearError } = authStore;
