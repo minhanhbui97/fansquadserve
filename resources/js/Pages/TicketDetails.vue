@@ -88,7 +88,7 @@ const selectTicketStatusOptions = computed(() => {
     // This should not be possible under normal circumstances
     else if (ticket.value.latest_status.id === 4) {
       possibleTicketStatusOptions.push(all_ticket_statuses[3]);
-      possibleTicketStatusOptions.push(all_ticket_statuses[6]);
+      // possibleTicketStatusOptions.push(all_ticket_statuses[6]);
     }
     // If latest_status is On-hold, show Resolved, On-hold, or Closed
     else if (ticket.value.latest_status.id === 5) {
@@ -323,7 +323,7 @@ watch([users, priorities, ticket_statuses], () => {
           :default="ticket?.latest_status.id"
           label="Status *"
           class="col-span-4"
-          :disabled="ticket?.latest_status.id == 7"
+          :disabled="ticket?.latest_status.id == 7 || ticket?.latest_status.id == 4"
           :rules="['required']"
           :can-clear="false"
           :can-deselect="false"

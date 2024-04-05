@@ -93,7 +93,7 @@ const date_chart_result = computed(() => {
   const tickets_filtered_by_active_tutor = _.filter(
     tickets.value,
     function (t) {
-      return t.tutor.is_active == true;
+      return t.tutor.is_active;
     },
   );
 
@@ -111,7 +111,7 @@ const date_chart_result = computed(() => {
     tickets_filtered_by_date,
     function (t) {
       return (
-        options.value.includes(t.assigned_tutor_id) && t.latest_status !== null
+        options.value.includes(t.assigned_tutor_id)
       );
     },
   );
@@ -134,7 +134,7 @@ const status_chart_result = computed(() => {
   const tickets_filtered_by_active_tutor = _.filter(
     tickets.value,
     function (t) {
-      return t.tutor.is_active == true;
+      return t.tutor.is_active;
     },
   );
 
@@ -152,7 +152,7 @@ const status_chart_result = computed(() => {
     tickets_filtered_by_date,
     function (t) {
       return (
-        options.value.includes(t.assigned_tutor_id) && t.latest_status !== null
+        options.value.includes(t.assigned_tutor_id)
       );
     },
   );
@@ -180,15 +180,15 @@ const status_chart_result = computed(() => {
 
 // Get data for AverageSLABarChart
 const sla_chart_result = computed(() => {
-  const tickets_filtered_by_active_tutor = _.filter(
+  const tickets_filtered_by_active_tutor_and_closed_status = _.filter(
     tickets.value,
     function (t) {
-      return t.tutor.is_active == true;
+      return (t.tutor.is_active && t.latest_status.id === 4);
     },
   );
 
   const tickets_filtered_by_date = _.filter(
-    tickets_filtered_by_active_tutor,
+    tickets_filtered_by_active_tutor_and_closed_status,
     function (t) {
       return dayjs(t.created_at).isBetween(
         dayjs(),
@@ -201,7 +201,7 @@ const sla_chart_result = computed(() => {
     tickets_filtered_by_date,
     function (t) {
       return (
-        options.value.includes(t.assigned_tutor_id) && t.latest_status !== null
+        options.value.includes(t.assigned_tutor_id)
       );
     },
   );
@@ -394,7 +394,6 @@ watch(users, () => {
             { value: 'day-30', label: 'Last 30 days' },
             { value: 'month', label: 'Last year' },
           ]"
-          class="col-span-6"
           @select="selectDateFilter"
           default="day-7"
           :can-clear="false"
@@ -405,13 +404,13 @@ watch(users, () => {
           :items="['Select all assignees', 'Specify assignees to filter']"
           @change="selectAssigneeRadio"
           default="Select all assignees"
+          class="col-span-3"
         />
         <MultiselectElement
           name="assignee"
           label="Filter by Assignee:"
           :native="false"
           :items="selectUserOptions"
-          class="col-span-6"
           :close-on-select="false"
           :hide-selected="false"
           @select="selectAssigneeFilter"
