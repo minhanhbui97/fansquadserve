@@ -41,59 +41,17 @@ onMounted(() => {
   getRoles();
 });
 
-// Handle Role MultiSelect element
-let selectedRoleIds = ref([]);
-let selectedRolesArr = ref([]);
 
 function selectRoles(option) {
-  selectedRoleIds.value.push(option);
   if (option === 1) {
     is_tutor.value = true;
   }
-
-  var roleObj = {};
-  roleObj['id'] = option;
-  selectedRolesArr.value.push(roleObj);
 }
 
 function deselectRoles(option) {
-  selectedRoleIds.value = selectedRoleIds.value.filter(
-    function (deselected_option) {
-      return deselected_option !== option;
-    },
-  );
-
-  is_tutor.value = false;
-
-  selectedRolesArr.value = selectedRolesArr.value.filter(function (roleObj) {
-    return roleObj.id !== option;
-  });
-}
-
-// Handle Course MultiSelect element
-let selectedCourseIds = ref([]);
-let selectedCoursesArr = ref([]);
-
-function selectCourses(option) {
-  selectedCourseIds.value.push(option);
-
-  var courseObj = {};
-  courseObj['id'] = option;
-  selectedCoursesArr.value.push(courseObj);
-}
-
-function deselectCourses(option) {
-  selectedCourseIds.value = selectedCourseIds.value.filter(
-    function (deselected_option) {
-      return deselected_option !== option;
-    },
-  );
-
-  selectedCoursesArr.value = selectedCoursesArr.value.filter(
-    function (courseObj) {
-      return courseObj.id !== option;
-    },
-  );
+  if (option === 1) {
+    is_tutor.value = false;
+  }
 }
 
 const is_tutor = ref(false);
@@ -206,9 +164,6 @@ async function submitUser(values) {
           class="col-span-6"
           :close-on-select="false"
           :hide-selected="false"
-          @select="selectCourses"
-          @deselect="deselectCourses"
-          :can-clear="false"
           :search="true"
           :conditions="[(form$, el$) => form$.el$('roles')?.value.includes(1)]"
         />

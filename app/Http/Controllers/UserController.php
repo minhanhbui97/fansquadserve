@@ -37,9 +37,15 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $body = $request->all();
-        $body_user = $request->except(['role_ids', 'course_ids', 'schedule_page']);
 
-        $user = User::create($body_user);
+        $validated_request = $request->validate([
+            'email' => ['unique:users,email'],
+            'password' => ['required'],
+            'first_name' => ['required'],
+            'last_name' => ['required'],
+        ]);
+
+        $user = User::create($validated_request);
 
         $role_ids = $body['roles'];
 
