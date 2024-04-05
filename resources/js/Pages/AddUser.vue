@@ -41,7 +41,6 @@ onMounted(() => {
   getRoles();
 });
 
-
 function selectRoles(option) {
   if (option === 1) {
     is_tutor.value = true;
@@ -166,7 +165,11 @@ async function submitUser(values) {
           :hide-selected="false"
           :search="true"
           :conditions="[(form$, el$) => form$.el$('roles')?.value.includes(1)]"
-        />
+        >
+          <template v-slot:option="{ option }">
+            {{ option.code }} - {{ option.label }}
+          </template>
+        </MultiselectElement>
         <TextElement
           name="schedule_page"
           label="Tutor's Schedule Page"
