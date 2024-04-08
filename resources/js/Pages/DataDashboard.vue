@@ -18,7 +18,9 @@ import _ from 'lodash';
 const ticketStore = useTicketStore();
 const { getTickets, getUsers } = ticketStore;
 const { tickets, users } = storeToRefs(ticketStore);
+const isLoading = ref(false);
 
+// Get data for Assignee dropdown
 const selectUserOptions = computed(() => {
   if (!users.value) return [];
   return users.value.map((user) => {
@@ -29,12 +31,18 @@ const selectUserOptions = computed(() => {
   });
 });
 
+async function initialize() {
+  isLoading.value = true;
+  await getTickets();
+  await getUsers();
+  isLoading.value = false;
+}
+
 onMounted(() => {
-  getTickets();
-  getUsers();
+  initialize();
 });
 
-// Get date range option
+// Get date range option for Date filter
 const format_string = ref('MM/DD');
 const date_diff = ref(7);
 
@@ -54,7 +62,7 @@ function selectDateFilter(option) {
   }
 }
 
-// Get assignee option
+// Get assignees for Assignee filter
 const options = ref([]);
 const assigneeFilter = ref('');
 
@@ -83,21 +91,13 @@ function deselectAllAssigneeFilter() {
   options.value = [];
 }
 
-// Helper function to round to 2 decimal place
-function roundNum(num) {
-  return Math.round((num + Number.EPSILON) * 100) / 100;
-}
+// Filter ticket data by active tutors only, and selecteddate and assignee filters
+const ticket_data = computed(() => {
+  let tickets_filtered_by_active_tutor = _.filter(tickets.value, function (t) {
+    return t.tutor.is_active;
+  });
 
-// Get data for TicketByDateBarChart
-const date_chart_result = computed(() => {
-  const tickets_filtered_by_active_tutor = _.filter(
-    tickets.value,
-    function (t) {
-      return t.tutor.is_active;
-    },
-  );
-
-  const tickets_filtered_by_date = _.filter(
+  let tickets_filtered_by_active_tutor_and_date = _.filter(
     tickets_filtered_by_active_tutor,
     function (t) {
       return dayjs(t.created_at).isBetween(
@@ -107,16 +107,18 @@ const date_chart_result = computed(() => {
     },
   );
 
-  const tickets_filtered_by_date_and_assignee = _.filter(
-    tickets_filtered_by_date,
+  let tickets_filtered_by_active_tutor_date_and_assignee = _.filter(
+    tickets_filtered_by_active_tutor_and_date,
     function (t) {
-      return (
-        options.value.includes(t.assigned_tutor_id)
-      );
+      return options.value.includes(t.assigned_tutor_id);
     },
   );
+  return tickets_filtered_by_active_tutor_date_and_assignee;
+});
 
-  let data_obj = _(tickets_filtered_by_date_and_assignee)
+// Get data for TicketByDateBarChart
+const date_chart_result = computed(() => {
+  let data_obj = _(ticket_data.value)
     .groupBy((ticket) => dayjs(ticket.created_at).format(format_string.value))
     .mapValues((ticket) => ticket.length)
     .value();
@@ -126,38 +128,13 @@ const date_chart_result = computed(() => {
   sortedKeys.forEach((key) => {
     sortedObj[key] = data_obj[key];
   });
+  console.log(sortedObj);
   return sortedObj;
 });
 
 // Get data for TicketByStatusBarChart
 const status_chart_result = computed(() => {
-  const tickets_filtered_by_active_tutor = _.filter(
-    tickets.value,
-    function (t) {
-      return t.tutor.is_active;
-    },
-  );
-
-  const tickets_filtered_by_date = _.filter(
-    tickets_filtered_by_active_tutor,
-    function (t) {
-      return dayjs(t.created_at).isBetween(
-        dayjs(),
-        dayjs().subtract(date_diff.value, 'day'),
-      );
-    },
-  );
-
-  const tickets_filtered_by_date_and_assignee = _.filter(
-    tickets_filtered_by_date,
-    function (t) {
-      return (
-        options.value.includes(t.assigned_tutor_id)
-      );
-    },
-  );
-
-  let data_obj = _(tickets_filtered_by_date_and_assignee)
+  let data_obj = _(ticket_data.value)
     .groupBy((ticket) => ticket.latest_status.name)
     .mapValues((ticket) => ticket.length)
     .value();
@@ -178,36 +155,24 @@ const status_chart_result = computed(() => {
   return sortedObj;
 });
 
+// Helper function to round to 2 decimal place
+function roundNum(num) {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+}
+
 // Get data for AverageSLABarChart
 const sla_chart_result = computed(() => {
-  const tickets_filtered_by_active_tutor_and_closed_status = _.filter(
-    tickets.value,
+  // Include only tickets with current status as "Resolved"
+  const tickets_filtered_by_resolved_status = _.filter(
+    ticket_data.value,
     function (t) {
-      return (t.tutor.is_active && t.latest_status.id === 4);
+      return t.latest_status.id === 4;
     },
   );
 
-  const tickets_filtered_by_date = _.filter(
-    tickets_filtered_by_active_tutor_and_closed_status,
-    function (t) {
-      return dayjs(t.created_at).isBetween(
-        dayjs(),
-        dayjs().subtract(date_diff.value, 'day'),
-      );
-    },
-  );
-
-  const tickets_filtered_by_date_and_assignee = _.filter(
-    tickets_filtered_by_date,
-    function (t) {
-      return (
-        options.value.includes(t.assigned_tutor_id)
-      );
-    },
-  );
-
-  const tickets_filtered_by_date_and_assignee_and_excl_statuses = _.filter(
-    tickets_filtered_by_date_and_assignee,
+  //Exclude tickets that has ever been moved to "On-hold" or "Escalated" status
+  const tickets_filtered_by_resolved_status_and_excl_statuses = _.filter(
+    tickets_filtered_by_resolved_status,
     function (t) {
       return (
         t.ticket_statuses.find(
@@ -221,11 +186,12 @@ const sla_chart_result = computed(() => {
   let total_tfr_low_priority = 0;
   let num_of_tickets_tfr_low_priority = 0;
   let avg_tfr_low_priority = 0;
-  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+  tickets_filtered_by_resolved_status_and_excl_statuses.forEach(
     calculate_tfr_low_priority,
   );
 
   function calculate_tfr_low_priority(ticket) {
+    // Calculate the difference between when ticket has "New" & "Confirmed" status
     if (
       ticket.ticket_statuses.find((s) => s.id === 1) &&
       ticket.ticket_statuses.find((s) => s.id === 2) &&
@@ -245,11 +211,12 @@ const sla_chart_result = computed(() => {
   let total_tr_low_priority = 0;
   let num_of_tickets_tr_low_priority = 0;
   let avg_tr_low_priority = 0;
-  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+  tickets_filtered_by_resolved_status_and_excl_statuses.forEach(
     calculate_tr_low_priority,
   );
 
   function calculate_tr_low_priority(ticket) {
+    // Calculate the difference between when ticket has "In-progress" & "Resolved" status
     if (
       ticket.ticket_statuses.find((s) => s.id === 3) &&
       ticket.ticket_statuses.find((s) => s.id === 4) &&
@@ -270,11 +237,12 @@ const sla_chart_result = computed(() => {
   let total_tfr_medium_priority = 0;
   let num_of_tickets_tfr_medium_priority = 0;
   let avg_tfr_medium_priority = 0;
-  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+  tickets_filtered_by_resolved_status_and_excl_statuses.forEach(
     calculate_tfr_medium_priority,
   );
 
   function calculate_tfr_medium_priority(ticket) {
+    // Calculate the difference between when ticket has "New" & "Confirmed" status
     if (
       ticket.ticket_statuses.find((s) => s.id === 1) &&
       ticket.ticket_statuses.find((s) => s.id === 2) &&
@@ -294,11 +262,12 @@ const sla_chart_result = computed(() => {
   let total_tr_medium_priority = 0;
   let num_of_tickets_tr_medium_priority = 0;
   let avg_tr_medium_priority = 0;
-  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+  tickets_filtered_by_resolved_status_and_excl_statuses.forEach(
     calculate_tr_medium_priority,
   );
 
   function calculate_tr_medium_priority(ticket) {
+    // Calculate the difference between when ticket has "In-progress" & "Resolved" status
     if (
       ticket.ticket_statuses.find((s) => s.id === 3) &&
       ticket.ticket_statuses.find((s) => s.id === 4) &&
@@ -319,11 +288,12 @@ const sla_chart_result = computed(() => {
   let total_tfr_high_priority = 0;
   let num_of_tickets_tfr_high_priority = 0;
   let avg_tfr_high_priority = 0;
-  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+  tickets_filtered_by_resolved_status_and_excl_statuses.forEach(
     calculate_tfr_high_priority,
   );
 
   function calculate_tfr_high_priority(ticket) {
+    // Calculate the difference between when ticket has "New" & "Confirmed" status
     if (
       ticket.ticket_statuses.find((s) => s.id === 1) &&
       ticket.ticket_statuses.find((s) => s.id === 2) &&
@@ -343,11 +313,12 @@ const sla_chart_result = computed(() => {
   let total_tr_high_priority = 0;
   let num_of_tickets_tr_high_priority = 0;
   let avg_tr_high_priority = 0;
-  tickets_filtered_by_date_and_assignee_and_excl_statuses.forEach(
+  tickets_filtered_by_resolved_status_and_excl_statuses.forEach(
     calculate_tr_high_priority,
   );
 
   function calculate_tr_high_priority(ticket) {
+    // Calculate the difference between when ticket has "In-progress" & "Resolved" status
     if (
       ticket.ticket_statuses.find((s) => s.id === 3) &&
       ticket.ticket_statuses.find((s) => s.id === 4) &&
@@ -363,6 +334,7 @@ const sla_chart_result = computed(() => {
     avg_tr_high_priority =
       total_tr_high_priority / num_of_tickets_tr_high_priority;
   }
+  console.log(avg_tfr_low_priority);
 
   return {
     'Low - TFR': roundNum(avg_tfr_low_priority),
@@ -382,7 +354,10 @@ watch(users, () => {
 <template>
   <div class="max-w-full mx-auto p-8 h-full overflow-auto">
     <div class="flex flex-col gap-8 max-w-6xl mx-auto">
-      <h1 class="text-red-700 text-3xl font-bold">Data Dashboard</h1>
+      <h1 class="text-red-700 text-3xl font-bold">
+        Data Dashboard
+        <font-awesome-icon icon="fa-spinner" v-if="isLoading" class="fa-spin" />
+      </h1>
       <Vueform ref="formRef" :endpoint="false">
         <SelectElement
           name="date_range"

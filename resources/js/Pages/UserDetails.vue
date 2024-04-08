@@ -78,11 +78,6 @@ watch(is_tutor, () => {
     if (is_tutor.value) {
       user.value.courses.forEach((course) => {
         formRef.value.el$('courses').select(course.id);
-
-        // if (!selectedCourseIds.value.includes(course.id)) {
-        //   selectedCourseIds.value.push(course.id);
-        //   formRef.value.el$('courses').select(course.id);
-        // }
       });
 
       if (user.value.schedule_page) {
@@ -103,16 +98,8 @@ watch(user, () => {
 
     user.value.roles.forEach((role) => {
       formRef.value.el$('roles').select(role.id);
-
-      // if (!selectedRoleIds.value.includes(role.id)) {
-      //   selectedRoleIds.value.push(role.id);
-      //   formRef.value.el$('roles').select(role.id);
-      // }
     });
 
-    // if (selectedRoleIds.value.includes(1)) {
-    //   is_tutor.value = true;
-    // }
 
     if (user.value.is_active === true) {
       formRef.value.el$('is_active').check();
