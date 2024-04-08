@@ -16,7 +16,7 @@ async function submit(values) {
     router.push({ name: 'tickets' });
   } catch {
     toast.error(
-      'Unable to login. Please use your valid Fanshawe email and password!',
+      'Unable to login. Please use your @fanshaweonline.ca or @fanshawec.ca email address and password!',
     );
   }
 }
@@ -26,9 +26,14 @@ async function submit(values) {
   <div
     class="h-screen flex flex-col gap-8 justify-center items-center max-w-xl mx-auto"
   >
-    <div class="w-64 self-center">
+    <!-- <div class="w-64 self-center">
       <img src="../../images/logo.png" alt="" />
-    </div>
+    </div> -->
+
+    <router-link :to="{ name: 'landing' }">
+      <img class="w-64" src="../../images/logo.png" alt="image description" />
+    </router-link>
+
     <div class="flex flex-col gap-2">
       <h1 class="text-xl text-red-700 font-bold">LabSquad Log In</h1>
       <div class="p-6 bg-gray-100 border-gray-800 border w-96">

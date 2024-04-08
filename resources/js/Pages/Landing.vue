@@ -30,7 +30,7 @@
       </router-link>
     </nav>
     <main class="flex flex-col gap-16">
-      <section class="flex w-full justify-between gap-8 max-w-7xl mx-auto">
+      <section class="flex w-full justify-between gap-8 max-w-7xl mx-auto my-4">
         <div class="flex flex-col gap-8 justify-center p-8">
           <img
             class="max-w-md max-h-lg mx-auto"
@@ -67,7 +67,7 @@
             dedicated to helping our fellow students for any inquiries related
             to IT courses or academic technical matters.
           </p>
-          <img class="max-w-xl" src="../../images/2.png" alt="fanshawecampus" />
+          <img class="max-w-xl" src="../../images/2.jpg" alt="fanshawecampus" />
         </div>
       </section>
       <section class="flex flex-col py-16 gap-16">
@@ -120,9 +120,11 @@
           </div>
         </div>
       </section>
-      <section class="flex justify-between items-end p-8 pt-0 max-w-6xl mx-auto w-full">
+      <section
+        class="flex justify-between items-end p-8 pt-0 max-w-6xl mx-auto w-full"
+      >
         <div class="flex flex-col gap-8">
-          <img class="self-start" src="../../images/footer.png" />
+          <img class="max-w-24" src="../../images/footer-logo.png" />
           <p class="text-sm w-96 leading-6">
             Join us at FanSquadServe, your dedicated tech support team at
             Fanshawe College's South Campus. With our expert assistance,
@@ -135,11 +137,7 @@
         <div class="text-sm flex flex-col gap-2">
           <p class="ml-7">CONTACT US</p>
           <div class="flex gap-4 items-center">
-            <font-awesome-icon
-              icon="fa-home"
-              size="md"
-              class="text-red-500"
-            />
+            <font-awesome-icon icon="fa-home" size="md" class="text-red-500" />
             <div>
               <p>Location:</p>
               <p>2nd Floor, Room 204</p>
@@ -147,11 +145,7 @@
             </div>
           </div>
           <div class="flex gap-4 items-center">
-            <font-awesome-icon
-              icon="fa-phone"
-              size="md"
-              class="text-red-500"
-            />
+            <font-awesome-icon icon="fa-phone" size="md" class="text-red-500" />
             <div>
               <p>Office hours:</p>
               <p>Monday to Friday 9AM to 9PM</p>
