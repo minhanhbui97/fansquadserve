@@ -16,16 +16,25 @@ const { getTickets, getTicketStatuses } = ticketStore;
 const { tickets, ticket_statuses } = storeToRefs(ticketStore);
 const tmp = ref();
 
+// Get data for dropdown in filter
 const selectTicketStatusOptions = computed(() => {
   return ticket_statuses.value.map((ticket_status) => {
     return ticket_status.name;
   });
 });
 
+const isLoading = ref(false);
+
+async function initialize() {
+  isLoading.value = true;
+  await getTickets();
+  await getTicketStatuses();
+  await initFilters();
+  isLoading.value = false;
+}
+
 onMounted(() => {
-  getTickets();
-  getTicketStatuses();
-  initFilters();
+  initialize();
 });
 
 async function submit(id) {
@@ -59,7 +68,10 @@ const initFilters = () => {
 
 <template>
   <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 justify-center">
-    <h1 class="text-red-700 text-3xl font-bold">List of Tickets</h1>
+    <h1 class="text-red-700 text-3xl font-bold">
+      List of Tickets
+      <font-awesome-icon icon="fa-spinner" v-if="isLoading" class="fa-spin" />
+    </h1>
     <div class="flex-grow">
       <DataTable
         class="text-[14px]"
@@ -132,8 +144,7 @@ const initFilters = () => {
           </template>
         </Column>
 
-        <Column field="description" header="Description" style="width: 200px"
-          >
+        <Column field="description" header="Description" style="width: 200px">
           <template #filter="{ filterModel }">
             <InputText
               v-model="filterModel.value"

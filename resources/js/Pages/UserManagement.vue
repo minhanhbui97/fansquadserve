@@ -13,9 +13,17 @@ const userStore = useUserStore();
 const { getUsers } = userStore;
 const { users } = storeToRefs(userStore);
 
+const isLoading = ref(false);
+
+async function initialize() {
+  isLoading.value = true;
+  await getUsers();
+  await initFilters();
+  isLoading.value = false;
+}
+
 onMounted(() => {
-  getUsers();
-  initFilters();
+  initialize();
 });
 
 async function submit(id) {
@@ -46,7 +54,10 @@ const initFilters = () => {
 
 <template>
   <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 justify-center">
-    <h1 class="text-red-700 text-3xl font-bold">List of Users</h1>
+    <h1 class="text-red-700 text-3xl font-bold">
+      List of Users
+      <font-awesome-icon icon="fa-spinner" v-if="isLoading" class="fa-spin" />
+    </h1>
 
     <router-link
       class="btn w-48 bg-red-700 hover:bg-red-700 text-white text-md font-bold"
