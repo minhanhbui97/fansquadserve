@@ -12,13 +12,13 @@ const user_id = route.params.id;
 
 const userStore = useUserStore();
 const { getRoles, getCourses, getCurrentUser, updateCurrentUser } = userStore;
-
 const { courses, roles, currentUser: user } = storeToRefs(userStore);
-const isLoading = ref(false);
 
+const isLoading = ref(false);
 const formRef = ref();
 const toast = useToast();
 
+// Get data for dropdowns
 const selectCourseOptions = computed(() => {
   return courses.value.map((course) => {
     return {
@@ -50,62 +50,20 @@ onMounted(() => {
   initialize();
 });
 
-// Handle Role MultiSelect element
-let selectedRoleIds = ref([]);
-let selectedRolesArr = ref([]);
+// Update is_tutor to show/hide optional Course & Schedule Page fields
+const is_tutor = ref(false);
 
 function selectRoles(option) {
-  selectedRoleIds.value.push(option);
   if (option === 1) {
     is_tutor.value = true;
   }
-
-  var roleObj = {};
-  roleObj['id'] = option;
-  selectedRolesArr.value.push(roleObj);
 }
 
 function deselectRoles(option) {
-  selectedRoleIds.value = selectedRoleIds.value.filter(
-    function (deselected_option) {
-      return deselected_option !== option;
-    },
-  );
-
-  is_tutor.value = false;
-
-  selectedRolesArr.value = selectedRolesArr.value.filter(function (roleObj) {
-    return roleObj.id !== option;
-  });
+  if (option === 1) {
+    is_tutor.value = false;
+  }
 }
-
-// Handle Course MultiSelect element
-let selectedCourseIds = ref([]);
-let selectedCoursesArr = ref([]);
-
-function selectCourses(option) {
-  selectedCourseIds.value.push(option);
-
-  var courseObj = {};
-  courseObj['id'] = option;
-  selectedCoursesArr.value.push(courseObj);
-}
-
-function deselectCourses(option) {
-  selectedCourseIds.value = selectedCourseIds.value.filter(
-    function (deselected_option) {
-      return deselected_option !== option;
-    },
-  );
-
-  selectedCoursesArr.value = selectedCoursesArr.value.filter(
-    function (courseObj) {
-      return courseObj.id !== option;
-    },
-  );
-}
-
-const is_tutor = ref(false);
 
 watch(user, () => {
   if (user.value) {
@@ -119,10 +77,12 @@ watch(is_tutor, () => {
   if (is_tutor) {
     if (is_tutor.value) {
       user.value.courses.forEach((course) => {
-        if (!selectedCourseIds.value.includes(course.id)) {
-          selectedCourseIds.value.push(course.id);
-          formRef.value.el$('courses').select(course.id);
-        }
+        formRef.value.el$('courses').select(course.id);
+
+        // if (!selectedCourseIds.value.includes(course.id)) {
+        //   selectedCourseIds.value.push(course.id);
+        //   formRef.value.el$('courses').select(course.id);
+        // }
       });
 
       if (user.value.schedule_page) {
@@ -134,6 +94,7 @@ watch(is_tutor, () => {
   }
 });
 
+// Populate user info on the form
 watch(user, () => {
   if (user.value) {
     formRef.value.el$('first_name').update(user.value.first_name);
@@ -141,15 +102,17 @@ watch(user, () => {
     formRef.value.el$('email').update(user.value.email);
 
     user.value.roles.forEach((role) => {
-      if (!selectedRoleIds.value.includes(role.id)) {
-        selectedRoleIds.value.push(role.id);
-        formRef.value.el$('roles').select(role.id);
-      }
+      formRef.value.el$('roles').select(role.id);
+
+      // if (!selectedRoleIds.value.includes(role.id)) {
+      //   selectedRoleIds.value.push(role.id);
+      //   formRef.value.el$('roles').select(role.id);
+      // }
     });
 
-    if (selectedRoleIds.value.includes(1)) {
-      is_tutor.value = true;
-    }
+    // if (selectedRoleIds.value.includes(1)) {
+    //   is_tutor.value = true;
+    // }
 
     if (user.value.is_active === true) {
       formRef.value.el$('is_active').check();
@@ -261,8 +224,6 @@ async function submitUser(values) {
           class="col-span-6"
           :close-on-select="false"
           :hide-selected="false"
-          @select="selectCourses"
-          @deselect="deselectCourses"
           :can-clear="false"
           :search="true"
           :conditions="[(form$, el$) => form$.el$('roles')?.value.includes(1)]"

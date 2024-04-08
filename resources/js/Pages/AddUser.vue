@@ -17,6 +17,7 @@ const visible = ref(false);
 const user = ref(null);
 const toast = useToast();
 
+// Get data for dropdowns
 const selectCourseOptions = computed(() => {
   return courses.value.map((course) => {
     return {
@@ -41,6 +42,9 @@ onMounted(() => {
   getRoles();
 });
 
+// Update is_tutor to show/hide optional Course & Schedule Page fields
+const is_tutor = ref(false);
+
 function selectRoles(option) {
   if (option === 1) {
     is_tutor.value = true;
@@ -52,8 +56,6 @@ function deselectRoles(option) {
     is_tutor.value = false;
   }
 }
-
-const is_tutor = ref(false);
 
 async function submitUser(values) {
   const allowed_domains = ['fanshaweonline.ca', 'fanshawec.ca'];
