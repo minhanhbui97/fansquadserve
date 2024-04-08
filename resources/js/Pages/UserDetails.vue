@@ -89,7 +89,7 @@ watch(is_tutor, () => {
   }
 });
 
-// Populate user info on the form
+// Populate user info in input fields on the form
 watch(user, () => {
   if (user.value) {
     formRef.value.el$('first_name').update(user.value.first_name);
@@ -99,7 +99,6 @@ watch(user, () => {
     user.value.roles.forEach((role) => {
       formRef.value.el$('roles').select(role.id);
     });
-
 
     if (user.value.is_active === true) {
       formRef.value.el$('is_active').check();
@@ -200,7 +199,10 @@ async function submitUser(values) {
           :rules="['required']"
         >
           <template v-slot:description="{ el$ }">
-            <div>Course and Tutor's Schedule Page fields are required if role Tutor is selected.</div>
+            <div>
+              Course and Tutor's Schedule Page fields are required if role Tutor
+              is selected.
+            </div>
           </template>
         </MultiselectElement>
         <MultiselectElement

@@ -32,6 +32,7 @@ async function submit(id) {
   router.push({ name: 'ticket-details', params: { id } });
 }
 
+// Add filter for id, tutor, description, and status columns
 const filters = ref();
 
 const initFilters = () => {
@@ -54,14 +55,12 @@ const initFilters = () => {
     },
   };
 };
-
 </script>
 
 <template>
   <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 justify-center">
     <h1 class="text-red-700 text-3xl font-bold">List of Tickets</h1>
     <div class="flex-grow">
-
       <DataTable
         class="text-[14px]"
         :value="tickets"
@@ -78,7 +77,7 @@ const initFilters = () => {
         :sortOrder="-1"
       >
         <template #empty> No tickets found. </template>
-        
+
         <Column field="id" header="Ticket ID" sortable style="width: 100px">
           <template #filter="{ filterModel }">
             <InputText
@@ -108,16 +107,14 @@ const initFilters = () => {
           sortable
           style="max-width: 80px"
         >
-        <template #body="slotProps">
+          <template #body="slotProps">
             <div class="singleLine">
               {{
-                slotProps.data.priority 
-                  ? slotProps.data.priority.name
-                  : 'N/A'
+                slotProps.data.priority ? slotProps.data.priority.name : 'N/A'
               }}
             </div>
           </template>
-      </Column>
+        </Column>
 
         <Column
           field="tutor.full_name"
@@ -135,7 +132,8 @@ const initFilters = () => {
           </template>
         </Column>
 
-        <Column field="description" header="Description" style="width: 200px">3
+        <Column field="description" header="Description" style="width: 200px"
+          >
           <template #filter="{ filterModel }">
             <InputText
               v-model="filterModel.value"

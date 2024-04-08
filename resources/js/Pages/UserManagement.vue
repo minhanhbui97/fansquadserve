@@ -22,6 +22,7 @@ async function submit(id) {
   router.push({ name: 'user-details', params: { id } });
 }
 
+// Add filter for id, first_name, and last_name columns
 const filters = ref();
 
 const initFilters = () => {
@@ -47,11 +48,11 @@ const initFilters = () => {
   <div class="max-w-6xl mx-auto p-8 flex flex-col gap-8 justify-center">
     <h1 class="text-red-700 text-3xl font-bold">List of Users</h1>
 
-    <router-link class="btn w-48 bg-red-700 hover:bg-red-700 text-white text-md font-bold" to="/add-user"> 
-    <button class="">
-      Add User
-    </button>  
-
+    <router-link
+      class="btn w-48 bg-red-700 hover:bg-red-700 text-white text-md font-bold"
+      to="/add-user"
+    >
+      <button class="">Add User</button>
     </router-link>
 
     <div class="flex-grow">
@@ -70,7 +71,7 @@ const initFilters = () => {
         sortField="id"
         :sortOrder="-1"
       >
-      <template #empty> No users found. </template>
+        <template #empty> No users found.</template>
 
         <Column field="id" header="User ID" sortable style="width: 100px">
           <template #filter="{ filterModel }">

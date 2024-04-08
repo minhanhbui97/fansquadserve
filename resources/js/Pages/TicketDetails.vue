@@ -39,6 +39,7 @@ const formRef = ref();
 const toast = useToast();
 const isLoading = ref(false);
 
+// Condition to show Update Ticket button only for user who is the assigned tutor
 const isAssignedTutor = computed(() => {
   if (!user.value || !ticket.value) return false;
 
@@ -48,6 +49,7 @@ const isAssignedTutor = computed(() => {
   );
 });
 
+// Get data for dropdowns
 const selectPriorityOptions = computed(() => {
   return priorities.value.map((priority) => {
     return {
@@ -84,11 +86,9 @@ const selectTicketStatusOptions = computed(() => {
       possibleTicketStatusOptions.push(all_ticket_statuses[4]);
       possibleTicketStatusOptions.push(all_ticket_statuses[5]);
     }
-    // Ticket with latest_status Resoleved will be moved to Closed immediately
-    // This should not be possible under normal circumstances
+    // If latest_status is Resolved, show Resolved
     else if (ticket.value.latest_status.id === 4) {
       possibleTicketStatusOptions.push(all_ticket_statuses[3]);
-      // possibleTicketStatusOptions.push(all_ticket_statuses[6]);
     }
     // If latest_status is On-hold, show Resolved, On-hold, or Closed
     else if (ticket.value.latest_status.id === 5) {
@@ -102,7 +102,7 @@ const selectTicketStatusOptions = computed(() => {
       possibleTicketStatusOptions.push(all_ticket_statuses[5]);
       possibleTicketStatusOptions.push(all_ticket_statuses[6]);
     }
-    // If latest_status is Closed
+    // If latest_status is Closed, show Closed
     else if (ticket.value.latest_status.id === 7) {
       possibleTicketStatusOptions.push(all_ticket_statuses[6]);
     }
@@ -119,12 +119,13 @@ const selectUserOptions = computed(() => {
   });
 });
 
-const allStatuses = computed(() => ticket.value?.ticket_statuses || []);
-
 // Helper function to round to 2 decimal place
 function roundNum(num) {
   return Math.round((num + Number.EPSILON) * 100) / 100;
 }
+
+// Calculate SLA
+const allStatuses = computed(() => ticket.value?.ticket_statuses || []);
 
 const firstResponseTime = computed(() => {
   if (!allStatuses.value.length) return 'N/A';
@@ -178,12 +179,13 @@ onMounted(() => {
   initialize();
 });
 
-watch(ticket, () => {
-  if (ticket.value) {
-    getUsers(ticket.value.course_id);
-  }
-});
+// watch(ticket, () => {
+//   if (ticket.value) {
+//     getUsers(ticket.value.course_id);
+//   }
+// });
 
+// Populate ticket info in input fields on the form
 watch([users, priorities, ticket_statuses], () => {
   if (ticket.value) {
     formRef.value.el$('priority_id').update(ticket.value.priority_id);
@@ -208,7 +210,7 @@ watch([users, priorities, ticket_statuses], () => {
   <div
     class="max-w-6xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-auto flex-grow"
   >
-  <h1 class="text-red-700 text-3xl font-bold flex-shrink-0">
+    <h1 class="text-red-700 text-3xl font-bold flex-shrink-0">
       Ticket Details
       <font-awesome-icon icon="fa-spinner" v-if="isLoading" class="fa-spin" />
     </h1>
@@ -323,7 +325,9 @@ watch([users, priorities, ticket_statuses], () => {
           :default="ticket?.latest_status.id"
           label="Status *"
           class="col-span-4"
-          :disabled="ticket?.latest_status.id == 7 || ticket?.latest_status.id == 4"
+          :disabled="
+            ticket?.latest_status.id == 7 || ticket?.latest_status.id == 4
+          "
           :rules="['required']"
           :can-clear="false"
           :can-deselect="false"
@@ -419,7 +423,8 @@ watch([users, priorities, ticket_statuses], () => {
           danger
           submits
           class="mx-auto mt-4"
-          >Update Ticket</ButtonElement>
+          >Update Ticket</ButtonElement
+        >
       </Vueform>
     </div>
   </div>
