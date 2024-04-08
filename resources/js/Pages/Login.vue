@@ -15,7 +15,9 @@ async function submit(values) {
     await login({ email: values.data.email, password: values.data.password });
     router.push({ name: 'tickets' });
   } catch {
-    toast.error('Unable to login. Please use your valid Fanshawe email and password!');
+    toast.error(
+      'Unable to login. Please use your valid Fanshawe email and password!',
+    );
   }
 }
 </script>
@@ -38,17 +40,23 @@ async function submit(values) {
         >
           <TextElement
             name="email"
-            label="Email"
-            :rules="['required', 'email', 'max:255']"
-            field-name="email"
+            label="Email *"
+            :rules="['required', 'email']"
           />
           <TextElement
             name="password"
-            label="Password"
+            label="Password *"
             input-type="password"
             :rules="['required']"
           />
-          <ButtonElement name="button" danger submits>Log In</ButtonElement>
+          <ButtonElement
+            name="button"
+            button-class="font-semibold"
+            danger
+            submits
+            class="mx-auto mt-4"
+            >Log In</ButtonElement
+          >
         </Vueform>
       </div>
     </div>
