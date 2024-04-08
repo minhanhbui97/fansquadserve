@@ -9,7 +9,7 @@ import {
   CategoryScale,
   LinearScale,
 } from 'chart.js';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 
 ChartJS.register(
   Title,

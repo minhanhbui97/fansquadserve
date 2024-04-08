@@ -1,12 +1,7 @@
 <script setup>
-import PeopleIcon from '@/Components/SVGIcons/PeopleIcon.vue';
-import GraphIcon from '@/Components/SVGIcons/GraphIcon.vue';
-import DocIcon from '@/Components/SVGIcons/DocIcon.vue';
 import { useAuthStore } from '@/Stores/AuthStore';
-import { useUserStore } from '@/Stores/UserStore';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
-import { ref, watch } from 'vue';
 
 const router = useRouter();
 const authStore = useAuthStore();

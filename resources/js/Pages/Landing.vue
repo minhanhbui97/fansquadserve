@@ -35,7 +35,7 @@
           <img
             class="max-w-md max-h-lg mx-auto"
             src="../../images/logo.png"
-            alt="image description"
+            alt="FanSquadServe Logo"
           />
           <div class="text-center">
             <p class="text-red-700 font-bold text-3xl">
@@ -53,7 +53,7 @@
             Book Appointment
           </router-link>
         </div>
-        <img class="max-w-xl" src="../../images/1.png" alt="image" />
+        <img class="max-w-xl" src="../../images/1.png" alt="Image" />
       </section>
       <section class="flex flex-col bg-slate-50 py-16 gap-16">
         <p class="text-red-700 font-bold text-4xl text-center">
@@ -67,7 +67,7 @@
             dedicated to helping our fellow students for any inquiries related
             to IT courses or academic technical matters.
           </p>
-          <img class="max-w-xl" src="../../images/2.jpg" alt="fanshawecampus" />
+          <img class="max-w-xl" src="../../images/2.jpg" alt="Fanshawe London South Campus" />
         </div>
       </section>
       <section class="flex flex-col py-16 gap-16">
@@ -103,10 +103,10 @@
               learning and confidence on your academic journey here at Fanshawe.
             </p>
           </div>
-          <img class="max-w-md" src="../../images/3.png" alt="fanshawecampus" />
+          <img class="max-w-md" src="../../images/3.png" alt="Peer Tutoring Image" />
         </div>
         <div class="flex justify-center gap-16 items-center">
-          <img class="max-w-md" src="../../images/4.png" alt="fanshawecampus" />
+          <img class="max-w-md" src="../../images/4.png" alt="Lab and Tech Support Image" />
           <div class="flex flex-col gap-8 w-96 leading-7">
             <h3 class="font-bold text-red-700">Lab and Tech Support</h3>
             <p>

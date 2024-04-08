@@ -26,12 +26,8 @@ async function submit(values) {
   <div
     class="h-screen flex flex-col gap-8 justify-center items-center max-w-xl mx-auto"
   >
-    <!-- <div class="w-64 self-center">
-      <img src="../../images/logo.png" alt="" />
-    </div> -->
-
     <router-link :to="{ name: 'landing' }">
-      <img class="w-64" src="../../images/logo.png" alt="image description" />
+      <img class="w-64" src="../../images/logo.png" alt="FanSquadServe Logo" />
     </router-link>
 
     <div class="flex flex-col gap-2">
