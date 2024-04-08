@@ -107,10 +107,11 @@ watch(user, () => {
 });
 
 async function submitUser(values) {
-  const allowed_domains = ['fanshaweonline.ca', 'fanshawec.ca'];
   let submitted_email = values.requestData.email;
-  let submitted_email_domain = submitted_email.split('@')[1];
-  if (allowed_domains.includes(submitted_email_domain)) {
+  if (
+    submitted_email.includes('@fanshaweonline.ca') ||
+    submitted_email.includes('@fanshawec.ca')
+  ) {
     try {
       await updateCurrentUser(user.value.id, values.requestData);
       toast.success('Update user successfully!');
