@@ -38,6 +38,7 @@ const referenceNumber = ref(null);
 const formData = ref(null);
 const ticket = ref(null);
 
+// Get data for dropdowns
 const selectPriorityOptions = computed(() => {
   return priorities.value.map((priority) => {
     return {
@@ -97,25 +98,57 @@ const selectUserOptions = computed(() => {
   });
 });
 
+// Get list of tutors available for selected course
+function selectCourse(courseId) {
+  getUsers(courseId);
+}
+
+// Build referenceNumber by concatenating randonly generated referenceNumber & student's fanshawe_id
+async function getReferenceNumber() {
+  const data = await getReferenceNumberService();
+  referenceNumber.value = data;
+}
 const finalReferenceNumber = computed(() => {
   return `${referenceNumber.value} - ${formRef.value.el$('fanshawe_id').value}`;
 });
 
-const { text, copy, copied, isSupported } = useClipboard({
+const { copy, copied } = useClipboard({
   source: finalReferenceNumber,
 });
 
-function selectCourse(courseId) {
-  getUsers(courseId);
+onMounted(() => {
+  getPriorities();
+  getOperatingSystems();
+  getPrograms();
+  getTypeofMachines();
+  getCourses();
+  getReferenceNumber();
+});
+
+// Search for student info by fanshawe_id
+async function search() {
+  const fanshawe_id = formRef.value.el$('fanshawe_id').value;
+  try {
+    const data = await getStudent(fanshawe_id);
+    student.value = data;
+  } catch (err) {
+    console.log(err);
+  }
 }
+
+// Populate student info if student with provided fanshawe_id exists
+watch(student, () => {
+  if (!student.value) return;
+  formRef.value.el$('first_name').update(student.value.first_name);
+  formRef.value.el$('last_name').update(student.value.last_name);
+  formRef.value.el$('email').update(student.value.email);
+});
 
 const is_submitted = ref(false);
 
 async function submitTicket(values) {
   formData.value = values.data;
-  // search again for student
   const fanshawe_id = formRef.value.el$('fanshawe_id').value;
-
   const { first_name, last_name, email } = values.data;
 
   if (
@@ -128,6 +161,7 @@ async function submitTicket(values) {
     return;
   }
 
+  // If student with fanshawe_id exists, update student info if needed. Else, create new student
   try {
     const studentData = await getStudent(fanshawe_id);
     student.value = studentData;
@@ -165,44 +199,13 @@ async function submitTicket(values) {
     email: undefined,
     fanshawe_id: undefined,
     student_id: student.value.id,
-    reference_number: `${referenceNumber.value}-${formRef.value.el$('fanshawe_id').value}`,
+    reference_number: finalReferenceNumber.value,
   };
 
   const data = await createTicket(payload);
   ticket.value = data;
   is_submitted.value = true;
 }
-
-async function search() {
-  const fanshawe_id = formRef.value.el$('fanshawe_id').value;
-  try {
-    const data = await getStudent(fanshawe_id);
-    student.value = data;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function getReferenceNumber() {
-  const data = await getReferenceNumberService();
-  referenceNumber.value = data;
-}
-
-onMounted(() => {
-  getPriorities();
-  getOperatingSystems();
-  getPrograms();
-  getTypeofMachines();
-  getCourses();
-  getReferenceNumber();
-});
-
-watch(student, () => {
-  if (!student.value) return;
-  formRef.value.el$('first_name').update(student.value.first_name);
-  formRef.value.el$('last_name').update(student.value.last_name);
-  formRef.value.el$('email').update(student.value.email);
-});
 </script>
 <template>
   <div class="max-w-4xl mx-auto p-8 flex flex-col gap-8 flex-grow">
