@@ -30,10 +30,10 @@
       </router-link>
     </nav>
     <main class="flex flex-col gap-16">
-      <section class="flex w-full justify-between gap-8 max-w-7xl mx-auto my-4">
-        <div class="flex flex-col gap-8 justify-center p-8">
+      <section class="flex w-full justify-between gap-8 mx-auto mb-[-64px] mt-4">
+        <div class="flex flex-col gap-8 justify-center p-8 flex-grow">
           <img
-            class="max-w-md max-h-lg mx-auto"
+            class="max-w-md max-h-lg mx-auto flex-grow"
             src="../../images/logo.png"
             alt="FanSquadServe Logo"
           />
@@ -103,7 +103,7 @@
               learning and confidence on your academic journey here at Fanshawe.
             </p>
           </div>
-          <img class="max-w-md" src="../../images/3.png" alt="Peer Tutoring Image" />
+          <img class="max-w-md w-[350px]" src="../../images/3.png" alt="Peer Tutoring Image" />
         </div>
         <div class="flex justify-center gap-16 items-center">
           <img class="max-w-md" src="../../images/4.png" alt="Lab and Tech Support Image" />

@@ -205,6 +205,7 @@ async function submitTicket(values) {
   const data = await createTicket(payload);
   ticket.value = data;
   is_submitted.value = true;
+  window.scrollTo(0,0);
 }
 </script>
 <template>
@@ -490,7 +491,7 @@ async function submitTicket(values) {
       </div>
       <p class="mb-8">
         If you have any questions or need to modify your appointment details,
-        please contact the LabSquad at {email}
+        please contact the LabSquad at <a href="mailto:someone@example.com" class="underline text-blue-500">fanshawelsclabsquad@gmail.com</a>.
       </p>
       <div class="flex gap-8 justify-end">
         <router-link to="/"

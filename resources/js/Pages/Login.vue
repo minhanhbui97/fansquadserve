@@ -50,7 +50,7 @@ async function submit(values) {
             input-type="password"
             :rules="['required']"
           />
-          <router-link :to="{ name: 'landing' }"  class="col-span-4">
+          <router-link :to="{ name: 'landing' }"  class="col-span-12 text-sm underline text-blue-500">
             <a>Back to Home Page</a>
           </router-link>
           <ButtonElement
