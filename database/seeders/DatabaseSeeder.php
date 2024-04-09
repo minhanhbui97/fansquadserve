@@ -2,22 +2,22 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
-use App\Models\OperatingSystem;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * The current password being used by the factory.
+     */
+    protected static ?string $password;
+
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-
-
         $this->call([
             RoleSeeder::class,
             CourseSeeder::class,
@@ -26,16 +26,17 @@ class DatabaseSeeder extends Seeder
             OperatingSystemSeeder::class,
             PrioritySeeder::class,
             ProgramSeeder::class,
-            TicketSeeder::class,
-
+            // Disable TicketSeeder when seeding prod DB
+            // TicketSeeder::class,
         ]);
 
-
-
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // Create first account which has role Admin to create other accounts
+        $user = User::factory([
+            'first_name' => 'Super',
+            'last_name' => 'Admin',
+            'email' => 'super.admin@fanshaweonline.ca',
+            'password' => static::$password ??= Hash::make('password'),
+        ])->create();
+        $user->roles()->attach(3);
     }
 }
