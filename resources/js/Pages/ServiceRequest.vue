@@ -477,6 +477,12 @@ async function submitTicket(values) {
             }}
           </p>
           <p>
+            Priority:
+            {{
+              ticket?.priority ? ticket?.priority.name : 'N/A'
+            }}
+          </p>
+          <p>
             Description:
             {{ ticket?.description }}
           </p>
