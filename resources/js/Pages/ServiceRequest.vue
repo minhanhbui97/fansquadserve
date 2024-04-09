@@ -9,6 +9,7 @@ import { createTicket } from '@/Services/TicketService';
 import { useTicketStore } from '@/Stores/TicketStore';
 import { useClipboard } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
+import { Container } from 'postcss';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 
@@ -215,7 +216,7 @@ async function submitTicket(values) {
         <img class="w-64" src="../../images/logo.png" alt="FanSquadServe Logo" />
       </router-link>
     </div>
-    <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
+    <h1 class="text-red-700 text-3xl font-bold flex-shrink-0">
       Service Request Form
     </h1>
     <div class="bg-gray-50 p-8 overflow-auto" v-if="!is_submitted">
@@ -235,8 +236,12 @@ async function submitTicket(values) {
         <ButtonElement
           name="button"
           class="col-span-2 mt-7 w-full"
-          danger
           @click="search"
+          :override-classes="{
+            ButtonElement: {
+              button_primary: 'bg-red-700 text-white'
+            }
+          }"
           >Search</ButtonElement
         >
         <TextElement
@@ -413,16 +418,20 @@ async function submitTicket(values) {
         <ButtonElement
           name="button"
           button-class="font-semibold "
-          danger
           type="submit"
           submits
           class="mx-auto mt-4"
+          :override-classes="{
+            ButtonElement: {
+              button_primary: 'bg-red-700 text-white'
+            }
+          }"
           >Confirm Appointment</ButtonElement
         >
       </Vueform>
     </div>
 
-    <div v-if="is_submitted" class="border-2 border-amber-800 rounded-md p-8">
+    <div v-if="is_submitted" class="border-2 border-red-700 rounded-md p-8">
       <h2 class="text-black text-lg font-bold mb-4">Confirmation message</h2>
 
       <div class="flex flex-col gap-2 mb-4">

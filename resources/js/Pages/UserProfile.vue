@@ -27,7 +27,7 @@ onMounted(() => {
   <div
     class="max-w-4xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-auto flex-grow"
   >
-    <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
+    <h1 class="text-red-700 text-3xl font-bold flex-shrink-0">
       User Profile
       <font-awesome-icon icon="fa-spinner" v-if="isLoading" class="fa-spin" />
     </h1>

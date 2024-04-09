@@ -137,7 +137,7 @@
         <div class="text-sm flex flex-col gap-2">
           <p class="ml-7">CONTACT US</p>
           <div class="flex gap-4 items-center">
-            <font-awesome-icon icon="fa-home" size="md" class="text-red-500" />
+            <font-awesome-icon icon="fa-home" size="md" class="text-red-700" />
             <div>
               <p>Location:</p>
               <p>2nd Floor, Room 204</p>
@@ -145,7 +145,7 @@
             </div>
           </div>
           <div class="flex gap-4 items-center">
-            <font-awesome-icon icon="fa-phone" size="md" class="text-red-500" />
+            <font-awesome-icon icon="fa-phone" size="md" class="text-red-700" />
             <div>
               <p>Office hours:</p>
               <p>Monday to Friday 9AM to 9PM</p>

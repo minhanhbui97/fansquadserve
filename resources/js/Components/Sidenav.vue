@@ -66,7 +66,7 @@ async function submit() {
 
         <button
           @click="handleLogout"
-          class="py-2 px-4 bg-red-500 rounded text-white hover:bg-red-500/90"
+          class="py-2 px-4 bg-red-700 rounded text-white hover:bg-red-700/90"
         >
           Log Out
         </button>

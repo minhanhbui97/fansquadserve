@@ -183,9 +183,13 @@ async function submitUser(values) {
         <ButtonElement
           name="button"
           button-class="font-semibold"
-          danger
           submits
           class="mx-auto mt-4"
+          :override-classes="{
+            ButtonElement: {
+              button_primary: 'bg-red-700 text-white'
+            }
+          }"
         >
           Create User
         </ButtonElement>

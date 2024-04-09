@@ -129,7 +129,7 @@ async function submitUser(values) {
   <div
     class="max-w-4xl mx-auto p-8 flex flex-col gap-8 max-h-screen overflow-auto flex-grow"
   >
-    <h1 class="text-amber-800 text-3xl font-bold flex-shrink-0">
+    <h1 class="text-red-700 text-3xl font-bold flex-shrink-0">
       User Details
       <font-awesome-icon icon="fa-spinner" v-if="isLoading" class="fa-spin" />
     </h1>
@@ -241,9 +241,13 @@ async function submitUser(values) {
         <ButtonElement
           name="button"
           button-class="font-semibold"
-          danger
           submits
           class="mx-auto mt-4"
+          :override-classes="{
+            ButtonElement: {
+              button_primary: 'bg-red-700 text-white'
+            }
+          }"
         >
           Update User
         </ButtonElement>

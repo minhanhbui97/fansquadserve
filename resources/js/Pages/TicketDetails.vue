@@ -362,7 +362,7 @@ watch([users, priorities, ticket_statuses], () => {
           <hr />
         </StaticElement>
         <StaticElement name="section_title">
-          <h2 class="text-amber-800 text-lg font-bold">Student Details</h2>
+          <h2 class="text-red-700 text-lg font-bold">Student Details</h2>
         </StaticElement>
         <StaticElement name="student_name" class="col-span-4">
           <div class="text-sm">
@@ -420,9 +420,13 @@ watch([users, priorities, ticket_statuses], () => {
           v-if="isAssignedTutor"
           name="button"
           button-class="font-semibold"
-          danger
           submits
           class="mx-auto mt-4"
+          :override-classes="{
+            ButtonElement: {
+              button_primary: 'bg-red-700 text-white'
+            }
+          }"
           >Update Ticket</ButtonElement
         >
       </Vueform>

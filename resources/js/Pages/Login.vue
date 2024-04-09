@@ -50,15 +50,22 @@ async function submit(values) {
             input-type="password"
             :rules="['required']"
           />
-          <router-link :to="{ name: 'landing' }"  class="col-span-12 text-sm underline text-blue-500">
+          <router-link
+            :to="{ name: 'landing' }"
+            class="col-span-12 text-sm underline text-blue-500"
+          >
             <a>Back to Home Page</a>
           </router-link>
           <ButtonElement
             name="button"
             button-class="font-semibold"
-            danger
             submits
-            class="mx-auto mt-4 "
+            class="mx-auto mt-4"
+            :override-classes="{
+              ButtonElement: {
+                button_primary: 'bg-red-700 text-white',
+              },
+            }"
             >Log In</ButtonElement
           >
         </Vueform>
