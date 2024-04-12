@@ -138,10 +138,8 @@ router.beforeEach(async (to, from) => {
   if (to.name !== 'login' && isLoggedIn.value && user.value === null) {
     try {
       await getAuthUser();
-      return;
     } catch (err) {
       reset();
-
       return { name: 'login' };
     }
   }
