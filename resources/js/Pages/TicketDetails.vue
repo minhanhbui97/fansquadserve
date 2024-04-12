@@ -179,11 +179,11 @@ onMounted(() => {
   initialize();
 });
 
-// watch(ticket, () => {
-//   if (ticket.value) {
-//     getUsers(ticket.value.course_id);
-//   }
-// });
+watch(ticket, () => {
+  if (ticket.value) {
+    getUsers(ticket.value.course_id);
+  }
+});
 
 // Populate ticket info in input fields on the form
 watch([users, priorities, ticket_statuses], () => {
@@ -317,6 +317,7 @@ watch([users, priorities, ticket_statuses], () => {
           label="Priority"
           class="col-span-4"
           :can-deselect="false"
+          :disabled="isLoading"
         />
         <SelectElement
           :native="false"
@@ -326,7 +327,7 @@ watch([users, priorities, ticket_statuses], () => {
           label="Status *"
           class="col-span-4"
           :disabled="
-            ticket?.latest_status.id == 7 || ticket?.latest_status.id == 4
+            ticket?.latest_status.id == 7 || ticket?.latest_status.id == 4 || isLoading
           "
           :rules="['required']"
           :can-clear="false"
@@ -341,6 +342,7 @@ watch([users, priorities, ticket_statuses], () => {
           :rules="['required']"
           :can-clear="false"
           :can-deselect="false"
+          :disabled="isLoading"
         />
         <StaticElement name="divider">
           <hr />
