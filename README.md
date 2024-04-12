@@ -58,11 +58,12 @@ https://fss-app-amber.vercel.app/
 ### Frontend
 
 - Vue.js: https://vuejs.org/
+- Pinia: https://pinia.vuejs.org/
 - TailwindCSS: https://tailwindui.com/
 - PrimeVue: https://primevue.org/
 - VueForm: https://vueform.com/
 
-## App specifications
+## App Specifications
 
 ### Landing Page
 
@@ -145,3 +146,13 @@ https://fss-app-amber.vercel.app/
 ### User Profile Page
 - Route: `/user-profile`
 - Current logged in user can view their information and assigned courses (for LabSquad tutors)
+
+## Screenshots
+- Landing Page
+![LandingPage](https://github.com/minhanhbui97/fansquadserve/assets/49821510/9f5d5453-a202-48c0-81b9-f344e29b6497)
+- Service Request Page
+![ServiceRequestPage](https://github.com/minhanhbui97/fansquadserve/assets/49821510/14ec16ea-7e74-470a-986f-bad591966425)
+- Ticket Queue Page
+![TicketQueuePage](https://github.com/minhanhbui97/fansquadserve/assets/49821510/6cb39ec2-a190-4278-864a-d72019458e3e)
+- Data Dashboard Page
+![DataDashboardPage](https://github.com/minhanhbui97/fansquadserve/assets/49821510/c85d109e-3b4a-4b66-ac90-9ca71ba06ce7)
