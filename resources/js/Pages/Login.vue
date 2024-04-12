@@ -50,12 +50,6 @@ async function submit(values) {
             input-type="password"
             :rules="['required']"
           />
-          <router-link
-            :to="{ name: 'landing' }"
-            class="col-span-12 text-sm underline text-blue-500"
-          >
-            <a>Back to Home Page</a>
-          </router-link>
           <ButtonElement
             name="button"
             button-class="font-semibold"
@@ -70,6 +64,12 @@ async function submit(values) {
           >
         </Vueform>
       </div>
+      <router-link
+        :to="{ name: 'landing' }"
+        class="col-span-12 text-center text-sm underline text-blue-500"
+      >
+        <a>Back to Home Page</a>
+      </router-link>
     </div>
   </div>
 </template>
