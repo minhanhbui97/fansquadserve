@@ -4,6 +4,9 @@
 
 **FanSquadServe (FSS)** is a ticket management system that records tutoring service request tickets created by Fanshawe students, allows the LabSquad tutors and faculties/staffs to manage ticket details, visualizes ticket data, and manage users.
 
+## App Demo
+https://fss-app-amber.vercel.app/
+
 ## Installation
 
 - Install Laravel & Composer at https://laravel.com/docs/10.x/installation
@@ -25,10 +28,11 @@
 - Run FE server with command `npm run dev`
 
 ## Deployment
-
+**Example Vercel Deployment**
 - Fork the git repo from https://github.com/fansquadserve/fansquadserve
-- Setup your Vercel account and create a project connecting to the git repo
-- In Settings/Environment Variables
+- Setup your Vercel account at https://vercel.com 
+- Create a project connecting to the git repo
+- In Settings/Environment Variables tab
   - Update the following variables to the same value as in your **`.env`** file
     - APP_KEY
     - DB_CONNECTION
@@ -41,6 +45,7 @@
     - SESSION_DOMAIN=`{your_domain}`
     - SANCTUM_STATEFUL_DOMAINS=`{your_domain}`
     - e.g. SESSION_DOMAIN=fansquadserve.vercel.app
+- Deploy automatically by pushing new commits to `main` branch or redeploy in Deployments tab
 
 ## Tech Stack
 
